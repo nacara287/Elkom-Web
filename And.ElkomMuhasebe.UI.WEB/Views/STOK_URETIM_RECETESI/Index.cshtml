@@ -1,0 +1,130 @@
+﻿@model IEnumerable<And.ElkomMuhasebe.Core.Model.Entity.FirmaDB.STOK_URETIM_RECETESI>
+
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Index</h2>
+
+<p>
+    @Html.ActionLink("Create New", "Create")
+</p>
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.RECETEKODU)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.deleted)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.RECETEADI)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.TARIH)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.OZELKOD)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.ACIKLAMA)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.MALIYETTURU)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.SON_URETIM_TARIHI)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.URETIM_ADET)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.URETIM_TIPI)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.URETIM_GURUBU)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.SON_URETIM_MALIYET)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.KDV_EKLE)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.CreateDate)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.CreateUserID)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.UpdateDate)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.UpdateUserID)
+        </th>
+        <th></th>
+    </tr>
+
+@foreach (var item in Model) {
+    <tr>
+        <td>
+            @Html.DisplayFor(modelItem => item.RECETEKODU)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.deleted)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.RECETEADI)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.TARIH)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.OZELKOD)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.ACIKLAMA)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.MALIYETTURU)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.SON_URETIM_TARIHI)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.URETIM_ADET)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.URETIM_TIPI)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.URETIM_GURUBU)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.SON_URETIM_MALIYET)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.KDV_EKLE)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.CreateDate)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.CreateUserID)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.UpdateDate)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.UpdateUserID)
+        </td>
+        <td>
+            @Html.ActionLink("Edit", "Edit", new { id=item.ID }) |
+            @Html.ActionLink("Details", "Details", new { id=item.ID }) |
+            @Html.ActionLink("Delete", "Delete", new { id=item.ID })
+        </td>
+    </tr>
+}
+
+</table>

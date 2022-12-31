@@ -1,0 +1,117 @@
+:root{
+    --renk1 : #9C1BF2;
+    --renk2 : #111827;
+    --renk3 : #04D939;
+    --renk4 : #F27405;
+    --renk5 : #F2F2F2;
+    
+}
+
+body{background-color: #f9fafb;}
+/* tablo icon renkleri*/
+.text-warning {
+    color: #ff9800 !important;
+}
+.text-primary {
+    color: #3f51b5 !important;
+}
+/* logo kısmınıa renk tonajı verme */
+.sb-topnav .navbar-brand {
+    color: #F4F7F5;
+    background-color: #111827; /* sabit */
+    font-weight: bolder;
+    border-bottom: 1px #3a3a3a solid;
+}
+.sb-topnav{border-bottom: 1px solid #f5f5f5;}
+.navbar-light .navbar-brand:focus{
+    color: var(--renk1);
+}
+.navbar-light .navbar-brand:hover{
+    color: #3f51b5;
+}
+/* sol menü icon rengi*/
+.sb-sidenav-light .sb-sidenav-menu .nav-link .sb-nav-link-icon ,
+/* sol menü link rengi*/
+.sb-sidenav-light .sb-sidenav-menu .nav-link {
+    color: var(--renk5);
+}
+/* sol menü link hover */
+.sb-sidenav-light .sb-sidenav-menu .nav-link:hover {
+    color: var(--renk3);
+   /* background-color:var(--renk2);*/
+}
+/* sol menu arka plan rengi */
+.sb-sidenav-dark, .sb-sidenav-footer{
+    background-color: var(--renk2);
+    
+}
+.sb-sidenav-dark .sb-sidenav-menu .nav-link:hover {
+    color: #fff;
+    background-color: #ffffff24;
+}
+
+
+.sb-sidenav-light, .sb-sidenav-footer {
+    background-color: var(--renk2) !important;
+}
+.bg-menu{
+    background-color:  var(--renk2) !important;
+}
+/*navbar arkaplan */
+.bg-dark {
+    background-color: var(--renk5) !important;
+}
+.bg-light {
+    background-color: #ffffff !important;
+    color: var(--renk2);
+}
+/* navbar sağ yazı renk*/
+.navbar-dark .navbar-nav .nav-link {
+    color: var(--renk5);
+}
+/* breadcrumb renk */
+.breadcrumb {
+   /* background-color: var(--renk5);*/
+   background-color: transparent;
+   font-weight: 900;
+   padding: 0rem;
+    font-size: 1.2rem;
+}
+.breadcrumb-item.active {
+    color: #3f51b5;
+}
+a {
+    color: #3f51b5;
+}
+
+/*buton */
+.btn{  font-weight: 500;}
+.btn-secondary{
+    color: #151926;  
+    background-color: #e9ecef;
+    border-color: transparent;
+}
+.btn-secondary:hover {
+    color: var(--renk5);
+    background-color: var(--renk2);
+    border-color: transparent;
+}
+
+/* tablo butonlar*/
+table{font-weight: 500;}
+.btn-secondary {
+    color: #151926;  
+    background-color: #e9ecef;
+    border-color: transparent;
+}
+/* tablo sayfalandırma linkleri */
+.page-link {
+    color: #151926;  
+    background-color: #e9ecef;
+    border-color: transparent;
+}
+.page-item.active .page-link {
+    color: #e9ecef;
+    background-color: #151926;
+    border-color: transparent;
+}

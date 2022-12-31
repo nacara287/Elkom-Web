@@ -1,0 +1,95 @@
+﻿@model And.ElkomMuhasebe.Core.Model.Entity.FirmaDB.SORUMLULUK_MERKEZI
+
+@{
+    ViewBag.Title = "Yeni Sorumluluk Merkezi";
+    Layout = "~/Views/Shared/yeni.cshtml";
+}
+
+
+@using (Html.BeginForm(null, null, new { @id = string.Empty }, FormMethod.Post,
+    new { @id = "postform" }))
+{
+    @Html.HiddenFor(x => x.CreateDate)
+    @Html.HiddenFor(x => x.CreateUserID)
+
+    @Html.AntiForgeryToken()
+    <nav>
+        <div class="nav nav-tabs" id="nav-tab" role="tablist">
+            <a class="nav-link active" id="nav-home-tab" data-toggle="tab" href="#nav-home" role="tab" aria-controls="nav-home" aria-selected="true">Genel</a>
+
+        </div>
+
+    </nav>
+    <div class="tab-pane fade show active" id="nav-home" role="tabpanel" aria-labelledby="nav-home-tab">
+        <div class="card border-top-0 rounded-0">
+            <div class="card-body p-3">
+                <div class="form-row">
+                    <div class="form-group col-md-6">
+                        <label for="ACIKLAMA">Açıklama :</label>
+
+                        <div class="input-group">
+                            @Html.EditorFor(model => model.ACIKLAMA, new { htmlAttributes = new { @class = "form-control form-control-sm", @placeholder = "Açıklama", @aria_label = "Açıklama", @aria_describedby = "button-addon2", @required = "true" } })
+                            @Html.ValidationMessageFor(model => model.ACIKLAMA, "", new { @class = "text-danger" })
+                          
+                        </div>
+                    </div>
+
+
+
+
+
+                </div>
+            </div>
+        </div>
+        <div class="py-2">
+            <button type="button" class="btn btn-sm btn-primary btn-icon-split" onclick="datagonder()">
+
+
+
+                <span class="icon text-white-50">
+                    <i class="fas fa-save"></i>
+                </span>
+                <span class="text">Kaydet</span>
+
+            </button>
+            <a href="@Url.RequestContext.HttpContext.Request.Url.ToString()" class="btn btn-sm btn-secondary btn-icon-split">
+                <span class="icon text-white-50">
+                    <i class="fas fa-power-off"></i>
+                </span>
+                <span class="text">İptal</span>
+            </a>
+        </div>
+    </div>
+
+
+
+}
+
+
+@section script{
+    <script type="text/javascript" charset="utf-8">
+
+      
+
+        function datagonder() {
+            var form = $('#postform');
+
+            $.ajax({
+                type: "POST",
+                url: form.attr('action'),
+                data: form.serialize()
+                ,
+                success: function (result) {
+                    historysend("/S_MERKEZI/");
+
+                },
+                error: function (result) {
+                    toastr["error"]('Lütfen Bilgileri Eksik  Ya da Yanlış Girmeyiniz');
+                }
+            });
+
+        };
+      
+   
+    </script>
+}

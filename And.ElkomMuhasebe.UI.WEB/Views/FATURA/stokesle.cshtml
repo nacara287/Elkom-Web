@@ -1,0 +1,514 @@
+﻿@model And.ElkomMuhasebe.UI.WEB.Controllers.FATURAController.efaturafismodel
+@{
+    ViewBag.Title = "Stok Eşle";
+    Layout = "~/Views/Shared/yeni.cshtml";
+    var tip = (int)Model.TIPI;
+}
+
+<style>
+    .vl {
+        border-left: 6px solid green;
+        height:35px;
+    }
+</style>
+
+<div class="card">
+    <div class="card-body p-3">
+        <div class="form-row">
+            <div class="form-group col-md-4">
+                <label>Cari Bilgileri</label>
+                <select id="CariKodu" onchange="carikurgetir()" class="js-example-data-ajax form-control" readonly>
+
+                    <option value="@Model.CARIKOD">@Model.CARIKOD</option>
+
+
+                </select>
+            </div>
+            <div class="form-group col-md-2">
+                <label>Fatura No</label>
+                <input id="FATNO" type="text" class="form-control form-control-sm" value="@Model.FISNO" readonly>
+            </div>
+            <div class="form-group col-md-2">
+                <label>Fatura Ettn</label>
+                <input id="FATETT" type="text" class="form-control form-control-sm" value="@Model.UUID" readonly>
+            </div>
+            <div class="form-group col-md-2">
+                <label>Fatura Tarihi</label>
+                <input id="Tarih" type="date" class="form-control form-control-sm" value="@Model.TARIH" readonly>
+            </div>
+
+            <div class="form-group col-md-2">
+                <label>Gönderim Senaryo</label>
+                <select id="gonderimsenaryo" class="form-control form-control-sm" readonly>
+                    <option value="@Model.GONDERIMSENARYO" selected>@Model.GONDERIMSENARYO</option>
+
+                </select>
+            </div>
+
+            <div class="form-group col-md-2">
+                <label>Para Birimleri</label>
+                <select class="form-control form-control-sm" name="ParaBirimi" id="ParaBirimi" readonly>
+                    <option value="1">@Model.PARABIRIMI</option>
+
+                </select>
+            </div>
+
+            <div class="form-group col-md-4">
+                <label>Fatura Notu</label>
+                <input id="Not" type="text" class="form-control form-control-sm" placeholder="Not" value="@Model.NOT" readonly>
+            </div>
+
+            <div class="form-group col-md-2">
+                <label>Fatura Türü</label>
+                <input id="faturaturu" class="form-control form-control-sm" value="@Model.GONDERIMSENARYO" readonly>
+
+
+
+            </div>
+
+            <div class="form-group col-md-2">
+                <label>Gönderim Türü</label>
+                <select id="gonderimtipi" class="form-control form-control-sm" readonly>
+                    <option value="@Model.GONDERIMTIPI" selected>@Model.GONDERIMTIPI</option>
+
+                </select>
+            </div>
+
+            <div class="form-group col-md-2">
+                <label>Para Birimi Kur</label>
+                <input type="text" name="ParaBirimiKuru" id="ParaBirimiKuru" class="form-control form-control-sm text-right" value="@Model.PARABIRIMIKUR" placeholder="Para Kuru" required="" readonly>
+            </div>
+
+
+
+
+        </div>
+
+
+        <!-- Liste -->
+        <div class="table-responsive" id="yazdirilcak">
+            <table id="bootstrap-table" class="table">
+                <thead>
+                    <tr>
+
+                        <th data-field="MALHIZMET" data-sortable="true">Mal/Hizmet</th>
+
+
+                        <th data-field="MIKTAR" data-sortable="true">Mıktar</th>
+                        <th data-field="BIRIM" data-sortable="true">Birim</th>
+                        <th data-field="FIYAT" data-sortable="true" data-footer-formatter="priceFormatter">Fiyat</th>
+                        <th data-field="ISKONTO" data-sortable="true">İskonto%</th>
+                        <th data-field="ISKONTOTUTAR" data-sortable="true">İskonto Tutar</th>
+                        <th data-field="KDVORANI" data-sortable="true" class="countable">KDV Oranı½</th>
+                        <th data-field="KDVTUTAR" data-sortable="true" class="countable">KDV Tutar</th>
+                        <th data-field="TOPLAM" data-sortable="true" class="countable">Toplam</th>
+                        <th><div class="vl"></div></th>
+                        <th data-field="STOKKODU" data-sortable="true" class="countable">Eşleşen Stok Kodu</th>
+
+                        <th width="8%&qucot;"></th>
+                    </tr>
+
+                </thead>
+                <tbody>
+                    @foreach (var item in Model.gelenhareket)
+                    {
+                    <tr>
+                        <td>@item.MALHIZMET</td>
+                        <td>@item.MIKTAR</td>
+                        <td>@item.BIRIM</td>
+                        <td>@item.FIYAT</td>
+                        <td>@item.ISKONTO</td>
+                        <td>@item.ISKONTOTUTAR</td>
+                        <td>@item.KDVORANI</td>
+                        <td>@item.KDVTUTAR</td>
+                        <td>@item.TOPLAM</td>
+                        <td><div class="vl"></div></td>
+                        <td id="@item.MALHIZMET">@item.STOKKOD</td>
+
+
+
+                        <td>
+                            <button type="button" class="btn btn-success btn-fill" onclick="stoklistele('@item.MALHIZMET')" data-toggle="modal" data-target="#ModalStokSec">
+                                <i class="fa fa-search" aria-hidden="true"></i>
+                            </button>
+                        </td>
+
+                    </tr>
+                    }
+
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <!-- Alt toplamlar -->
+    <div class="card-footer ">
+        <div class="row">
+            <div class="col-md-6">
+                <p>Text: </p>
+                <p>Text: </p>
+            </div>
+            <div class="col-md-6">
+
+
+
+                <div class="form-group row mb-1">
+                    <label for="ödenecek" class="col-sm-6  text-right col-form-label">Ödenecek Tutar:</label>
+                    <div class="col-sm-6">
+                        <input id="ödenecek" type="text" class="form-control text-right form-control-sm" placeholder="0.00" readonly value="@Model.ODENCEKTUTAR">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="modal fade" id="ModalStokSec" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="vertical-alignment-helper">
+        <div class="modal-dialog modal-xl  modal-lg vertical-align-center" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title" id="myModalLabel">Stok Seç</h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+
+                </div>
+                <div class="modal-body">
+                    <div id="FaturaCariSecDataTablo_wrapper" class="dataTables_wrapper form-inline dt-bootstrap no-footer">
+
+                        <div class="col-sm-12">
+                            <div class="table-responsive">
+                                <table id="kasatable" class="table-bordered table-sm" data-show-search-clear-button="true"
+                                       data-show-footer="true" data-footer-style="footerStyle" data-show-print="true"
+                                       data-single-select="true" data-show-refresh="true" data-icon-size="sm"
+                                       data-side-pagination="server"
+                                       data-pagination="true"
+                                       data-page-size="10"
+                                       data-page-list="[10, 20, 50, 100, 200, 300]" data-show-export="true" data-reorderable-columns="true">
+                                    <thead>
+                                        <tr>
+                                            <th data-field="state" class="no-print" data-print-ignore="true" data-checkbox="true"></th>
+                                            <th data-field="ID" data-print-ignore="true" class="text-center" data-visible="false" data-sortable="true" data-footer-formatter="idFormatter">ID</th>
+
+                                            <th data-field="STOKODU" data-sortable="true" data-footer-formatter="nameFormatter">Stok Kodu</th>
+                                            <th data-field="STOKAD" data-sortable="true">Stok İsmi</th>
+                                            <th data-field="MIKTAR" data-formatter="numberformatter" data-align="right" data-sortable="true">Miktar</th>
+                                            <th data-field="BIRIM">Birim</th>
+                                            <th data-field="ALISFIYATI" data-formatter="numberformatter" data-align="right">Alış Fiyatı</th>
+                                            <th data-field="PARABIRIMI" data-sortable="true" data-align="right">Paraba Birimi</th>
+                                            <th data-field="SATISFIYATI" data-formatter="numberformatter" data-align="right" data-sortable="true">Satış Fiyatı</th>
+                                            <th data-field="MALIYET" data-formatter="numberformatter" data-align="right" data-sortable="true">Maliyet</th>
+                                            <th data-field="KDV" data-formatter="numberformatter" data-align="right" data-sortable="true">KDV</th>
+                                            <th data-field="DEPO" data-sortable="true">Depo</th>
+
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-primary" onclick="butonkasagetir()" data-dismiss="modal">Seç</button>
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Vazgeç</button>
+                    </div>
+
+
+
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- butonlar -->
+
+
+<div class="py-2">
+    <button aria-label="" class="btn btn-primary " onclick="butongonder()">
+        <span class="icon text-white-50">
+            <i class="fas fa-save"></i>
+        </span>
+        <span class="text">Kaydet</span>
+    </button>
+    <a aria-label="" class="btn btn-secondary " href="@Url.RequestContext.HttpContext.Request.Url.ToString()" type="reset">
+        <span class="icon text-white-50">
+            <i class="fas fa-power-off"></i>
+        </span>
+        <span class="text">İptal</span>
+    </a>
+</div>
+
+
+@section script{
+    <script type="text/javascript">
+        function numberformatter(value, row, index) {
+            if (!value)
+                return "0.00";
+            else {
+                return [
+
+                    numberWithCommas((Number(value.toString().replace(",", "."))).toFixed(2))
+                ].join('');
+            }
+        }
+        function numberWithCommas(x) {
+            return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+        }
+        function priceFormatter(data) {
+            var field = this.field
+
+            var toplam = data.map(function (row) {
+                if (row[field])
+                    return +Number(row[field].toString().replace(",", "."))
+                else {
+                    return +Number("0")
+                }
+            }).reduce(function (sum, i) {
+                return sum + i
+            }, 0);
+            return numberWithCommas(toplam) + " TL"
+        }
+        function get_query_params(p) {
+
+            var arr = [{ verismi: "MIKTAR", deger: -9999999, deger2: 9999999, filtretipi: 3 }]
+
+            if (p.sort != null) {
+                return {
+
+                    extraParam: 'abc',
+                    search: p.search,
+                    sort: p.sort,
+                    order: p.order,
+                    limit: p.limit,
+                    offset: p.offset,
+
+                    sort: p.sort,
+
+                    filterler: arr
+                }
+            } else {
+                return {
+                    extraParam: 'abc',
+                    search: p.search,
+                    sort: p.sort,
+                    order: p.order,
+                    limit: p.limit,
+                    offset: p.offset,
+
+                    sort: "ID",
+
+                    filterler: arr
+                }
+
+            }
+        }
+
+        var kasakodu;
+        var id;
+        var $kasatable = $('#kasatable');
+        $().ready(function () {
+
+
+            $kasatable.bootstrapTable({
+  type: "POST",
+                url: "/STOKs/GetData",
+                method: 'post',
+                contentType: 'application/x-www-form-urlencoded',
+                queryParams: get_query_params,
+
+                clickToSelect: true,
+                showRefresh: true,
+
+                search: true,
+                showToggle: true,
+                showColumns: true,
+
+                searchAlign: 'left',
+                formatShowingRows: function (pageFrom, pageTo, totalRows) {
+                    return "Toplam " + totalRows+" Kayıt";
+                },
+                formatRecordsPerPage: function (pageNumber) {
+                    return pageNumber + " Adet Listeleniyor";
+                },
+
+            });
+
+            $kasatable.on('click-row.bs.table', function (e, row, $element) {
+
+                kasakodu = row.STOKODU;
+
+
+
+            });
+            $kasatable.on('  dbl-click-row.bs.table', function (e, row, $element) {
+                kasakodu = row.STOKODU;
+
+
+                document.getElementById(id).innerHTML = kasakodu;
+
+                $('#ModalStokSec').modal('hide');
+
+            });
+
+        });
+         function stoklistele(gelen) {
+
+             id = gelen;
+
+
+
+        }
+        function butonkasagetir() {
+
+
+
+            document.getElementById(id).innerHTML = kasakodu;
+            document.getElementById("ModalStokSec").style.display = "none";
+
+
+        }
+     function butongonder() {
+            var kod = "";
+            var senaryo = document.getElementById("gonderimsenaryo").options[document.getElementById("gonderimsenaryo").selectedIndex].value;
+            var gonderimtipi = document.getElementById("gonderimtipi");
+            var tip = gonderimtipi.options[gonderimtipi.selectedIndex].value;
+
+
+
+
+
+            var arr = [];
+
+
+            var oTable = document.getElementById('bootstrap-table');
+
+            //gets rows of table
+            var rowLength = oTable.rows.length;
+
+            //loops through rows
+            for (i = 1; i < rowLength; i++) {
+
+                //gets cells of current row
+                var oCells = oTable.rows.item(i).cells;
+
+                //gets amount of cells of current row
+                var cellLength = oCells.length;
+
+                var Malhizmet;
+                var Miktar;
+                var Birim;
+
+
+                var Fiyat;
+                var İskonto;
+                var İskontotutar;
+                var Kdv = "0.00";
+                var Kdvtutar = "0.00";
+                var Tevfikat = "0.00";
+                var TevfikatOran = "0.00";
+                var TevfikatTutar = "0.00";
+                var Teslimsartı = "";
+                var Gtipno = "";
+                var Esyanıngonderimsekli = "";
+                var Esyanınbulundugukabınsekli = "";
+                var Kapadet = "";
+                var Digervergi = "0.00";
+                var Toplam;
+                var StokKod;
+                //loops through each cell in current row
+                for (var j = 0; j < cellLength; j++) {
+
+                    // get your cell info here
+
+
+                    var cellVal = oCells.item(j).innerHTML;
+
+
+                        if (j == 0)
+                            Malhizmet = oCells.item(j).innerHTML;
+                        if (j == 1)
+                            Miktar = oCells.item(j).innerHTML;
+                        if (j == 2)
+                            Birim = oCells.item(j).innerHTML;
+                        if (j == 3)
+                            Fiyat = oCells.item(j).innerHTML;
+                        if (j == 4)
+                            İskonto = oCells.item(j).innerHTML;
+                        if (j == 5)
+                            İskontotutar = oCells.item(j).innerHTML;
+                        if (j == 6)
+                            Kdv = oCells.item(j).innerHTML;
+                        if (j == 7)
+                            Kdvtutar = oCells.item(j).innerHTML;
+
+                    if (j == 8)
+                        Toplam = oCells.item(j).innerHTML;
+                    if (j == 10)
+                        StokKod = oCells.item(j).innerHTML;
+
+
+                }
+                arr.push({ MALHIZMET: Malhizmet, MIKTAR: Miktar, BIRIM: Birim, FIYAT: Fiyat, ISKONTO: İskonto, ISKONTOTUTAR: İskontotutar, KDVORANI: Kdv, KDVTUTAR: Kdvtutar, TEVFIKAT: Tevfikat, TEVFIKATORAN: TevfikatOran, TEVFIKATTUTAR: TevfikatTutar, TESLIMSARTI: Teslimsartı, GTIP: Gtipno, ESYANINGONDERIMSEKLI: Esyanıngonderimsekli, ESYANINBULUNDUGUKAP: Esyanınbulundugukabınsekli, KAPADET: Kapadet,TOPLAM:Toplam, STOKKOD: StokKod });
+
+            }
+         toastr['warning']("Lütfen Bekleyin..");
+
+            $.ajax({
+                type: "POST",
+
+
+                dataType: "json",
+                contentType: "application/json; charset=utf-8",
+                url: "/FATURA/stokeslepost/",
+                data: JSON.stringify({
+
+
+                    GONDERIMTIPI: "",
+                    GONDERIMSEKLI: "",
+                    GONDERIMSENARYO:"",
+                    KOD: "",
+                    UUID: document.getElementById("FATETT").value,
+                    TEVFIKAT3: "",
+                    TEVFIKAT5: "",
+                    TEVFIKAT7: "",
+                    TEVFIKAT9: "",
+                    ISTISNA:"",
+                    KDV1: "",
+                    KDV8:"",
+                    KDV18:"",
+                    TOPLAMKDV:"",
+                    MATRAH:"",
+                    ISKONTOTOPLAM: "",
+                    MALHIZMET: "",
+                    ODENCEKTUTAR: "",
+                    CARIKOD: document.getElementById("CariKodu").value,
+                     TIPI: @tip,
+                    PARABIRIMI: document.getElementById("ParaBirimi").options[document.getElementById("ParaBirimi").selectedIndex].innerHTML,
+                    PARABIRIMIKUR: document.getElementById("ParaBirimiKuru").value,
+                    FISNO: document.getElementById("FATNO").value,
+                    TARIH: (document.getElementById("Tarih").value),
+                    ODEMETARIHI:"",
+                    NOT: document.getElementById("Not").value,
+                    SORUMLULUK_MERKEZI: "",
+                    gelenhareket: arr,
+
+
+                    }),
+
+            success: function (result) {
+                toastr['success']("Başarıyla Eşlendi");
+                    },
+                error: function (result) {
+                        toastr('error')("Başarısız!");
+                    }
+            });
+
+        }
+    </script>
+
+}
+
+

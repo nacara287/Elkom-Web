@@ -1,0 +1,358 @@
+﻿@model IEnumerable<And.ElkomMuhasebe.Core.Model.Entity.FirmaDB.SIPARIS_FIS>
+
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/yeni.cshtml";
+}
+
+<h2>Index</h2>
+
+<p>
+    @Html.ActionLink("Create New", "Create")
+</p>
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.TIP)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.deleted)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.CARIKOD)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.TARIH)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.OZELKOD)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.ACIKLAMA)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.DEPO)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.ODEMETARIHI)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.KDVDAHIL)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.IADE)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.MUHASEBEDURUM)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.TOPLAMTUTAR)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.KDVMATRAHI)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.KDVTUTARI)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.GENELTOPLAM)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.TESLIMALAN)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.YAZIILE)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.MASRAFTUTARI)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.ACIKKAPALI)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.SIPNOSOL)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.SIPARISNO)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.SIPNOSAG)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.PARAKUR)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.DOVIZ_GENELTOPLAM)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.PARABIRIMI)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.ISKTOPLAM)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.ISK1TOP)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.ISK2TOP)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.ARATOPLAM)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.DURUM)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.PERSONEL)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.TESLIMSURESI)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.OPSIYON)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.GENELACIKLAMA)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.KDV)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.TESLIM_YERI)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.NAKLIYESI)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.ISKONTO)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.MASRAF)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.FORM_NO)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.TEKLIF_NO)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.REVIZYON_NO)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.REVIZYON_TARIH)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.MUHATTAP)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.S_MERKEZI)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.KABUL)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.DUZLEME_ISKONTO)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.RED_EDILDI)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.RED_TARIHI)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.RED_ACIKLAMA)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.WEB_DURUM)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.CreateDate)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.CreateUserID)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.UpdateDate)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.UpdateUserID)
+        </th>
+        <th></th>
+    </tr>
+
+@foreach (var item in Model) {
+    <tr>
+        <td>
+            @Html.DisplayFor(modelItem => item.TIP)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.deleted)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.CARIKOD)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.TARIH)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.OZELKOD)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.ACIKLAMA)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.DEPO)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.ODEMETARIHI)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.KDVDAHIL)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.IADE)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.MUHASEBEDURUM)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.TOPLAMTUTAR)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.KDVMATRAHI)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.KDVTUTARI)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.GENELTOPLAM)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.TESLIMALAN)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.YAZIILE)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.MASRAFTUTARI)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.ACIKKAPALI)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.SIPNOSOL)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.SIPARISNO)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.SIPNOSAG)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.PARAKUR)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.DOVIZ_GENELTOPLAM)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.PARABIRIMI)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.ISKTOPLAM)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.ISK1TOP)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.ISK2TOP)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.ARATOPLAM)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.DURUM)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.PERSONEL)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.TESLIMSURESI)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.OPSIYON)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.GENELACIKLAMA)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.KDV)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.TESLIM_YERI)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.NAKLIYESI)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.ISKONTO)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.MASRAF)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.FORM_NO)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.TEKLIF_NO)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.REVIZYON_NO)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.REVIZYON_TARIH)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.MUHATTAP)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.S_MERKEZI)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.KABUL)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.DUZLEME_ISKONTO)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.RED_EDILDI)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.RED_TARIHI)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.RED_ACIKLAMA)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.WEB_DURUM)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.CreateDate)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.CreateUserID)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.UpdateDate)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.UpdateUserID)
+        </td>
+        <td>
+            @Html.ActionLink("Edit", "Edit", new { id=item.ID }) |
+            @Html.ActionLink("Details", "Details", new { id=item.ID }) |
+            @Html.ActionLink("Delete", "Delete", new { id=item.ID })
+        </td>
+    </tr>
+}
+
+</table>

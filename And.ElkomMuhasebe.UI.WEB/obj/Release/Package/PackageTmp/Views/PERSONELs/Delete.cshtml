@@ -1,0 +1,329 @@
+﻿@model And.ElkomMuhasebe.Core.Model.Entity.FirmaDB.PERSONEL
+
+@{
+    ViewBag.Title = "Delete";
+    Layout = "~/Views/Shared/yeni.cshtml";
+}
+
+<h2>Delete</h2>
+
+<h3>Are you sure you want to delete this?</h3>
+<div>
+    <h4>PERSONEL</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.AD)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.AD)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.deleted)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.deleted)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.SOYAD)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.SOYAD)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.ADISOYADI)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.ADISOYADI)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.PERSONELKODU)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.PERSONELKODU)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.EVTEL)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.EVTEL)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.MOBIL)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.MOBIL)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.GOREVI)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.GOREVI)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.DOGUMTARIHI)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.DOGUMTARIHI)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.CINSIYET)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.CINSIYET)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.ISTIHBARAT)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.ISTIHBARAT)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.TOPLAMBORC)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.TOPLAMBORC)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.TOPLAMALACAK)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.TOPLAMALACAK)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.BAKIYE)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.BAKIYE)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.EVPOSTAKODU)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.EVPOSTAKODU)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.EVADRES2)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.EVADRES2)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.EVADRES1)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.EVADRES1)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.EVIL)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.EVIL)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.EVILCE)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.EVILCE)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.EVILGOS)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.EVILGOS)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.E_POSTA)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.E_POSTA)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.KOD1)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.KOD1)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.KOD2)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.KOD2)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.KOD3)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.KOD3)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.KOD4)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.KOD4)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.SSKNO)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.SSKNO)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.KIMLIKNO)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.KIMLIKNO)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.IS_BAS_TARIHI)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.IS_BAS_TARIHI)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.MAASGUNU)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.MAASGUNU)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.MAAS)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.MAAS)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.RESIM)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.RESIM)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.AKTIF)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.AKTIF)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.SATIS_KOTASI)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.SATIS_KOTASI)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.IS_AYRILMA_TARIHI)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.IS_AYRILMA_TARIHI)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.CreateDate)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.CreateDate)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.CreateUserID)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.CreateUserID)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.UpdateDate)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.UpdateDate)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.UpdateUserID)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.UpdateUserID)
+        </dd>
+
+    </dl>
+
+    @using (Html.BeginForm()) {
+        @Html.AntiForgeryToken()
+
+        <div class="form-actions no-color">
+            <input type="submit" value="Delete" class="btn btn-default" /> |
+            @Html.ActionLink("Back to List", "Index")
+        </div>
+    }
+</div>

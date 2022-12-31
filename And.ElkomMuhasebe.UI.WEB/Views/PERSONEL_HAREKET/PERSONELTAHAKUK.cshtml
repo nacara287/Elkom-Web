@@ -1,0 +1,574 @@
+﻿@model And.ElkomMuhasebe.UI.WEB.Controllers.PERSONEL_HAREKETController.modelimiz
+@{
+    ViewBag.Title = "Personel Tahakkuk";
+    Layout = "~/Views/Shared/yeni.cshtml";
+
+
+}
+
+
+
+<!-- Fiş bilgileri -->
+<div class="card">
+    <div class="card-body p-3">
+        <div class="form-row">
+            <div class="form-group col-md-3">
+                <label>Personel Bilgileri</label>
+                <select id="CariKodu" onchange="carikurgetir()"  class="form-control  select2bs4" style="width: 100%;">
+                </select>
+            </div>
+            <div class="form-group col-md-2">
+                <label>Fiş Numarası</label>
+                <input id="FisNo" type="text" class="form-control form-control-sm" placeholder="Fiş Numarası" readonly required="" value="@("PERTHKFIS" + (Model.PERSONEL_MAAS_TAHAKKUKS+1))">
+            </div>
+            <div class="form-group col-md-2">
+                <label>Fiş Tarihi</label>
+                <input id="Tarih" type="datetime-local" class="form-control form-control-sm" value="@DateTime.Now.Year.ToString("D" + 4)-@DateTime.Now.Month.ToString("D" + 2)-@DateTime.Now.Day.ToString("D" + 2)@Html.Raw("T")@DateTime.Now.Hour.ToString("D" + 2):@DateTime.Now.Minute.ToString("D" + 2)">
+            </div>
+            <div class="form-group col-md-2">
+
+                <label>Dönem</label>
+                <select id="donem" class="form-control">
+                    <option value="1">Ocak</option>
+                    <option value="2">Şubat</option>
+                    <option value="3">Mart</option>
+                    <option value="4">Nisan</option>
+                    <option value="5">Mayıs</option>
+                    <option value="6">Haziran</option>
+                    <option value="7">Temmuz</option>
+                    <option value="8">Ağustos</option>
+                    <option value="9">Eylül</option>
+                    <option value="10">Ekim</option>
+                    <option value="11">Kasım</option>
+                    <option value="12">Aralık</option>
+
+                </select>
+
+
+
+            </div>
+            <div class="form-group col-md-2">
+
+
+                <label>Aylık Maaşı</label>
+                <input id="Maası" onchange="maasgetir()" type="text" class="form-control form-control-sm" placeholder="Maaş" required="" value="0">
+
+            </div>
+            <div class="form-group col-md-2">
+
+                <label>Maaş Günü</label>
+                <input id="MaasGunu" onchange="maasgetir()" type="text" class="form-control form-control-sm" placeholder="Çalıştığı Gün" required="" value="30">
+
+
+
+            </div>
+
+
+
+            <div class="form-group col-md-2">
+                <label>Çalıştığı Güne Göre Maaş Tutarı</label>
+                <input id="MaasGunuTutarı" type="text" readonly class="form-control form-control-sm" placeholder="Çalıştığı Güne Göre Maaş Tutarı" required="" value="">
+            </div>
+
+
+
+            <div class="form-group col-md-2">
+                <label>Sorumluluk Merkezi</label>
+                <select id="Smerkezi" class="form-control form-control-sm">
+                    @{ if (Model.sORUMLULUK_MERKEZIs != null)
+                        {
+                            foreach (var item in Model.sORUMLULUK_MERKEZIs)
+                            {
+                                <option>@item.ACIKLAMA</option>
+                            }
+                        }
+                    }
+                </select>
+            </div>
+            <div class="form-group col-md-3">
+                <label>Fiş Notu</label>
+                <input id="Not" type="text" class="form-control form-control-sm" placeholder="Not">
+            </div>
+        </div>
+        <!-- Liste -->
+        <div class="table-responsive">
+            <table id="bootstrap-table" class="table">
+                <thead>
+                    <tr>
+                        <th data-field="HAREKET" class="text-center" data-sortable="true">HAREKET</th>
+
+
+                        <th data-field="ACIKLAMA" data-sortable="true">AÇIKLAMA</th>
+                        <th data-field="MIKTAR" data-sortable="true" data-footer-formatter="priceFormatter">Birim Miktar</th>
+                        <th data-field="FIYAT" data-sortable="true" data-footer-formatter="priceFormatter">Birim Ücret</th>
+                        <th data-field="BIRIM" data-sortable="true" data-footer-formatter="priceFormatter">Birim</th>
+                        <th data-field="TUTAR" data-sortable="true" data-footer-formatter="priceFormatter">NET TUTAR</th>
+
+                        <th width="8%&quot;"></th>
+                    </tr>
+                    <tr>
+                        <td>
+                            <select class="custom-select custom-select-sm" name="Hareket" id="Hareket">
+
+                                @foreach (var item in Model.PERSONEL_HAREKETTIPLERI)
+                                {
+                                    <option value="@item.ID">@item.HAREKETADI</option>
+
+                                }
+
+                            </select>
+                        </td>
+
+
+                        <td>
+                            <input type="text" class="form-control form-control-sm" value="Açıklama" id="Açıklama">
+                        </td>
+                        <td>
+                            <input type="text" class="form-control form-control-sm text-right" value="0.00" name="Miktar" id="Miktar" onchange="tutargetir()" placeholder="Miktar" required="">
+                        </td>
+                        <td>
+                            <input type="text" class="form-control form-control-sm text-right" value="0.00" name="Fiyat" id="Fiyat" onchange="tutargetir()" placeholder="Birim Ücreti" required="">
+                        </td>
+                        <td>
+                            <select class="custom-select custom-select-sm" name="Birimi" id="Birimi" onchange="tutargetir()">
+                                <option>Gün</option>
+                                <option>Saat</option>
+                                <option>Dönem</option>
+                                <option>Ay</option>
+                            </select>
+                        </td>
+
+
+
+                        <td>
+                            <div class="input-group">
+                                <span class="input-group-addon">₺</span>
+                                <input type="text" class="form-control form-control-sm text-right" value="0.00" name="NetTutar" id="NetTutar" readonly placeholder="Net Tutar">
+                            </div>
+
+                        </td>
+                        <td w="">
+                            <button type="button" id="addRowBtn" onclick="butonlistele()"  class="btn btn-success btn-sm btn-rounded">
+                                <span class="icon text-white-50">
+                                    <i class="fas fa-plus"></i>
+                                </span>
+                            </button>
+
+                        </td>
+                    </tr>
+                </thead>
+                <tbody>
+                </tbody>
+            </table>
+        </div>
+
+
+    </div>
+    <!-- Alt toplamlar -->
+    <div class="card-footer ">
+        <div class="row">
+            <div class="col-md-6">
+                <p> </p>
+                <p></p>
+                <p> </p>
+            </div>
+            <div class="col-md-6">
+                <div class="form-group row mb-1">
+                    <label for="toplam" class="col-sm-6 text-right col-form-label">Toplam Tutar</label>
+                    <div class="col-sm-6">
+                        <input type="text" id="toplam" class="form-control text-right form-control-sm" placeholder="0.00" readonly>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!-- butonlar -->
+<div class="py-2">
+    <button aria-label="" class="btn btn-primary " onclick="butongonder(this)">
+        <span class="icon text-white-50">
+            <i class="fas fa-save"></i>
+        </span>
+        <span class="text">Kaydet</span>
+    </button>
+    <a aria-label="" class="btn btn-secondary " href="@Url.RequestContext.HttpContext.Request.Url.ToString()" type="reset">
+        <span class="icon text-white-50">
+            <i class="fas fa-power-off"></i>
+        </span>
+        <span class="text">İptal</span>
+    </a>
+</div>
+
+
+
+@section script{
+    <script type="text/javascript">
+
+
+
+        var bakiyefiltre = null;
+        var carid;
+        var caridg;
+        var carikodu;
+        var kasaid;
+        var kasadg;
+        var kasakodu;
+        var $table = $('#bootstrap-table');
+        var $caritable = $('#caritablo');
+
+        var parakuru;
+
+        function carikurgetir() {
+            $.ajax({
+                type: "POST",
+
+                dataType: "json",
+                contentType: "application/json; charset=utf-8",
+                url: "/PERSONELS/maasgetir/",
+                data: JSON.stringify({
+                    kod: document.getElementById("CariKodu").options[document.getElementById("CariKodu").selectedIndex].value
+                }),
+                success: function (result) {
+                   document.getElementById("Maası").value = result;
+
+
+                    maasgetir();
+                },
+                error: function (result) {
+                    toastr["error"]('error');
+                }
+
+            })
+        };
+
+        $('.select2').select2()
+
+
+
+        //Initialize Select2 Elements
+        $('.select2bs4').select2({
+            theme: 'bootstrap4',
+            placeholder: "Personel adı veya kodu ile ara",
+            ajax: {
+                url: '/PERSONELS/getpersonel',
+                processResults: function (data) {
+                    // Transforms the top-level key of the response object from 'items' to 'results'
+                    return {
+                        results: data
+
+                    };
+                }
+                // Additional AJAX parameters go here; see the end of this chapter for the full code of this example
+            }
+        })
+   
+        function maasgetir() {
+            document.getElementById("MaasGunuTutarı").value=     parseFloat(document.getElementById("Maası").value) / 30 * parseFloat(document.getElementById("MaasGunu").value)
+            yenile();
+        }
+
+          function tutargetir() {
+
+            document.getElementById("NetTutar").value = parseFloat(document.getElementById("Fiyat").value) *parseFloat(document.getElementById("Miktar").value);
+            }
+        function butoncarigetir() {
+
+            carid = caridg;
+            document.getElementById("CariKodu").value = carikodu;
+            document.getElementById("ModalCariSec").style.display = "none";
+
+
+        }
+
+        function addRow(tableID) {
+
+            var table = document.getElementById(tableID);
+
+            var rowCount = table.rows.length;
+            var row = table.insertRow(rowCount);
+
+            var cell1 = row.insertCell(0);
+            var element1 = document.createElement("input");
+            element1.type = "text";
+            element1.name = "txtbox[]";
+            cell1.appendChild(element1);
+
+            var cell2 = row.insertCell(1);
+            var element2 = document.createElement("input");
+            element2.type = "text";
+            element2.name = "txtbox[]";
+            cell2.appendChild(element2);
+
+            var cell3 = row.insertCell(2);
+            var element3 = document.createElement("input");
+            element3.type = "text";
+            element3.name = "txtbox[]";
+            cell3.appendChild(element3);
+            var cell4 = row.insertCell(3);
+            var element4 = document.createElement("input");
+            element4.type = "text";
+            element4.name = "txtbox[]";
+            cell4.appendChild(element4);
+
+            var cell5 = row.insertCell(4);
+            var element5 = document.createElement("input");
+            element5.type = "text";
+            element5.name = "txtbox[]";
+            cell5.appendChild(element5);
+
+            var cell6 = row.insertCell(5);
+            var element6 = document.createElement("input");
+            element6.type = "text";
+            element6.name = "txtbox[]";
+            cell6.appendChild(element6);
+            var cell7 = row.insertCell(6);
+            var element7 = document.createElement("input");
+            element7.type = "text";
+            element7.name = "txtbox[]";
+            cell7.appendChild(element7);
+
+        }
+
+        $().ready(function () {
+
+            $caritable.bootstrapTable({
+
+
+                clickToSelect: true,
+
+
+                search: true,
+
+
+                pagination: true,
+                searchAlign: 'left',
+                pageSize: 8,
+
+                pageList: [8, 10, 25, 50, 100],
+                locale: 'tr-TR',
+                formatShowingRows: function (pageFrom, pageTo, totalRows) {
+                    return "Toplam " + totalRows+" Kayıt";
+                },
+                formatRecordsPerPage: function (pageNumber) {
+                    return pageNumber + " Adet Listeleniyor";
+                },
+
+            });
+
+            $caritable.on('click-row.bs.table', function (e, row, $element) {
+                caridg = row.ID;
+                 carid = row.ID;
+                carikodu = row.CARIKOD;
+                parakuru = row.PARABIRIMI;
+                document.getElementById("Maası").value = row.MAAS;
+                maasgetir();
+            });
+            $caritable.on('  dbl-click-row.bs.table', function (e, row, $element) {
+                carid = row.ID;
+                parakuru = row.PARABIRIMI;
+                document.getElementById("CariKodu").value = row.CARIKOD;
+                document.getElementById("Maası").value = row.MAAS;
+                     $('#ModalCariSec').modal('hide');
+                       var sel = document.getElementById("ParaBirimi");
+                maasgetir();
+            });
+
+            //activate the tooltips after the data table is initialized
+            $('[rel="tooltip"]').tooltip();
+
+            $(window).resize(function () {
+                $caritable.bootstrapTable('resetView');
+            });
+
+
+
+
+
+        })
+        function butonlistele() {
+
+            $table.append('<tr data-index="0"><td>' + document.getElementById('Hareket').options[document.getElementById('Hareket').selectedIndex].text + '</td><td>' + document.getElementById('Açıklama').value + '</td><td>' + document.getElementById('Fiyat').value + '</td><td>' + document.getElementById('Miktar').value + '</td><td>' + document.getElementById('Birimi').options[document.getElementById('Birimi').selectedIndex].text + '</td><td class="countable">'+document.getElementById('NetTutar').value+'</td><td> <button  type="button" id="deleteRowBtn" onclick="deleteRow(this)" class="btn btn-danger btn-sm btn-rounded">  <span class="icon text-white-50">    <i class="fas fa-trash-alt"></i> </span></button></td></tr>');
+            yenile();
+
+
+
+
+
+
+        }
+            function yenile() {maskla();
+                var sum = 0;
+
+                var table = document.getElementById("bootstrap-table");
+                var ths = table.getElementsByTagName('th');
+                var tds = table.getElementsByClassName('countable');
+
+                for (var i = 0; i < tds.length; i++) {
+                    sum += isNaN(tds[i].innerText) ? 0 : parseFloat(tds[i].innerText);
+                }
+                sum += parseFloat(document.getElementById("MaasGunuTutarı").value);
+                document.getElementById("toplam").value = numberformatter(sum);
+
+
+            }
+        function deleteRow(btn) {
+  var row = btn.parentNode.parentNode;
+            row.parentNode.removeChild(row);
+                yenile();
+}
+        function butongonder(buton) {
+        
+            var arr = [];
+
+
+            var oTable = document.getElementById('bootstrap-table');
+
+            //gets rows of table
+            var rowLength = oTable.rows.length;
+
+            //loops through rows
+            for (i = 2; i < rowLength; i++) {
+
+                //gets cells of current row
+                var oCells = oTable.rows.item(i).cells;
+
+                //gets amount of cells of current row
+                var cellLength = oCells.length;
+
+                //loops through each cell in current row
+                for (var j = 0; j < cellLength; j++) {
+
+                    // get your cell info here
+
+                    var cellVal = oCells.item(j).innerHTML;
+                    var cellVal = oCells.item(j).innerHTML;
+                    var Hareket;
+
+
+                    var Acıklama;
+                    var Miktar;
+                    var Fiyat;
+                    var Birim;
+
+                    var NetTutar;
+                    if (j == 0)
+                        Hareket = oCells.item(j).innerHTML;
+                    if (j == 1)
+                        Acıklama = oCells.item(j).innerHTML;
+
+                    if (j == 2)
+                        Miktar = oCells.item(j).innerHTML;
+
+                    if (j == 3)
+                        Fiyat = oCells.item(j).innerHTML;
+                    if (j == 4)
+                        Birim = oCells.item(j).innerHTML;
+
+                     if (j == 5)
+                        NetTutar = oCells.item(j).innerHTML;
+
+                }
+                arr.push({ HAREKET: Hareket, ACIKLAMA: Acıklama, MIKTAR: Miktar, FIYAT: Fiyat, BIRIM: Birim, NETTutar: NetTutar });
+            }
+
+
+            if (document.getElementById("CariKodu").options[document.getElementById("CariKodu").selectedIndex] == null) {
+                toastr["error"]('Lütfen Personel Seçiniz!');
+            } else {
+                buton.disabled = true;
+                $.ajax({
+                    type: "POST",
+
+
+                    dataType: "json",
+                    contentType: "application/json; charset=utf-8",
+                    url: "/PERSONEL_HAREKET/tahakukdatagonder/",
+                    data: JSON.stringify({
+                        PERSONELKOD: document.getElementById("CariKodu").value,
+                        FISNO: document.getElementById("FisNo").value,
+                        DONEM: document.getElementById("donem").options[document.getElementById("donem").selectedIndex].value,
+                        TARIH: (document.getElementById("Tarih").value ),
+                        MAASTUTAR: document.getElementById("MaasGunuTutarı").value,
+                        MAASGUNU: document.getElementById("MaasGunu").value,
+                        MAAS: document.getElementById("Maası").value,
+                        TOPLAMTAHAKUK: document.getElementById("toplam").value,
+                        NOT: document.getElementById("Not").value,
+                        SORUMLULUK_MERKEZI: document.getElementById("Smerkezi").value,
+                        gelenhareket: arr,
+
+
+                    })
+                    ,
+                    success: function (result) {
+                        historysend("/PERSONEL_HAREKET/PERSONELTAHAKKUKLISTE");
+                        toastr["success"]("Başarıyla Kayıt Edildi!");
+                    },
+                    error: function (result) {
+                        toastr["error"]('Lütfen Bilgileri Eksik  Ya da Yanlış Girmeyiniz');
+                    }
+                });
+            }
+        }
+
+        function idFormatter() {
+            return 'Toplam'
+        }
+
+        function nameFormatter(data) {
+            return data.length
+        }
+
+            function numberformatter(value, row, index) {
+                if (!value)
+                    return "0.00";
+                else {
+                    return [
+
+                        numberWithCommas((Number(value.toString().replace(",", "."))).toFixed(2))
+                    ].join('');
+                }
+            }
+            function numberWithCommas(x) {
+                return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+            }
+            function priceFormatter(data) {
+                var field = this.field
+
+                var toplam = data.map(function (row) {
+                    if (row[field])
+                        return +Number(row[field].toString().replace(",", "."))
+                    else {
+                        return +Number("0")
+                    }
+                }).reduce(function (sum, i) {
+                    return sum + i
+                }, 0);
+                return numberWithCommas(toplam) + " TL"
+            }
+
+        function footerStyle(column) {
+            return {
+                id: {
+                    classes: 'uppercase'
+                },
+                name: {
+                    css: { 'font-weight': 'normal' }
+                },
+                price: {
+                    css: { color: 'red' }
+                }
+            }[column.field]
+        }
+
+
+    </script>
+}
+
+
+
+
+
+

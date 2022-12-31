@@ -1,0 +1,71 @@
+﻿@model And.ElkomMuhasebe.Core.Model.Entity.Admin.User
+@{
+    ViewBag.Title = "Elkom Web Giriş";
+
+    Layout = "~/Views/Shared/_Layout1.cshtml";
+}
+
+@{
+    if (ViewBag.Error != null)
+    {
+        <div class="alert alert-danger">
+            @ViewBag.Error
+        </div>
+    }
+}
+
+<div class="card card-outline card-primary">
+    <div class="card-header text-center">
+      <a href="/" class="h1"><b>Elkom Web</b> Portal</a>
+    </div>
+    <div class="card-body">
+      <p class="login-box-msg">Oturum bilgilerinizi giriniz.</p>
+      <form action="/Uye-Giris" method="post">
+        <div class="input-group mb-3">
+          <input type="text"  name="username" id="username"  class="form-control" value="demo" placeholder="Kullanıcı adınızı giriniz">
+          <div class="input-group-append">
+            <div class="input-group-text">
+              <span class="fas fa-envelope"></span>
+            </div>
+          </div>
+        </div>
+        <div class="input-group mb-3">
+          <input class="form-control" name="password" id="password" type="password" value="demo" placeholder="Şifrenizi giriniz">
+          <div class="input-group-append">
+            <div class="input-group-text">
+              <span class="fas fa-lock"></span>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-8">
+            <div class="icheck-primary">
+              <input type="checkbox" id="remember">
+              <label for="remember">
+                Beni hatırla
+              </label>
+            </div>
+          </div>
+          <!-- /.col -->
+          <div class="col-4">
+            <button type="submit" class="btn btn-primary btn-block">Giriş Yap</button>
+          </div>
+          <!-- /.col -->
+        </div>
+      </form>
+
+      <p class="mb-1">
+        <a href="#" disabled="disabled">Şifremi unuttum</a>
+      </p>
+      <p class="mb-0">
+        <a href="/Uye-Kayit" class="text-center">Kayıt</a>
+      </p>
+    </div>
+    <!-- /.card-body -->
+  </div>
+
+<script type="text/javascript">
+    if (document.getElementById("loginbody") == null) {
+        location.reload();
+    }
+</script>

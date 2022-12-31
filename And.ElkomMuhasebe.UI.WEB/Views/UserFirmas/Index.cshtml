@@ -1,0 +1,74 @@
+﻿@model IEnumerable<And.ElkomMuhasebe.Core.Model.Entity.Admin.UserFirma>
+
+@{
+    ViewBag.Title = "Index";
+}
+
+<h2>Firmalarım</h2>
+
+<p>
+    @Html.ActionLink("Yeni Firma Oluştur", "Create")
+</p>
+<form action="/FirmaSec" method="post">
+    <h>Kullanılan Firmayı Seç:</h>
+    <select id="Select1" name="firmasecim">
+        @foreach (var item in Model)
+        {
+            <option>@item.Companyname</option>
+}
+
+    </select><input id="Submit1" type="submit" value="Kaydet" />
+</form>
+<div class="card bootstrap-table">
+    <div class="card-body table-full-width">
+        <table class="table table-sm table-striped table-hover border-bottom">
+            <thead>
+                <tr>
+
+                    <th>
+                        @Html.DisplayName("Şirket İsmi")
+                    </th>
+                    <th>
+                        @Html.DisplayName("Şirket Kullanılıyor")
+                    </th>
+                    <th>
+                        @Html.DisplayName("Oluşturulma Tarihi")
+                    </th>
+                  
+                    <th>
+                        @Html.DisplayName("Güncellenme Tarihi")
+                    </th>
+                 
+                    <th></th>
+                </tr>
+            </thead>
+            @foreach (var item in Model)
+            {
+                <tr>
+
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Companyname)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Using)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.CreateDate)
+                    </td>
+              
+                    <td>
+                        @Html.DisplayFor(modelItem => item.UpdateDate)
+                    </td>
+                 
+                    <td>
+                        
+                        @Html.ActionLink("Düzenle", "Edit", new { id = item.ID }) |
+                        @Html.ActionLink("Detaylar", "Details", new { id = item.ID }) |
+                        @Html.ActionLink("Sil", "Delete", new { id = item.ID })
+                    </td>
+                </tr>
+            }
+
+        </table>
+    </div>
+</div>

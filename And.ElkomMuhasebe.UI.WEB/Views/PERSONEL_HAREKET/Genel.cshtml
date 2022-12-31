@@ -1,0 +1,466 @@
+﻿@model And.ElkomMuhasebe.UI.WEB.Controllers.CARI_HAREKETController.yenimodel
+@{
+    ViewBag.Title = "Genel Personel Hareketleri";
+    ViewBag.Extra = " " + Model.kodu + "-" + Model.ismi;
+    Layout = "~/Views/Shared/yeni.cshtml";
+}
+
+
+<!-- Butonlar -->
+<div class="card border-0 mb-2 bg-transparent shadow-none">
+    <div class="card-body p-0 ">
+        <a id="carilistesi" href="/PERSONELS/" class="btn btn-sm btn-secondary  mr-1">
+            <span class="icon">
+                <i class="fas fa-list"></i>
+            </span>
+            <span class="text">Personel Listesi</span>
+        </a>
+      
+
+        <a class="btn btn-sm btn-primary btn-icon-split float-right collapsed" data-toggle="collapse" href="#collapseFiltre" role="button" aria-expanded="false" aria-controls="collapseCariHareketFiltre">
+            <span class="icon">
+                <i class="fas fa-filter"></i>
+            </span>
+            <span class="text">Filtre</span>
+        </a>
+    </div>
+</div>
+<!-- Filtreler -->
+<div class="row">
+    <div class="col">
+        <div class="collapse" id="collapseFiltre" style="">
+            
+            <div class="card card-body p-2  mb-2">
+                <div class="row pb-2">
+                    <div class="col-6 mb-2">
+                        <div class="input-group input-group-sm">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text">Tarih</span>
+                            </div>
+                            <input type="date" id="ilktarih" aria-label="First name" value="@DateTime.Now.Year.ToString("D" + 4)-01-01" class="form-control">
+                            <input type="date" id="sontarih" aria-label="Last name" value="@DateTime.Now.Year.ToString("D" + 4)-@DateTime.Now.Month.ToString("D" + 2)-@DateTime.Now.Day.ToString("D" + 2)" class="form-control">
+                        </div>
+                    </div>
+                    <div class="col-6 mb-2">
+                        <div class="input-group input-group-sm">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text">S. Merkezi</span>
+                            </div>
+                            <select name="smerkezi" id="semerkezi_id" class="form-control form-control-sm">
+                                <option value="0">Tümü</option>
+                                @foreach (var item in Model.sORUMLULUK_MERKEZIs)
+                                {
+                                    <option value="@item.ID">@item.ACIKLAMA</option>
+                                }
+
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-6 mb-2">
+                        <div class="card">
+                            <div class="card-header filtre-card-header">
+                                İşlem Türleri
+                            </div>
+                            <div class="card-body filtre-card-body">
+                                <div class="row no-gutters">
+                                    <div class="col-md-4">
+                                        <div class="form-check form-check-inline">
+                                            <input class="form-check-input" id="türdevir" type="checkbox" value="0" checked>
+                                            <label class="form-check-label" for="türdevir">Devir</label>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="form-check form-check-inline">
+                                            <input class="form-check-input" type="checkbox" id="türpersonel" value="1" checked>
+                                            <label class="form-check-label" for="türfatura">PersonelFişi</label>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="form-check form-check-inline">
+                                            <input class="form-check-input" type="checkbox" id="türmaas" value="2" checked>
+                                            <label class="form-check-label" for="türefatura">Maaşİşlemleri</label>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="form-check form-check-inline">
+                                            <input class="form-check-input" type="checkbox" id="türkasafis" value="3" checked>
+                                            <label class="form-check-label" for="türearsiv">KasaFişi</label>
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-3 mb-2">
+                        <div class="card">
+                            <div class="card-header filtre-card-header">
+                                İşlem Tipi
+                            </div>
+                            <div class="card-body filtre-card-body">
+                                <div class="row no-gutters">
+                                    <div class="col">
+                                        <div class="form-check form-check-inline">
+                                            <input class="form-check-input" type="checkbox" id="filtredevir" value="0" checked>
+                                            <label class="form-check-label" for="filtredevir">Devir</label>
+                                        </div>
+                                    </div>
+                                    <div class="col">
+                                        <div class="form-check form-check-inline">
+                                            <input class="form-check-input" type="checkbox" id="filtregiris" value="1" checked>
+                                            <label class="form-check-label" for="filtregiris">Giriş</label>
+                                        </div>
+                                    </div>
+                                    <div class="col">
+                                        <div class="form-check form-check-inline">
+                                            <input class="form-check-input" type="checkbox" id="filtrecikis" value="2" checked>
+                                            <label class="form-check-label" for="filtrcikis">Çıkış</label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <button class="btn btn-sm btn-primary" onclick="tabloyenile()">Filtreyi Uygula</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!-- Liste -->
+<div class="card">
+    <div class="">
+        <div class="table-responsive">
+            <div class="col-sm-12">
+                <table id="bootstrap-table" class="table-bordered table-sm" data-show-search-clear-button="true"
+                       data-show-footer="true" data-footer-style="footerStyle" data-show-print="true"
+                       data-single-select="true" data-show-refresh="true" data-icon-size="sm"
+                       data-side-pagination="server"
+                       data-pagination="true"
+                       data-page-size="10"
+                       data-page-list="[10, 20, 50, 100, 200, 300]" data-show-export="true" data-reorderable-columns="true">
+                    <thead>
+                        <tr>
+                         
+                            <th data-field="ID" class="text-center" data-visible="false" data-sortable="true" data-footer-formatter="idFormatter">ID</th>
+                            <th data-field="actions" class="td-actions text-right no-print" data-events="operateEvents" data-formatter="operateFormatter">İşlemler</th>
+                            <th data-field="TARIHSAAT" data-sortable="true">Tarih</th>
+                            <th data-field="PERSONELKODU" data-sortable="true">Personel Kodu</th>
+                            <th data-field="PERSONELADI" data-sortable="true">Personel Adı<a class="no-print" style="color:transparent;">-----------------------------------------</a></th>
+
+                            <th data-field="TURU" data-sortable="true">İşlem Türü</th>
+                            <th data-field="DETAY" data-sortable="true">Ayrıntı</th>
+                            <th data-field="TIPI">İşlem</th>
+                            <th data-field="DOSYANO">Belge No</th>
+                            <th data-field="ACIKLAMA">Açıklama</th>
+                            <th data-field="BORC" data-sortable="true" data-footer-formatter="priceFormatter" data-formatter="numberformatter">Borç</th>
+                            <th data-field="ALACAK" data-sortable="true" data-footer-formatter="priceFormatter" data-formatter="numberformatter">Alacak</th>
+                            <th data-field="BAKIYE" data-sortable="true" data-footer-formatter="priceFormatter" data-formatter="numberformatter">Personel Bakiye</th>
+                            <th data-field="S_MERKEZI">S Merkezi</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+
+@section script{
+    <script type="text/javascript">
+        function pad(d) {
+            return (d < 10) ? '0' + d.toString() : d.toString();
+        }
+        Date.prototype.formatMM = function () {
+            return (pad(this.getDate()) +   "/" +pad(this.getMonth() + 1) +
+
+                "/" + this.getFullYear());
+        }
+
+        function numberformatter(value, row, index) {
+            if (!value)
+                return "0.00";
+            else {
+                return [
+
+                    numberWithCommas((Number(value.toString().replace(",", "."))).toFixed(2))
+                ].join('');
+            }
+        }
+        function numberWithCommas(x) {
+            if (x != null)
+                return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+            else {
+                return 0;
+            }
+        }
+        function priceFormatter(data) {
+            var field = this.field
+
+            var toplam = data.map(function (row) {
+                if (row[field])
+                    return +Number(row[field].toString().replace(",", "."))
+                else {
+                    return +Number("0")
+                }
+            }).reduce(function (sum, i) {
+                return sum + i
+            }, 0);
+            return numberformatter(toplam) + " TL"
+        }
+        function get_query_params(p) {
+            var date = new Date($('#ilktarih').val());
+            var dateson = new Date($('#sontarih').val());
+
+            var arr = [{ verismi: "hareket.TARIHSAAT", deger: date.formatMMDDYYYY(), deger2: dateson.formatMMDDYYYY(), filtretipi: 4 }]
+            if (document.getElementById("filtredevir").checked == true)
+                arr.push({ verismi: "hareket.TIPI", deger: document.getElementById("filtredevir").value, deger2: "", filtretipi: 2 });
+            if (document.getElementById("filtregiris").checked == true)
+                arr.push({ verismi: "hareket.TIPI", deger: document.getElementById("filtregiris").value, deger2: "", filtretipi: 2 });
+            if (document.getElementById("filtrecikis").checked == true)
+                arr.push({ verismi: "hareket.TIPI", deger: document.getElementById("filtrecikis").value, deger2: "", filtretipi: 2 });
+              if (document.getElementById("türdevir").checked == true)
+                  arr.push({ verismi: "hareket.TURU", deger: document.getElementById("türdevir").value, deger2: "", filtretipi: 2 });
+            if (document.getElementById("türpersonel").checked == true)
+                arr.push({ verismi: "hareket.TURU", deger: document.getElementById("türpersonel").value, deger2: "", filtretipi: 2 });
+            if (document.getElementById("türmaas").checked == true)
+                arr.push({ verismi: "hareket.TURU", deger: document.getElementById("türmaas").value, deger2: "", filtretipi: 2 });
+            if (document.getElementById("türkasafis").checked == true)
+                arr.push({ verismi: "hareket.TURU", deger: document.getElementById("türkasafis").value, deger2: "", filtretipi: 2 });
+
+            if (p.sort != null) {
+                if (p.sort == "PERSONELADI" || p.sort == "S_MERKEZI") {
+                   return {
+
+                       extraParam: 'abc',
+                       search: p.search,
+                       sort: p.sort,
+                       order: p.order,
+                       limit: p.limit,
+                       offset: p.offset,
+
+                       sort:p.sort,
+                       id: 0,
+                       filterler: arr
+                   }
+               } else {
+                   return {
+
+                       extraParam: 'abc',
+                       search: p.search,
+                       sort: p.sort,
+                       order: p.order,
+                       limit: p.limit,
+                       offset: p.offset,
+
+                       sort: "hareket." + p.sort,
+                       id: 0,
+                       filterler: arr
+                   }
+               }
+            } else {
+                   return {
+                    extraParam: 'abc',
+                       search: p.search,
+                    sort: p.sort,
+                    order: p.order,
+                    limit: p.limit,
+                    offset: p.offset,
+
+                       sort: "ID",
+                       id: 0,
+                       filterler: arr
+                }
+
+            }
+    }
+
+
+   
+        function ajaxRequest(params) {
+            const str = window.location.href;
+
+
+            $.ajax({
+                type: "POST",
+
+
+                dataType: "json",
+                contentType: "application/json; charset=utf-8",
+                url: "/PERSONEL_HAREKET/dataham/",
+                data: JSON.stringify({
+                    ozelgenel: 0,
+                    cariid: str.substring(str.length - 1)
+
+                }),
+                success: function (result) {
+                    params.success(result)
+                },
+                error: function (result) {
+                    alert('error');
+                }
+            });
+
+        }
+
+        var $table = $('#bootstrap-table');
+
+        function operateFormatter(value, row, index) {
+            return [
+                '<div class="d-flex justify-content-start">',
+             
+                '<a rel="tooltip" title="Hareketi Düzenle"     class="btn btn-link btn-sm table-action edit" href="javascript:void(0)"><i class="fa fa-edit text-primary"></i></a>',
+                '</div>',
+            ].join('');
+        }
+
+        $().ready(function () {
+            window.operateEvents = {
+                'click .edit': function (e, value, row, index) {
+                    info = JSON.stringify(row);
+                    $.ajax({
+                        type: "POST",
+
+
+                        dataType: "json",
+                        contentType: "application/json; charset=utf-8",
+                        url: "/CARI_HAREKET/urlgetir/",
+                        data: JSON.stringify({
+                            belgeno: row.DOSYANO,
+                            türü: row.TURU
+
+                        }),
+                        success: function (result) {
+                            historysend(result);
+                        },
+                        error: function (result) {
+                            alert('error');
+                        }
+                    });
+
+
+                },
+
+            };
+
+            $table.bootstrapTable({
+                type: "POST",
+                url: "/PERSONEL_HAREKET/GetData",
+                method: 'post',
+                contentType: 'application/x-www-form-urlencoded',
+                queryParams: get_query_params,
+           printPageBuilder: function (table) {
+        return `
+<html>
+  <head>
+  <style type="text/css" media="print">
+  page {
+    size: auto;
+    margin: 25px 0 25px 0;
+  }
+  </style>
+  <style type="text/css" media="all">
+    @@media print
+{
+    .no-print, .no-print *
+    {
+        display: none !important;
+    }
+}
+  table {
+    border-collapse: collapse;
+    font-size: 12px;
+  }
+  table, th, td {
+    border: 1px solid grey;
+  }
+  th, td {
+    text-align: center;
+    vertical-align: middle;
+  }
+  p {
+    font-weight: bold;
+    margin-left:20px;
+  }
+  table {
+    width:94%;
+    margin-left:3%;
+    margin-right:3%;
+  }
+  div.bs-table-print {
+    text-align:center;
+  }
+    h1.bs-table-print {
+    text-align:center;
+  }
+ </style>
+      <title>@Session["FirmaAdı"]</title>
+     </head>
+  <body>
+     <h1 class="bs-table-print">Genel Personel Hareket Raporu</h1>
+
+  <div class="bs-table-print">  <table class="table-bordered table-sm"><thead>` + $table.children('thead').html() + '</thead><tbody>' + $table.children('tbody').html()+ "<tbody></table></div></body></html></div>"
+
+      },
+                clickToSelect: true,
+                showRefresh: true,
+
+                search: true,
+                showToggle: true,
+                showColumns: true,
+
+                searchAlign: 'left',
+
+                locale: 'tr-TR',
+                formatShowingRows: function (pageFrom, pageTo, totalRows) {
+                    return "Toplam " + totalRows+" Kayıt";
+                },
+                formatRecordsPerPage: function (pageNumber) {
+                    return pageNumber + " Adet Listeleniyor";
+                },
+
+            });
+            //activate the tooltips after the data table is initialized
+            $('[rel="tooltip"]').tooltip();
+
+            $(window).resize(function () {
+                $table.bootstrapTable('resetView');
+            });
+
+
+        })
+
+        function idFormatter() {
+            return 'Toplam'
+        }
+
+        function nameFormatter(data) {
+            return data.length
+        }
+
+
+        function footerStyle(column) {
+            return {
+                id: {
+                    classes: 'uppercase'
+                },
+                name: {
+                    css: { 'font-weight': 'normal' }
+                },
+                price: {
+                    css: { color: 'red' }
+                }
+            }[column.field]
+        }
+
+
+    </script>
+}

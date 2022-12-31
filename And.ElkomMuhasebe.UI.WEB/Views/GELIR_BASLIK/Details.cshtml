@@ -1,0 +1,122 @@
+﻿@model And.ElkomMuhasebe.Core.Model.Entity.FirmaDB.GELIR_BASLIK
+
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Details</title>
+</head>
+<body>
+    <div>
+        <h4>GELIR_BASLIK</h4>
+        <hr />
+        <dl class="dl-horizontal">
+            <dt>
+                @Html.DisplayNameFor(model => model.GELIRKODU)
+            </dt>
+    
+            <dd>
+                @Html.DisplayFor(model => model.GELIRKODU)
+            </dd>
+    
+            <dt>
+                @Html.DisplayNameFor(model => model.deleted)
+            </dt>
+    
+            <dd>
+                @Html.DisplayFor(model => model.deleted)
+            </dd>
+    
+            <dt>
+                @Html.DisplayNameFor(model => model.GELIRAD)
+            </dt>
+    
+            <dd>
+                @Html.DisplayFor(model => model.GELIRAD)
+            </dd>
+    
+            <dt>
+                @Html.DisplayNameFor(model => model.ACIKLAMA)
+            </dt>
+    
+            <dd>
+                @Html.DisplayFor(model => model.ACIKLAMA)
+            </dd>
+    
+            <dt>
+                @Html.DisplayNameFor(model => model.OZELKOD1)
+            </dt>
+    
+            <dd>
+                @Html.DisplayFor(model => model.OZELKOD1)
+            </dd>
+    
+            <dt>
+                @Html.DisplayNameFor(model => model.OZELKOD2)
+            </dt>
+    
+            <dd>
+                @Html.DisplayFor(model => model.OZELKOD2)
+            </dd>
+    
+            <dt>
+                @Html.DisplayNameFor(model => model.KDVGRUP)
+            </dt>
+    
+            <dd>
+                @Html.DisplayFor(model => model.KDVGRUP)
+            </dd>
+    
+            <dt>
+                @Html.DisplayNameFor(model => model.TOPLAMTUTAR)
+            </dt>
+    
+            <dd>
+                @Html.DisplayFor(model => model.TOPLAMTUTAR)
+            </dd>
+    
+            <dt>
+                @Html.DisplayNameFor(model => model.CreateDate)
+            </dt>
+    
+            <dd>
+                @Html.DisplayFor(model => model.CreateDate)
+            </dd>
+    
+            <dt>
+                @Html.DisplayNameFor(model => model.CreateUserID)
+            </dt>
+    
+            <dd>
+                @Html.DisplayFor(model => model.CreateUserID)
+            </dd>
+    
+            <dt>
+                @Html.DisplayNameFor(model => model.UpdateDate)
+            </dt>
+    
+            <dd>
+                @Html.DisplayFor(model => model.UpdateDate)
+            </dd>
+    
+            <dt>
+                @Html.DisplayNameFor(model => model.UpdateUserID)
+            </dt>
+    
+            <dd>
+                @Html.DisplayFor(model => model.UpdateUserID)
+            </dd>
+    
+        </dl>
+    </div>
+    <p>
+        @Html.ActionLink("Edit", "Edit", new { id = Model.ID }) |
+        @Html.ActionLink("Back to List", "Index")
+    </p>
+</body>
+</html>

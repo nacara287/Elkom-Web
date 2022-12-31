@@ -1,0 +1,171 @@
+﻿@model And.ElkomMuhasebe.Core.Model.Entity.FirmaDB.BANKA_VISA
+
+@{
+    ViewBag.Title = "Details";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Details</h2>
+
+<div>
+    <h4>BANKA_VISA</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.INDEXNO)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.INDEXNO)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.deleted)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.deleted)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.BANKAKODU)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.BANKAKODU)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.PORTFOYNO)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.PORTFOYNO)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.DURUMU)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.DURUMU)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.CARI)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.CARI)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.ACIKLAMA)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.ACIKLAMA)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.TARIHI)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.TARIHI)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.VADE)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.VADE)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.TUTAR)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.TUTAR)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.KOMISYON)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.KOMISYON)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.TAHSILTARIHI)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.TAHSILTARIHI)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.PARABIRIMI)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.PARABIRIMI)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.KASA)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.KASA)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.S_MERKEZI)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.S_MERKEZI)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.CreateDate)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.CreateDate)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.CreateUserID)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.CreateUserID)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.UpdateDate)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.UpdateDate)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.UpdateUserID)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.UpdateUserID)
+        </dd>
+
+    </dl>
+</div>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id = Model.ID }) |
+    @Html.ActionLink("Back to List", "Index")
+</p>

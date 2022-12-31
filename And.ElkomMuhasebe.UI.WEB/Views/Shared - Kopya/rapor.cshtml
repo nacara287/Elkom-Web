@@ -1,0 +1,129 @@
+﻿@{ 
+    var modela = Session["rapor"] as And.ElkomMuhasebe.UI.WEB.Controllers.CARI_HAREKETController.rapor;
+}
+@{
+
+}
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta http-equiv="content-type" content="text/html;charset=UTF-8" />
+    <meta charset="utf-8" />
+    <title>Rapor</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, shrink-to-fit=no" />
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-F3w7mX95PdgyTmZZMECAngseQB83DfGTowi0iMjiWaeVhAn4FJkqJByhZMI3AhiU" crossorigin="anonymous">
+
+</head>
+<body class="fixed-header">
+
+    <div class=" container-fluid">
+        <div class="row">
+            <div class="col-md-12 text-center">
+                <h4 class="m-0">@ViewBag.Title</h4>
+                <hr>
+            </div>
+        </div>
+        <div class="row d-flex justify-content-between align-items-end">
+            <div class="col">
+                <span class="font-weight-bold">@modela.Firma.FIRMAADI</span> <br>
+                                                                             <span>@modela.Firma.ADRESI1</span>
+            </div>
+            <div class="col d-flex justify-content-end">
+                <span class="mr-3 font-weight-bold">Tarih: @DateTime.Now.ToShortDateString()</span>
+               
+            </div>
+        </div>
+
+        <hr>
+        <div class="row">
+            @foreach (var item in modela.Baslıklar)
+            {<div class="col">
+                    <h6 class="my-0">@item.Baslık</h6> <span class="text-muted">@item.Deger</span>
+                </div>
+
+            }
+
+            <div class="col text-end">
+                <h6 class="my-0">Ortalama Vade: 46 Gün </h6>
+                <h6 class="my-0">Normal Vade: 46 Gün </h6>
+                <span class="text-danger">Risk: 2.950,00</span>
+            </div>
+        </div>
+        @RenderBody()
+
+
+        <div class="table-responsive">
+            <table class="table table-striped table-sm">
+                <thead>
+                    <tr>
+                        @foreach (var item in modela.Thler)
+                        {
+                            <th>@item</th>
+                        }
+
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in modela.Tdler)
+                    {
+                        <tr>
+                            @Html.Raw(item.Islem)
+                        </tr>
+                        foreach (var altitem in item.Kalem)
+                        {
+                            <tr>
+                                <td></td>
+                                <td colspan="@(modela.Thler.Count-2)">@altitem</td>
+                                <td></td>
+                            </tr>
+                        }
+
+                    }
+
+
+                </tbody>
+                <thead>
+                    <tr>
+                        <th colspan="@(modela.Thler.Count-3)"></th>
+                 
+                        @foreach (var item in modela.Toplamlar)
+                        {
+
+                           
+                                <th class="text-end">@item.Baslık</th>
+                           
+
+                        }
+
+                    </tr>
+                </thead>
+                <tfoot>
+                    <tr>
+
+                        <td colspan="@(modela.Thler.Count-4)" class="text-muted">Listelenen Kayıt Sayısı :@modela.Tdler.Count</td>
+                      
+                        <th class="text-end" scope="row" >Toplam:</th>
+                        @foreach (var item in modela.Toplamlar)
+                        {
+                            <th class="text-end" scope="row">@item.Deger</th>
+                        }
+
+                    </tr>
+                </tfoot>
+            </table>
+        </div>
+    </div>
+    </div>
+
+
+    <!-- BEGIN VENDOR JS -->
+
+</body>
+<script type="text/javascript">
+    window.onload = function () { window.print(); }
+    window.onafterprint = function () {
+        window.location.href = "/Home";
+    }
+</script>
+</html>

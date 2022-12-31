@@ -1,0 +1,443 @@
+﻿@model And.ElkomMuhasebe.Core.Model.Entity.FirmaDB.FIRMA
+
+@{
+    ViewBag.Title = "Details";
+    Layout = "~/Views/Shared/yeni.cshtml";
+}
+
+<h2>Details</h2>
+
+<div>
+    <h4>FIRMA</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.FIRMAADI)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.FIRMAADI)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.KISAADI)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.KISAADI)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.ADRESI1)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.ADRESI1)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.ADRESI2)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.ADRESI2)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.SEHIR)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.SEHIR)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.VERGIDAIRESI)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.VERGIDAIRESI)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.VERGINO)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.VERGINO)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.TEL)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.TEL)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.FAX)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.FAX)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.CARIYIL)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.CARIYIL)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.CARIGRUPKODU)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.CARIGRUPKODU)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.CARIKODUZUNLUK)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.CARIKODUZUNLUK)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.STOKKODUZUNLUK)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.STOKKODUZUNLUK)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.DOVIZLEISLEM)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.DOVIZLEISLEM)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.VADEFARKI)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.VADEFARKI)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.STOK_ACIKLAMA)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.STOK_ACIKLAMA)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.TEL2)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.TEL2)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.TEL3)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.TEL3)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.FAX2)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.FAX2)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.E_MAIL)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.E_MAIL)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.WEB_SITE)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.WEB_SITE)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.TELKOD)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.TELKOD)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.TELDAHILI)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.TELDAHILI)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.PBIRIMI)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.PBIRIMI)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.DEVREDEN_KDV)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.DEVREDEN_KDV)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.ILKTARIH)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.ILKTARIH)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.SONTARIH)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.SONTARIH)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.KURUMKODU)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.KURUMKODU)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.WEB_SIFRE)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.WEB_SIFRE)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.STOK_LISTE_ADET)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.STOK_LISTE_ADET)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.FIFO_OTOMATIK_CALIS)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.FIFO_OTOMATIK_CALIS)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.CIROLU_SENET_DUSUM_GUN)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.CIROLU_SENET_DUSUM_GUN)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.CIROLU_CEK_DUSUM_GUN)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.CIROLU_CEK_DUSUM_GUN)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.EKSIYE_DUSMESIN)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.EKSIYE_DUSMESIN)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.ZORUNLUMIKTAR)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.ZORUNLUMIKTAR)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.SMS_BASLIK)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.SMS_BASLIK)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.SMS_BORC_HATIRLATMA_TIPI)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.SMS_BORC_HATIRLATMA_TIPI)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.SMS_BORC_HATIRLATMA_GUN_SAYISI)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.SMS_BORC_HATIRLATMA_GUN_SAYISI)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.SMS_TAHSILAT_GONDERIM_TIPI)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.SMS_TAHSILAT_GONDERIM_TIPI)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.SMS_FATURA_GONDERIM_TIPI)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.SMS_FATURA_GONDERIM_TIPI)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.SMS_CEK_SENET_GONDERIM_TIPI)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.SMS_CEK_SENET_GONDERIM_TIPI)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.SMS_YONETICI_BIDIRIM_TIPI)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.SMS_YONETICI_BIDIRIM_TIPI)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.SMS_YONETICI_BILDIRIM_1_SAAT)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.SMS_YONETICI_BILDIRIM_1_SAAT)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.SMS_YONETICI_BILDIRIM_2_SAAT)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.SMS_YONETICI_BILDIRIM_2_SAAT)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.YONETICI_TEL)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.YONETICI_TEL)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.SMS_DURUM)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.SMS_DURUM)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.SMS_GONDERIM_TARIHI)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.SMS_GONDERIM_TARIHI)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.SMS_ISLEM_TARIHI)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.SMS_ISLEM_TARIHI)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.KREDI_ASIMINA_IZIN_VER)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.KREDI_ASIMINA_IZIN_VER)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.CreateDate)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.CreateDate)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.CreateUserID)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.CreateUserID)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.UpdateDate)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.UpdateDate)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.UpdateUserID)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.UpdateUserID)
+        </dd>
+
+    </dl>
+</div>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id = Model.ID }) |
+    @Html.ActionLink("Back to List", "Index")
+</p>

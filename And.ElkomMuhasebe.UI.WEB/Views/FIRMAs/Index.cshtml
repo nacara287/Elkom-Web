@@ -1,0 +1,346 @@
+﻿@model IEnumerable<And.ElkomMuhasebe.Core.Model.Entity.FirmaDB.FIRMA>
+
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/yeni.cshtml";
+}
+
+<h2>Index</h2>
+
+<p>
+    @Html.ActionLink("Create New", "Create")
+</p>
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.FIRMAADI)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.KISAADI)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.ADRESI1)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.ADRESI2)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.SEHIR)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.VERGIDAIRESI)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.VERGINO)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.TEL)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.FAX)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.CARIYIL)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.CARIGRUPKODU)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.CARIKODUZUNLUK)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.STOKKODUZUNLUK)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.DOVIZLEISLEM)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.VADEFARKI)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.STOK_ACIKLAMA)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.TEL2)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.TEL3)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.FAX2)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.E_MAIL)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.WEB_SITE)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.TELKOD)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.TELDAHILI)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.PBIRIMI)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.DEVREDEN_KDV)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.ILKTARIH)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.SONTARIH)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.KURUMKODU)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.WEB_SIFRE)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.STOK_LISTE_ADET)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.FIFO_OTOMATIK_CALIS)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.CIROLU_SENET_DUSUM_GUN)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.CIROLU_CEK_DUSUM_GUN)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.EKSIYE_DUSMESIN)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.ZORUNLUMIKTAR)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.SMS_BASLIK)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.SMS_BORC_HATIRLATMA_TIPI)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.SMS_BORC_HATIRLATMA_GUN_SAYISI)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.SMS_TAHSILAT_GONDERIM_TIPI)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.SMS_FATURA_GONDERIM_TIPI)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.SMS_CEK_SENET_GONDERIM_TIPI)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.SMS_YONETICI_BIDIRIM_TIPI)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.SMS_YONETICI_BILDIRIM_1_SAAT)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.SMS_YONETICI_BILDIRIM_2_SAAT)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.YONETICI_TEL)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.SMS_DURUM)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.SMS_GONDERIM_TARIHI)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.SMS_ISLEM_TARIHI)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.KREDI_ASIMINA_IZIN_VER)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.CreateDate)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.CreateUserID)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.UpdateDate)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.UpdateUserID)
+        </th>
+        <th></th>
+    </tr>
+
+@foreach (var item in Model) {
+    <tr>
+        <td>
+            @Html.DisplayFor(modelItem => item.FIRMAADI)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.KISAADI)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.ADRESI1)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.ADRESI2)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.SEHIR)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.VERGIDAIRESI)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.VERGINO)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.TEL)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.FAX)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.CARIYIL)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.CARIGRUPKODU)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.CARIKODUZUNLUK)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.STOKKODUZUNLUK)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.DOVIZLEISLEM)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.VADEFARKI)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.STOK_ACIKLAMA)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.TEL2)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.TEL3)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.FAX2)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.E_MAIL)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.WEB_SITE)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.TELKOD)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.TELDAHILI)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.PBIRIMI)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.DEVREDEN_KDV)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.ILKTARIH)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.SONTARIH)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.KURUMKODU)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.WEB_SIFRE)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.STOK_LISTE_ADET)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.FIFO_OTOMATIK_CALIS)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.CIROLU_SENET_DUSUM_GUN)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.CIROLU_CEK_DUSUM_GUN)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.EKSIYE_DUSMESIN)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.ZORUNLUMIKTAR)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.SMS_BASLIK)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.SMS_BORC_HATIRLATMA_TIPI)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.SMS_BORC_HATIRLATMA_GUN_SAYISI)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.SMS_TAHSILAT_GONDERIM_TIPI)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.SMS_FATURA_GONDERIM_TIPI)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.SMS_CEK_SENET_GONDERIM_TIPI)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.SMS_YONETICI_BIDIRIM_TIPI)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.SMS_YONETICI_BILDIRIM_1_SAAT)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.SMS_YONETICI_BILDIRIM_2_SAAT)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.YONETICI_TEL)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.SMS_DURUM)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.SMS_GONDERIM_TARIHI)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.SMS_ISLEM_TARIHI)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.KREDI_ASIMINA_IZIN_VER)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.CreateDate)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.CreateUserID)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.UpdateDate)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.UpdateUserID)
+        </td>
+        <td>
+            @Html.ActionLink("Edit", "Edit", new { id=item.ID }) |
+            @Html.ActionLink("Details", "Details", new { id=item.ID }) |
+            @Html.ActionLink("Delete", "Delete", new { id=item.ID })
+        </td>
+    </tr>
+}
+
+</table>

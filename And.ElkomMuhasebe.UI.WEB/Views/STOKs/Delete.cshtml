@@ -1,0 +1,537 @@
+﻿@model And.ElkomMuhasebe.Core.Model.Entity.FirmaDB.STOK
+
+@{
+    ViewBag.Title = "Delete";
+    Layout = "~/Views/Shared/yeni.cshtml";
+}
+
+<h2>Delete</h2>
+
+<h3>Are you sure you want to delete this?</h3>
+<div>
+    <h4>STOK</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.STOKAD)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.STOKAD)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.deleted)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.deleted)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.STOKKODU)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.STOKKODU)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.URETISISTOKKODU)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.URETISISTOKKODU)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.BARKODTIPI)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.BARKODTIPI)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.BARKODNO)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.BARKODNO)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.ACIKLAMA)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.ACIKLAMA)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.BIRIM)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.BIRIM)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.AKTIF)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.AKTIF)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.SATISFIYATI1)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.SATISFIYATI1)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.SATISFIYATI2)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.SATISFIYATI2)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.ESKSATISFIYAT)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.ESKSATISFIYAT)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.FIYATDEGISIMTARIHI)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.FIYATDEGISIMTARIHI)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.MALIYETORT)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.MALIYETORT)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.MALIYETFIFO)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.MALIYETFIFO)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.MALIYETLIFO)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.MALIYETLIFO)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.ALISFIYATI)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.ALISFIYATI)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.SONALISTARIHI)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.SONALISTARIHI)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.SATISISKONTOSU)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.SATISISKONTOSU)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.ALISISKONTOSU)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.ALISISKONTOSU)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.MIKTAR)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.MIKTAR)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.ZORUNLUMIKTAR)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.ZORUNLUMIKTAR)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.MINMIKTAR)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.MINMIKTAR)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.MAXMIKTAR)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.MAXMIKTAR)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.ALISSIFARIS)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.ALISSIFARIS)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.SATISSIFARIS)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.SATISSIFARIS)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.REZERVE)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.REZERVE)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.ALISMUHKODU)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.ALISMUHKODU)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.SATISMUHKODU)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.SATISMUHKODU)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.URETICIKODU)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.URETICIKODU)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.STOKGURUBU)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.STOKGURUBU)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.OZELKOD1)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.OZELKOD1)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.OZELKOD2)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.OZELKOD2)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.OZELKOD3)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.OZELKOD3)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.OZELKOD4)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.OZELKOD4)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.KDV)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.KDV)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.PARABIRIMI)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.PARABIRIMI)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.RAFNO)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.RAFNO)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.DEPO)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.DEPO)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.KDVDAHIL)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.KDVDAHIL)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.SATISFIYATI3)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.SATISFIYATI3)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.TOPGIREN)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.TOPGIREN)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.TOPCIKAN)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.TOPCIKAN)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.SONSATISFIYATI)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.SONSATISFIYATI)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.BIRIM2)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.BIRIM2)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.BIRIM3)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.BIRIM3)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.BCARPAN2)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.BCARPAN2)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.BCARPAN3)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.BCARPAN3)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.DEVIRALISFIYATI)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.DEVIRALISFIYATI)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.DEVIR_MIKTAR)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.DEVIR_MIKTAR)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.OTVTIPI)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.OTVTIPI)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.OTVORAN)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.OTVORAN)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.OTVBIRIM)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.OTVBIRIM)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.RENK)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.RENK)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.TL_ALISFIYATI)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.TL_ALISFIYATI)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.EK_MALIYET)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.EK_MALIYET)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.EKSIYE_DUSMESIN)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.EKSIYE_DUSMESIN)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.WEB_DURUM)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.WEB_DURUM)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.WEB_ID)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.WEB_ID)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.WEB_UPDATE)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.WEB_UPDATE)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.CreateDate)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.CreateDate)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.CreateUserID)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.CreateUserID)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.UpdateDate)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.UpdateDate)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.UpdateUserID)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.UpdateUserID)
+        </dd>
+
+    </dl>
+
+    @using (Html.BeginForm()) {
+        @Html.AntiForgeryToken()
+
+        <div class="form-actions no-color">
+            <input type="submit" value="Delete" class="btn btn-default" /> |
+            @Html.ActionLink("Back to List", "Index")
+        </div>
+    }
+</div>

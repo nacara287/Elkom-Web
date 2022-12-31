@@ -1,0 +1,78 @@
+﻿@model And.ElkomMuhasebe.Core.Model.Entity.Admin.User
+
+@{
+    ViewBag.Title = "CreateUser";
+      Layout = "~/Views/Shared/_Layout1.cshtml";
+}
+<div class="card card-outline card-primary">
+    <div class="card-header text-center">
+      <a href="/" class="h1"><b>Elkom Web</b> Portal</a>
+    </div>
+    <div class="card-body">
+      <p class="login-box-msg">Kayıt bilgilerinizi doldurunuz.</p>
+      @{
+        if (ViewBag.Error != null)
+            {<div class="alert alert-danger">
+                    @ViewBag.Error
+                </div>
+
+
+            }
+        }
+      @using (Html.BeginForm()) 
+      {
+        @Html.AntiForgeryToken()
+       
+        <div class="input-group mb-3">
+            @Html.EditorFor(model => model.username, new { htmlAttributes = new { @class = "form-control", @autofocus = "true", placeholder = "Kullanıcı adınızı giriniz" } })
+                                @Html.ValidationMessageFor(model => model.username, "", new { @class = "text-danger" })
+        </div>
+
+        <div class="input-group mb-3">
+            @Html.PasswordFor(model => model.password, new { @class = "form-control" , placeholder = "Şifre" })
+                        @Html.ValidationMessageFor(model => model.password, "", new { @class = "text-danger" })
+
+        </div>
+
+        <div class="input-group mb-3">
+            @Html.EditorFor(model => model.name, new { htmlAttributes = new { @class = "form-control", placeholder = "Adınız" } })
+                        @Html.ValidationMessageFor(model => model.name, "", new { @class = "text-danger" })
+            
+        </div>
+
+        <div class="input-group mb-3">
+            @Html.EditorFor(model => model.surname, new { htmlAttributes = new { @class = "form-control", placeholder = "Soyadınız" } })
+            @Html.ValidationMessageFor(model => model.surname, "", new { @class = "text-danger" })
+
+        </div>
+
+        <div class="input-group mb-3">
+            @Html.EditorFor(model => model.mail, new { htmlAttributes = new { @class = "form-control", placeholder = "E-Posta" } })
+            @Html.ValidationMessageFor(model => model.mail, "", new { @class = "text-danger" })
+
+        </div>
+
+        <div class="input-group mb-3">
+            @Html.EditorFor(model => model.telephone, new { htmlAttributes = new { @class = "form-control", placeholder = "Telefon" } })
+            @Html.ValidationMessageFor(model => model.telephone, "", new { @class = "text-danger" })
+
+        </div>
+
+        <div class="input-group mb-3">
+            @Html.EditorFor(model => model.kullanılanfirma, new { htmlAttributes = new { @class = "form-control", placeholder = "Firma Adı" } })
+            @Html.ValidationMessageFor(model => model.kullanılanfirma, "", new { @class = "text-danger" })
+        </div>
+        
+        <div class="row">         
+          <!-- /.col -->
+          <div class="col">
+            <button type="submit" class="btn btn-primary btn-block">Kayıt</button>
+          </div>
+          <!-- /.col -->
+        </div>
+      }
+        
+
+    </div>
+    <!-- /.card-body -->
+</div>

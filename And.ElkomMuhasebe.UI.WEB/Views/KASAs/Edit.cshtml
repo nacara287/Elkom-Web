@@ -1,0 +1,250 @@
+﻿@model And.ElkomMuhasebe.UI.WEB.Controllers.KASAsController.modelimiz
+
+@{
+    ViewBag.Title = "Kasa Kartı";
+    Layout = "~/Views/Shared/yeni.cshtml";
+}
+
+
+
+
+
+@using (Html.BeginForm(null, null, new { @id = string.Empty }, FormMethod.Post,
+    new { @id = "postform" }))
+{
+
+    @Html.AntiForgeryToken()
+    @Html.HiddenFor(model => model.KASA.ID)
+    @Html.HiddenFor(model => model.KASA.BAKIYE)
+    @Html.HiddenFor(model => model.KASA.TOPLAMALACAK)
+    @Html.HiddenFor(model => model.KASA.TOPLAMBORC)
+    @Html.HiddenFor(model => model.KASA.CreateUserID)
+    @Html.HiddenFor(model => model.KASA.CreateDate)
+    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+    <nav>
+        <div class="nav nav-tabs" id="nav-tab" role="tablist">
+            <a class="nav-link active" id="nav-home-tab" data-toggle="tab" href="#nav-home" role="tab" aria-controls="nav-home" aria-selected="true">Genel</a>
+
+        </div>
+
+    </nav>
+    <div class="tab-pane fade show active" id="nav-home" role="tabpanel" aria-labelledby="nav-home-tab">
+        <div class="card border-top-0 rounded-0">
+            <div class="card-body p-3">
+                <div class="form-row">
+                    <div class="form-group col-md-6">
+                        <label for="KASA.KASAKODU">Kasa Kodu :</label>
+
+                        <div class="input-group">
+                            @Html.EditorFor(model => model.KASA.KASAKODU, new { htmlAttributes = new { @class = "form-control form-control-sm", @placeholder = "Kasa Kodu", @aria_label = "Kasa Kodu", @aria_describedby = "button-addon2", @readonly = "true" } })
+                            @Html.ValidationMessageFor(model => model.KASA.KASAKODU, "", new { @class = "text-danger" })
+
+                        </div>
+                    </div>
+
+                    <div class="form-group col-md-6">
+                        <label>Kasa Adı</label>
+                        @Html.EditorFor(model => model.KASA.KASAADI, new { htmlAttributes = new { @class = "form-control form-control-sm", @placeholder = "Kasa Adı", @required = "true" } })
+                        @Html.ValidationMessageFor(model => model.KASA.KASAADI, "", new { @class = "text-danger" })
+                    </div>
+                    <div class="form-group col-md-6">
+
+                        <label>Para Birimi</label>
+
+                        <select class="form-control" name="KASA.PBIRIMI" id="KASA_PBIRIMI">
+                            @{ if (Model.KUR_BASLIKa != null)
+                                {
+                                    <option value="TRY">TRY</option>
+                                    foreach (var item in Model.KUR_BASLIKa)
+                                    {
+                                        <option value="@item.KURKODU">@item.KURKODU</option>
+                                    }
+                                }
+                            }
+                        </select>
+
+                    </div>
+
+                    <!-- Devir Bilgisi Son -->
+
+                    <div class="form-group col-md-6">
+
+
+                        <div class="form-input-group ">
+                            <label>Kasa Tipi</label>
+
+                            <select class="form-control selectbox" name="KASA.TIPI" id="KASA_TIPI">
+
+
+                                <option value="0">Nakit</option>
+
+                                <option value="1">Çek</option>
+
+                                <option value="2">Senet</option>
+
+                                <option value="3">Visa</option>
+
+                            </select>
+
+
+
+                        </div>
+
+
+                    </div>
+
+
+
+                    <div class="form-group col-md-6">
+
+
+                        <div class="form-input-group ">
+                            <label>Kasa Türü</label>
+
+                            <select class="form-control selectbox" name="KASA.TUR" id="KASA_TUR">
+                                <option selected value="@Model.KASA.TUR">@Model.KASA.TUR.ToString()</option>
+
+                                <option value="0">Giriş</option>
+
+                                <option value="1">Çıkış</option>
+
+
+
+                            </select>
+
+
+
+                        </div>
+
+
+                    </div>
+
+
+
+
+                </div>
+            </div>
+        </div>
+        <div class="py-2">
+            <button type="button" class="btn btn-sm btn-primary btn-icon-split" onclick="datagonder()">
+
+
+                <span class="icon text-white-50">
+                    <i class="fas fa-save"></i>
+                </span>
+                <span class="text">Kaydet</span>
+
+            </button>
+            <a href="@Url.RequestContext.HttpContext.Request.Url.ToString()" class="btn btn-sm btn-secondary btn-icon-split">
+                <span class="icon text-white-50">
+                    <i class="fas fa-power-off"></i>
+                </span>
+                <span class="text">İptal</span>
+            </a>
+        </div>
+    </div>
+
+
+}
+
+@section script{
+    <script type="text/javascript" charset="utf-8">
+
+        var textbox = document.getElementById("KASA_TOPLAMALACAK");
+        var textbox2 = document.getElementById("KASA_TOPLAMBORC");
+        var carikod = document.getElementById('KASA_KASAKODU');
+        var carikodbutton = document.getElementById('button-addon2');
+
+        function datagonder() {
+            var form = $('#postform');
+
+            $.ajax({
+                type: "POST",
+                url: form.attr('action'),
+                data: form.serialize()
+                ,
+                success: function (result) {
+                    historysend("/KASAS/");
+
+                },
+                error: function (result) {
+                    toastr["error"]('Lütfen Bilgileri Eksik  Ya da Yanlış Girmeyiniz');
+                }
+            });
+
+        };
+
+        carikodbutton.onclick = function () {
+            if (!carikod.value) {
+                $.ajax({
+                    type: "POST",
+
+
+                    dataType: "json",
+                    contentType: "application/json; charset=utf-8",
+                    url: "/KASAS/kodgetir/",
+                    data: JSON.stringify({
+
+                        kod: ""
+
+
+
+
+
+                    }),
+                    success: function (result) {
+                        carikod.value = result;
+                    },
+                    error: function (result) {
+                        alert('error');
+                    }
+                });
+            }
+            else {
+
+                $.ajax({
+                    type: "POST",
+
+
+                    dataType: "json",
+                    contentType: "application/json; charset=utf-8",
+                    url: "/KASAS/kodgetir/",
+                    data: JSON.stringify({
+
+                        kod: carikod.value
+
+
+
+
+
+                    }),
+                    success: function (result) {
+                        carikod.value = result;
+                    },
+                    error: function (result) {
+                        alert('error');
+                    }
+                });
+            }
+        }
+        textbox.oninput = function () {
+            var s1 = Number(document.getElementById("KASA_TOPLAMALACAK").value);
+            var s2 = Number(document.getElementById("KASA_TOPLAMBORC").value);
+            var toplam = s2 - s1;
+            document.getElementById("KASA_BAKIYE").value = toplam;
+
+        }
+        textbox2.oninput = function () {
+            var s1 = Number(document.getElementById("KASA_TOPLAMALACAK").value);
+            var s2 = Number(document.getElementById("KASA_TOPLAMBORC").value);
+            var toplam = s2 - s1;
+            document.getElementById("KASA_BAKIYE").value = toplam;
+
+        }
+    </script>
+}
+
+
+
+
+

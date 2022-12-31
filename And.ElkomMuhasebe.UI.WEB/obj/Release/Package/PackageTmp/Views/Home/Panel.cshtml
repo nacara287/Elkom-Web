@@ -1,0 +1,97 @@
+﻿@model And.ElkomMuhasebe.Core.Model.FirmaBaseDB
+@{
+
+    Layout = "~/Views/Shared/yeni.cshtml";
+
+}
+
+
+
+<div class="row">
+  <div class="col-lg-6">
+    <div class="card">
+      <div class="card-header border-0">
+        <div class="d-flex justify-content-between">
+          <h3 class="card-title">Kasa Durumu</h3>
+        </div>
+      </div>
+      <div class="card-body">    
+        <div class="position-relative mb-4">
+            <canvas id="myChart" style="width:100%;max-width:700px;"></canvas>                 
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- /.col-md-6 -->
+  <div class="col-lg-6">
+    <div class="card">
+      <div class="card-header border-0">
+        <div class="d-flex justify-content-between">
+          <h3 class="card-title">Banka Durumu</h3>
+        </div>
+      </div>
+      <div class="card-body">    
+        <div class="position-relative mb-4">
+            <canvas id="myChart2" style="width:100%;max-width:700px;"></canvas>                 
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- /.col-md-6 -->
+  
+</div>
+
+
+@section script{
+
+
+    <script type="text/javascript">
+        const data = {
+            labels: [
+                'Nakit',
+                'Çek',
+                'Senet'
+            ],
+            datasets: [{
+                label: 'Kasa Durumu',
+                data: [   @Model.KASA.Where(x=>x.TIPI==And.ElkomMuhasebe.Core.Model.Entity.FirmaDB.KASA.kasatipi.Nakit).Sum(x=>x.BAKIYE),    @Model.KASA.Where(x=>x.TIPI==And.ElkomMuhasebe.Core.Model.Entity.FirmaDB.KASA.kasatipi.Senet).Sum(x=>x.BAKIYE),    @Model.KASA.Where(x=>x.TIPI==And.ElkomMuhasebe.Core.Model.Entity.FirmaDB.KASA.kasatipi.Nakit).Sum(x=>x.BAKIYE)],
+                backgroundColor: [
+                    'rgb(255, 99, 132)',
+                    'rgb(54, 162, 235)',
+                    'rgb(255, 205, 86)'
+                ],
+                hoverOffset: 4
+            }]
+        };
+        var ctx = document.getElementById("myChart");
+        var myChart = new Chart(ctx, {
+            type: "pie",
+            data: data,
+            options: {}
+        });
+         const dataa = {
+            labels: [
+                'Nakit',
+                'Çek',
+                'Senet'
+            ],
+            datasets: [{
+                label: 'Kasa Durumu',
+                data: [   @Model.BANKA.Sum(x=>x.BAKIYE),    @Model.BANKA.Sum(x=>x.CEK_TOPLAM),    @Model.BANKA.Sum(x=>x.SENET_TOPLAM)],
+                backgroundColor: [
+                    'rgb(255, 99, 132)',
+                    'rgb(54, 162, 235)',
+                    'rgb(255, 205, 86)'
+                ],
+                hoverOffset: 4
+            }]
+        };
+        var ctx = document.getElementById("myChart2");
+        var myCharta = new Chart(ctx, {
+            type: "pie",
+            data: dataa,
+            options: {}
+        });
+    </script>
+  
+}

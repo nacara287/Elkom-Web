@@ -1,0 +1,612 @@
+﻿@model And.ElkomMuhasebe.UI.WEB.Controllers.STOKsController.modelimiz
+
+@{
+    ViewBag.Title = "Yeni Stok Oluştur";
+    Layout = "~/Views/Shared/yeni.cshtml";
+}
+
+
+
+@using (Html.BeginForm(null, null, new { @id = string.Empty }, FormMethod.Post,
+    new { @id = "postform" }))
+{
+    @Html.AntiForgeryToken()
+    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+    <nav>
+        <div class="nav nav-tabs" id="nav-tab" role="tablist">
+            <a class="nav-link active" id="nav-home-tab" data-toggle="tab" href="#nav-home" role="tab" aria-controls="nav-home" aria-selected="true">Genel</a>
+            <a class="nav-link" id="nav-ozel-tab" data-toggle="tab" href="#nav-ozel" role="tab" aria-controls="nav-ozel" aria-selected="false">Özel Tanımlar</a>
+        </div>
+    </nav>
+    <div class="tab-content" id="nav-tabContent">
+        <!-- Genel -->
+        <div class="tab-pane fade show active" id="nav-home" role="tabpanel" aria-labelledby="nav-home-tab">
+            <div class="card border-top-0 rounded-0">
+                <div class="card-body p-3">
+                    <div class="form-row">
+                        <div class="form-group col-md-3">
+                            <label for="STOKKODU">Stok Kodu :</label>
+                            <div class="input-group">
+                                @Html.EditorFor(model => model.Stok.STOKKODU, new { htmlAttributes = new { @class = "form-control form-control-sm", @placeholder = "...", @aria_label = "...", @aria_describedby = "button-addon2" } })
+                                @Html.ValidationMessageFor(model => model.Stok.STOKKODU, "", new { @class = "text-danger" })
+
+                                <div class="input-group-append">
+                                    <button class="btn btn-sm btn-outline-secondary" title="Kod üret" type="button" id="button-addon2"><i class="fas fa-plus"></i></button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group col-md-6">
+                            <label for="STOKAD">Stok Adı :</label>
+                            <div class="input-group">
+                                @Html.EditorFor(model => model.Stok.STOKAD, new { htmlAttributes = new { @class = "form-control form-control-sm", @placeholder = "..." } })
+                                @Html.ValidationMessageFor(model => model.Stok.STOKAD, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+                        <div class="form-group col-md-3">
+                            <label for="BIRIM">Stok Birimi :</label>
+                            <select name="Stok.BIRIM" id="Stok_BIRIM" class="form-control form-control-sm">
+                                @{ if (Model.sTOK_BIRIMLERs != null)
+                                    {
+
+                                        foreach (var item in Model.sTOK_BIRIMLERs)
+                                        {
+                                            if (item.ID == 39)
+                                            {
+                                                <option value="@item.ID" selected>@item.BIRIMADI</option>
+                                            }
+
+
+                                            <option value="@item.ID">@item.BIRIMADI</option>
+                                        }
+                                    }
+                                }
+                            </select>
+                        </div>
+                        <!-- Devir Bilgisi -->
+                        <div class="form-group col-md-3">
+                            <label>Devir Tarihi :</label>
+                            <input id="Hareket_TARIHSAAT" name="Hareket.TARIHSAAT" class="form-control form-control-sm" type="date" value="@DateTime.Now.Year.ToString("D" + 4)-@DateTime.Now.Month.ToString("D" + 2)-@DateTime.Now.Day.ToString("D" + 2)">
+                        </div>
+                        <div class="form-group col-md-3">
+                            <label>Para Birimi :</label>
+                            <select name="Stok.PARABIRIMI" id="Stok_PARABIRIMI" class="form-control form-control-sm">
+                                @foreach (var item in Model.KUR_BASLIKa)
+                                {
+                                    <option value="@item.KURKODU">@item.KURADI</option>
+                                }
+                            </select>
+                        </div>
+                        <div class="form-group col-md-3">
+                            <label>Devir Miktarı :</label>
+                            <input id="Hareket_MIKTAR" name="Hareket.MIKTAR" onchange="tutargetir()" class="form-control form-control-sm " type="text" value="0">
+                        </div>
+                        <div class="form-group col-md-3">
+                            <label>Devir Fiyatı :</label>
+                            <input type="text" name="Hareket.FIYAT" id="Hareket_FIYAT" onchange="tutargetir()" value="0" class="form-control form-control-sm text-right ">
+                        </div>
+                        <!-- Devir Bilgisi Son -->
+
+                        <div class="form-group col-md-6">
+                            <label>Açıklama :</label>
+                            <input id="Stok_ACIKLAMA" name="Stok.ACIKLAMA" type="text" class="form-control form-control-sm " value="@Model.Stok.ACIKLAMA">
+                        </div>
+
+
+                        <div class="form-group col-md-3">
+                            <label for="STOK_OZELKOD1">Kategori 1 :</label>
+                            <div class="input-group input-group-sm">
+                                <select class="custom-select" id="STOK_OZELKOD1" name="STOK.OZELKOD1">
+                                    <option selected="selected">Seçiniz</option>
+                                    @{
+
+
+                                        if (Model.STOK_KOD1s != null)
+                                        {
+                                            foreach (var item in Model.STOK_KOD1s)
+                                            {
+
+                                                <option>@item.KOD</option>
+
+                                            }
+                                        }}
+                                </select>
+                                <div class="input-group-append">
+                                    <button class="btn btn-sm btn-outline-secondary" type="button" data-toggle="modal" data-target="#ModalOZELKOD1"><i class="fas fa-plus"></i></button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group col-md-3">
+                            <label for="STOK_OZELKOD2">Kategori 2 :</label>
+                            <div class="input-group input-group-sm">
+                                <select class="custom-select" id="STOK_OZELKOD2" name="STOK.OZELKOD2">
+                                    <option selected="selected">Seçiniz</option>
+                                    @{
+
+
+                                        if (Model.STOK_KOD1s != null)
+                                        {
+                                            foreach (var item in Model.STOK_KOD2s)
+                                            {
+
+                                                <option>@item.KOD</option>
+
+                                            }
+                                        }}
+                                </select>
+                                <div class="input-group-append">
+                                    <button class="btn btn-sm btn-outline-secondary" type="button" data-toggle="modal" data-target="#ModalOZELKOD2"><i class="fas fa-plus"></i></button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group col-md-2">
+                            <label>Alış Liste Fiyatı :</label>
+                            <input class="form-control form-control-sm text-right masklancak" id="Stok_HAMALISFIYAT" name="Stok.HAMALISFIYAT" value="0" />
+                        </div>
+                        <div class="form-group col-md-2">
+                            <label>Satış Liste Fiyatı :</label>
+                            <input class="form-control form-control-sm text-right masklancak" id="Stok_HAMSATISFIYAT" name="Stok.HAMSATISFIYAT" value="188888888888" />
+                        </div>
+                        <div class="form-group col-md-2">
+                            <label for="Stok_KDV">KDV Otanı:</label>
+                            <select name="Stok.KDV" id="Stok_KDV" class="form-control form-control-sm">
+                                <option value="0">%0 KDV</option>
+                                <option value="1">%1 KDV</option>
+                                <option value="8">%8 KDV</option>
+                                <option selected value="18">%18 KDV</option>
+                            </select>
+                        </div>
+                        <div class="form-group col-md-2">
+                            <label>Kdv Dahil :</label>
+                            <select name="Stok.KDVDAHIL" id="Stok_KDVDAHIL" class="form-control form-control-sm">
+
+                                <option value="1">Evet</option>
+                                <option value="0">Hayır</option>
+                            </select>
+                        </div>
+                        <div class="form-group col-md-2">
+                            <label>Alış İsk. Oranı (%) :</label>
+                            <input class="form-control form-control-sm text-right masklancak" id="Stok_ALISISKONTOSU" name="Stok.ALISISKONTOSU" value="0" />
+                        </div>
+                        <div class="form-group col-md-2">
+                            <label>Satış İsk. Oranı (%) :</label>
+                            <input class="form-control form-control-sm text-right masklancak" id="Stok_SATISISKONTOSU" name="Stok.SATISISKONTOSU" value="0" />
+                        </div>
+
+                        <div class="form-group col-md-2">
+
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" value="1" name="Stok.AKTIF" id="Stok_AKTIF" checked>
+                                <label class="form-check-label" for="Stok_AKTIF">
+                                    Aktif
+                                </label>
+                            </div>
+
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Özel Tanımlar -->
+        <div class="tab-pane fade" id="nav-ozel" role="tabpanel" aria-labelledby="nav-ozel-tab">
+            <div class="card border-top-0 rounded-0">
+                <div class="card-body p-3">
+                    <div class="form-row">
+                        <div class="form-group col-md-3">
+                            <label for="RENK">Renk :</label>
+                            <div class="input-group">
+                                @Html.EditorFor(model => model.Stok.RENK, new { htmlAttributes = new { @class = "form-control form-control-sm", @placeholder = "...", @aria_label = "...", @aria_describedby = "button-addon2" } })
+                                @Html.ValidationMessageFor(model => model.Stok.RENK, "", new { @class = "text-danger" })
+
+                          
+                            </div>
+                        </div>
+                        <div class="form-group col-md-3">
+                            <label for="En">En :</label>
+                            <div class="input-group">
+                                @Html.EditorFor(model => model.Stok.EN, new { htmlAttributes = new { @class = "form-control form-control-sm", @placeholder = "...", @aria_label = "...", @aria_describedby = "button-addon2" } })
+                                @Html.ValidationMessageFor(model => model.Stok.EN, "", new { @class = "text-danger" })
+
+                              
+                            </div>
+                        </div>
+                        <div class="form-group col-md-3">
+                            <label for="BOY">Boy :</label>
+                            <div class="input-group">
+                                @Html.EditorFor(model => model.Stok.BOY, new { htmlAttributes = new { @class = "form-control form-control-sm", @placeholder = "...", @aria_label = "...", @aria_describedby = "button-addon2" } })
+                                @Html.ValidationMessageFor(model => model.Stok.BOY, "", new { @class = "text-danger" })
+
+                            </div>
+                        </div>
+                        <div class="form-group col-md-3">
+                            <label for="YUKSEKLIK">Yükseklik :</label>
+                            <div class="input-group">
+                                @Html.EditorFor(model => model.Stok.YUKSEKLIK, new { htmlAttributes = new { @class = "form-control form-control-sm", @placeholder = "...", @aria_label = "...", @aria_describedby = "button-addon2" } })
+                                @Html.ValidationMessageFor(model => model.Stok.YUKSEKLIK, "", new { @class = "text-danger" })
+
+                              
+                            </div>
+                        </div>
+                        <div class="form-group col-md-2">
+                            <label>ÖTV :</label>
+                            <select name="" id="" class="form-control form-control-sm">
+                                <option value="">ÖTV Yok</option>
+                                <option value="">Miktardan</option>
+                                <option value="">Tutardan</option>
+                            </select>
+                        </div>
+                        <div class="form-group col-md-2">
+                            <label>Ötv Oranı :</label>
+                            <select name="" id="" class="form-control form-control-sm">
+                                <option value="1">Evet</option>
+                                <option value="0">Hayır</option>
+                            </select>
+                        </div>
+                        <div class="form-group col-md-2">
+                            <label>Eksiye Düşmesin :</label>
+                            <select name="Stok.EKSIYE_DUSMESIN" id="Stok_EKSIYE_DUSMESIN" class="form-control form-control-sm">
+
+                                <option value="1">Evet</option>
+                                <option value="0">Hayır</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group col-md-2">
+                            <label>Raf Numarası :</label>
+                            <input type="text" class="form-control form-control-sm">
+                        </div>
+                        <div class="form-group col-md-2">
+                            <label>Varsayılan Depo :</label>
+                            <select id="Stok_DEPOSUID" name="Stok.DEPOSUID" class="form-control form-control-sm">
+                              
+                                @{
+
+
+                                    if (Model.DEPOs != null)
+                                    {
+                                        foreach (var item in Model.DEPOs)
+                                        {
+
+                                                                <option value="@item.ID">@item.DEPONO/@item.DEPOADI</option>
+
+                                        }
+                                    }}
+                            </select>
+                        </div>
+                        <div class="form-group col-md-3">
+                            <label>Barkod :</label>
+                            <input type="text" class="form-control form-control-sm">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="py-2">
+        <button type="button" class="btn btn-sm btn-primary btn-icon-split" onclick="datagonder()">
+
+            <span class="icon text-white-50">
+                <i class="fas fa-save"></i>
+            </span>
+            <span class="text">Kaydet</span>
+
+        </button>
+        <a href="@Url.RequestContext.HttpContext.Request.Url.ToString()" class="btn btn-sm btn-secondary btn-icon-split">
+            <span class="icon text-white-50">
+                <i class="fas fa-power-off"></i>
+            </span>
+            <span class="text">İptal</span>
+        </a>
+    </div>
+
+}
+
+
+<div class="modal fade" id="ModalOZELKOD1" tabindex="-1" aria-labelledby="ModalOZELKOD1Label" aria-hidden="true">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="ModalOZELKOD1Label">Yeni Özel Kod-1 Oluştur</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label for="özelkod1">Başlık</label>
+                    <input type="text" class="form-control" id="özelkod1" name="özelkod1">
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-outline-dark" data-dismiss="modal">İptal</button>
+                <button type="button" class="btn btn-primary" onclick="özelkodolustur1()">Kaydet</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="ModalOZELKOD2" tabindex="-1" aria-labelledby="ModalOZELKOD2Label" aria-hidden="true">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="ModalOZELKOD2Label">Yeni Özel Kod-2 Oluştur</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label for="özelkod2">Başlık</label>
+                    <input type="text" class="form-control" id="özelkod2" name="özelkod2">
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-outline-dark" data-dismiss="modal">İptal</button>
+                <button type="button" class="btn btn-primary" onclick="özelkodolustur2()">Kaydet</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section script{
+    <script type="text/javascript" charset="utf-8">
+
+        var textbox = document.getElementById("Cari_TOPLAMALACAK");
+        var textbox2 = document.getElementById("Cari_TOPLAMBORC");
+        var carikod = document.getElementById('Stok_STOKKODU');
+        var carikodbutton = document.getElementById('button-addon2');
+        var select_il = document.getElementById('vergiil');
+
+        var select_ila = document.getElementById('Cari_ISIL');
+        var select_ilcea = document.getElementById('Cari_ISILCE');
+        var select_ilce = document.getElementById('vergiilce');
+        var select_isim = document.getElementById('Cari_VERGIDAIRESI');
+   
+        function datagonder() {
+            var form = $('#postform');
+            cevir("Stok_HAMALISFIYAT");
+            cevir("Stok_HAMSATISFIYAT");
+            cevir("Stok_ALISISKONTOSU");
+            cevir("Stok_SATISISKONTOSU");
+          
+        
+            
+            $.ajax({
+                type: "POST",
+                url: form.attr('action'),
+                data: form.serialize()
+                ,
+                success: function (result) {
+                    historysend("/STOKS/");
+
+                },
+                error: function (result) {
+                    toastr["error"]('Lütfen Bilgileri Eksik  Ya da Yanlış Girmeyiniz');
+                }
+            });
+
+        };
+
+        window.onload = function (e) {
+            loadRoleTypes();
+
+            if (!carikod.value) {
+                $.ajax({
+                    type: "POST",
+
+
+                    dataType: "json",
+                    contentType: "application/json; charset=utf-8",
+                    url: "/STOKS/kodgetir/",
+                    data: JSON.stringify({
+
+                        kod: ""
+
+
+
+
+
+                    }),
+                    success: function (result) {
+
+                        if (carikod.value != onceki) {
+                            onceki = result;
+                            carikod.value = result;
+                        }
+                    },
+                    error: function (result) {
+                        alert('error');
+                    }
+                });
+            }
+            else {
+
+                $.ajax({
+                    type: "POST",
+
+
+                    dataType: "json",
+                    contentType: "application/json; charset=utf-8",
+                    url: "/STOKS/kodgetir/",
+                    data: JSON.stringify({
+
+                        kod: carikod.value
+
+
+
+
+
+                    }),
+                    success: function (result) {
+                        if (carikod.value != onceki) {
+                            onceki = result;
+                            carikod.value = result;
+                        }
+                    },
+                    error: function (result) {
+                        alert('error');
+                    }
+                });
+            }
+        };
+        function özelkodolustur1() {
+            $.ajax({
+                type: "POST",
+
+                dataType: "json",
+                contentType: "application/json; charset=utf-8",
+                url: "/STOKS/özelkodolustur/",
+                data: JSON.stringify({
+                    kod: document.getElementById("özelkod1").value,
+                    kodtürü: 1
+                }),
+                success: function (result) {
+                    alert("Özel Kod Oluşturuldu!")
+                    var opt = document.createElement('option');
+
+
+                    opt.appendChild(document.createTextNode(document.getElementById("özelkod1").value));
+
+
+                    opt.selected = true;
+                    var sel = document.getElementById('STOK_OZELKOD1');
+
+                    sel.appendChild(opt);
+                    $('#ModalOZELKOD1').modal('hide');
+
+                }
+                ,
+                error: function (result) {
+                    alert('Başarısız');
+                }
+            });
+        }
+        function özelkodolustur2() {
+            $.ajax({
+                type: "POST",
+
+                dataType: "json",
+                contentType: "application/json; charset=utf-8",
+                url: "/STOKS/özelkodolustur/",
+                data: JSON.stringify({
+                    kod: document.getElementById("özelkod2").value,
+                    kodtürü: 2
+                }),
+                success: function (result) {
+                    alert("Özel Kod Oluşturuldu!")
+                    var opt = document.createElement('option');
+
+
+                    opt.appendChild(document.createTextNode(document.getElementById("özelkod2").value));
+
+
+                    opt.selected = true;
+                    var sel = document.getElementById('STOK_OZELKOD2');
+
+                    sel.appendChild(opt);
+                    $('#ModalOZELKOD2').modal('hide');
+                }
+                ,
+                error: function (result) {
+                    alert('Başarısız');
+                }
+            });
+        }
+
+        function loadRoleTypes() {
+
+
+            $.ajax({
+                url: '/KUR_BASLIK/getkur',
+                dataType: 'json',
+                type: 'POST',
+
+                success: function (response) {
+                    var array = response;
+                    if (array != '') {
+                        for (i in array) {
+                            $("#Stok_PARABIRIMI").append('<option value="' + array[i].KURKODU + '">' + array[i].KURKODU + "</option>");
+                        }
+
+                    }
+
+                },
+                error: function (x, e) {
+
+                }
+
+            });
+
+        }
+        $(document).ready(function () {
+
+            kodgetir();
+        });
+        carikodbutton.onclick = function () {
+            kodgetir();
+        }
+
+        function kodgetir() {
+             if (!carikod.value) {
+                $.ajax({
+                    type: "POST",
+
+
+                    dataType: "json",
+                    contentType: "application/json; charset=utf-8",
+                    url: "/STOKS/kodgetir/",
+                    data: JSON.stringify({
+
+                        kod: ""
+
+
+
+
+
+                    }),
+                    success: function (result) {
+                        carikod.value = result;
+                    },
+                    error: function (result) {
+                        alert('error');
+                    }
+                });
+            }
+            else {
+
+                $.ajax({
+                    type: "POST",
+
+
+                    dataType: "json",
+                    contentType: "application/json; charset=utf-8",
+                    url: "/STOKS/kodgetir/",
+                    data: JSON.stringify({
+
+                        kod: carikod.value
+
+
+
+
+
+                    }),
+                    success: function (result) {
+                        carikod.value = result;
+                    },
+                    error: function (result) {
+                        alert('error');
+                    }
+                });
+            }
+
+        }
+
+    </script>
+}
+
+
+

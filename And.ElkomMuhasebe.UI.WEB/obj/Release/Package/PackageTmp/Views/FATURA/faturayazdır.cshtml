@@ -1,0 +1,725 @@
+﻿@model And.ElkomMuhasebe.UI.WEB.Controllers.FATURAController.faturasablonmodel
+@{ Layout = null; }
+
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<html>
+<head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+    <title></title>
+    <meta name="generator" content="LibreOffice 5.2.7.2 (Linux)" />
+    <meta name="created" content="2012-06-26T21:33:00" />
+    <meta name="changed" content="2020-07-20T17:13:43.404473203" />
+    <meta name="AppVersion" content="15.0000" />
+    <meta name="CampaignTags" content="" />
+    <meta name="CategoryTags" content="" />
+    <meta name="CategoryTagsTaxHTField0" content="" />
+    <meta name="ContentTypeId" content="0x010100DC5CB8ABFAEE764594C61AB7267324960400FC796B3B1D425B47B2BA3D040986AFEA" />
+    <meta name="DocSecurity" content="0" />
+    <meta name="FeatureTags" content="" />
+    <meta name="HiddenCategoryTags" content="" />
+    <meta name="HiddenCategoryTagsTaxHTField0" content="" />
+    <meta name="HyperlinksChanged" content="false" />
+    <meta name="InternalTags" content="" />
+    <meta name="LinksUpToDate" content="false" />
+    <meta name="LocMarketGroupTiers" content="" />
+    <meta name="LocalizationTags" content="" />
+    <meta name="ScaleCrop" content="false" />
+    <meta name="ScenarioTags" content="" />
+    <meta name="ShareDoc" content="false" />
+    <style type="text/css">
+
+		p { margin-bottom: 0.1in; direction: ltr; line-height: 120%; text-align: left; orphans: 2; widows: 2 }
+    </style>
+</head>
+<body lang="tr-TR" dir="ltr">
+    <p style="margin-bottom: 0in; border-top: none; border-bottom: none; border-left: 6.75pt double #1f4e79; border-right: none; padding-top: 0in; padding-bottom: 0in; padding-left: 0.06in; padding-right: 0in; text-transform: uppercase; line-height: 0.29in">
+        <font color="#1f4e79"><font face="Arial Black, serif"><font size="5" style="font-size: 19pt"> @Model.FIRMA.FIRMAADI</font></font></font>
+    </p>
+    <p style="margin-top: 0.06in; margin-bottom: 0in; border-top: none; border-bottom: none; border-left: 6.75pt double #1f4e79; border-right: none; padding-top: 0in; padding-bottom: 0in; padding-left: 0.06in; padding-right: 0in; line-height: 0.19in">
+        <font color="#5b9bd5"></font>
+    </p>
+    <p style="margin-top: 0.42in; margin-bottom: 0.17in; text-transform: uppercase; line-height: 100%">
+        <font color="#1f4e79">
+            <font size="4" style="font-size: 14pt">
+                <b>
+                   @Model.FATURA.FATNO
+                </b>
+            </font>
+        </font>
+    </p>
+    <table width="100%" cellpadding="7" cellspacing="0">
+        <col width="128*">
+        <col width="128*">
+        <tr valign="bottom">
+            <td width="50%" bgcolor="#deeaf6" style="background: #deeaf6" style="border: 1px solid #5b9bd5; padding-top: 0in; padding-bottom: 0in; padding-left: 0.08in; padding-right: 0.08in">
+                <p style="margin-top: 0.08in; page-break-after: avoid">
+                    <b>
+                        Fatura
+                        adresi:
+                    </b>
+                </p>
+            </td>
+            <td width="50%" bgcolor="#deeaf6" style="background: #deeaf6" style="border: 1px solid #5b9bd5; padding-top: 0in; padding-bottom: 0in; padding-left: 0.08in; padding-right: 0.08in">
+                <p style="margin-top: 0.08in; page-break-after: avoid"><b>Teslimat</b></p>
+            </td>
+        </tr>
+        <tr valign="top">
+            <td width="50%" style="border: 1px solid #5b9bd5; padding-top: 0in; padding-bottom: 0in; padding-left: 0.08in; padding-right: 0.08in">
+                <table width="100%" cellpadding="10" cellspacing="0">
+                    <col width="111*">
+                    <col width="145*">
+                    <tr valign="top">
+                        <td width="44%" style="border: none; padding: 0in">
+                            <p style="margin-top: 0.08in"><b>Müşteri</b></p>
+                        </td>
+                        <td width="56%" style="border: none; padding: 0in">
+                            <p>
+                                <b>@Model.CARI_BASLIK.FIRMAUNVANI</b>
+                              
+                            </p>
+                        </td>
+                    </tr>
+                    <tr valign="top">
+                        <td width="44%" style="border: none; padding: 0in">
+                            <p><b> @Model.CARI_BASLIK.VERGINUMARASI></p>
+                        </td>
+                        <td width="56%" style="border: none; padding: 0in">
+                            <p>[Müşteri Kimliği]</p>
+                        </td>
+                    </tr>
+                    <tr valign="top">
+                        <td width="44%" style="border: none; padding: 0in">
+                            <p><b>Adres</b></p>
+                        </td>
+                        <td width="56%" style="border: none; padding: 0in">
+                            <p>
+                                @Model.CARI_BASLIK.ISIL/ @Model.CARI_BASLIK.ISILCE /@Model.CARI_BASLIK.ISADRES1><br />
+                       
+                            </p>
+                        </td>
+                    </tr>
+                    <tr valign="top">
+                        <td width="44%" style="border: none; padding: 0in">
+                            <p><b>Telefon</b></p>
+                        </td>
+                        <td width="56%" style="border: none; padding: 0in">
+                            <p> @Model.CARI_BASLIK.ISTEL</p>
+                        </td>
+                    </tr>
+                </table>
+                <p style="margin-bottom: 0.08in; line-height: 100%">
+                    <br />
+                    <br />
+
+                </p>
+            </td>
+            <td width="50%" style="border: 1px solid #5b9bd5; padding-top: 0in; padding-bottom: 0in; padding-left: 0.08in; padding-right: 0.08in">
+                <table width="100%" cellpadding="10" cellspacing="0">
+                    <col width="113*">
+                    <col width="143*">
+                    <tr valign="top">
+                        <td width="44%" style="border: none; padding: 0in">
+                            <p style="margin-top: 0.08in"><b>Alıcı</b></p>
+                        </td>
+                        <td width="56%" style="border: none; padding: 0in">
+                            <p>
+                                [Alıcı Adı]<br />
+                                [Şirket]
+                            </p>
+                        </td>
+                    </tr>
+                    <tr valign="top">
+                        <td width="44%" style="border: none; padding: 0in">
+                            <p><b>Adres</b></p>
+                        </td>
+                        <td width="56%" style="border: none; padding: 0in">
+                            <p>
+                                [Adres]<br />
+                                [Şehir, Posta Kodu]
+                            </p>
+                        </td>
+                    </tr>
+                    <tr valign="top">
+                        <td width="44%" style="border: none; padding: 0in">
+                            <p><b>Telefon</b></p>
+                        </td>
+                        <td width="56%" style="border: none; padding: 0in">
+                            <p>[Telefon]</p>
+                        </td>
+                    </tr>
+                </table>
+                <p style="margin-bottom: 0.08in; line-height: 100%">
+                    <br />
+                    <br />
+
+                </p>
+            </td>
+        </tr>
+        <tr valign="top">
+            <td width="50%" style="border: 1px solid #5b9bd5; padding-top: 0in; padding-bottom: 0in; padding-left: 0.08in; padding-right: 0.08in">
+                <table width="100%" cellpadding="10" cellspacing="0">
+                    <col width="111*">
+                    <col width="145*">
+                    <tr valign="top">
+                        <td width="44%" style="border: none; padding: 0in">
+                            <p style="margin-top: 0.08in"><b>Alacak Vadesi</b></p>
+                        </td>
+                        <td width="56%" style="border: none; padding: 0in">
+                            <p></p>
+                        </td>
+                    </tr>
+                    <tr valign="top">
+                        <td width="44%" style="border: none; padding: 0in">
+                            <p><b>Satış Elemanı</b></p>
+                        </td>
+                        <td width="56%" style="border: none; padding: 0in">
+                            <p>[Satış Elemanı Adı]</p>
+                        </td>
+                    </tr>
+                    <tr valign="top">
+                        <td width="44%" style="border: none; padding: 0in">
+                            <p><b>Ödeme Koşulları</b></p>
+                        </td>
+                        <td width="56%" style="border: none; padding: 0in">
+                            <p>[Koşullar]</p>
+                        </td>
+                    </tr>
+                </table>
+                <p style="margin-bottom: 0.08in; line-height: 100%">
+                    <br />
+                    <br />
+
+                </p>
+            </td>
+            <td width="50%" style="border: 1px solid #5b9bd5; padding-top: 0in; padding-bottom: 0in; padding-left: 0.08in; padding-right: 0.08in">
+                <table width="100%" cellpadding="10" cellspacing="0">
+                    <col width="113*">
+                    <col width="143*">
+                    <tr valign="top">
+                        <td width="44%" style="border: none; padding: 0in">
+                            <p style="margin-top: 0.08in"><b>Teslim Tarihi</b></p>
+                        </td>
+                        <td width="56%" style="border: none; padding: 0in">
+                            <p></p>
+                        </td>
+                    </tr>
+                    <tr valign="top">
+                        <td width="44%" style="border: none; padding: 0in">
+                            <p><b>Sevkiyat Yöntemi</b></p>
+                        </td>
+                        <td width="56%" style="border: none; padding: 0in">
+                            <p>[Sevkiyat Yöntemi]</p>
+                        </td>
+                    </tr>
+                    <tr valign="top">
+                        <td width="44%" style="border: none; padding: 0in">
+                            <p><b>Sevkiyat Koşulları</b></p>
+                        </td>
+                        <td width="56%" style="border: none; padding: 0in">
+                            <p>[Koşullar]</p>
+                        </td>
+                    </tr>
+                </table>
+                <p style="margin-bottom: 0.08in; line-height: 100%">
+                    <br />
+                    <br />
+
+                </p>
+            </td>
+        </tr>
+    </table>
+    <p style="margin-bottom: 0.11in; line-height: 100%">
+        <br />
+        <br />
+
+    </p>
+    <table width="100%" cellpadding="7" cellspacing="0">
+        <colgroup>
+            <col width="18*">
+            <col width="30*">
+            <col width="84*">
+            <col width="36*">
+            <col width="44*">
+        </colgroup>
+        <colgroup>
+            <col width="43*">
+        </colgroup>
+        <thead>
+            <tr valign="bottom">
+                <td width="7%" bgcolor="#deeaf6" style="background: #deeaf6" style="border: 1px solid #5b9bd5; padding-top: 0in; padding-bottom: 0in; padding-left: 0.08in; padding-right: 0.08in">
+                    <p align="center" style="margin-top: 0.08in; page-break-after: avoid">
+                        <b>Mik.</b>
+                    </p>
+                </td>
+                <td width="12%" bgcolor="#deeaf6" style="background: #deeaf6" style="border: 1px solid #5b9bd5; padding-top: 0in; padding-bottom: 0in; padding-left: 0.08in; padding-right: 0.08in">
+                    <p align="center" style="margin-top: 0.08in; page-break-after: avoid">
+                        <a name="_GoBack"></a>
+                        <b>Öğe no.</b>
+                    </p>
+                </td>
+                <td width="33%" bgcolor="#deeaf6" style="background: #deeaf6" style="border: 1px solid #5b9bd5; padding-top: 0in; padding-bottom: 0in; padding-left: 0.08in; padding-right: 0.08in">
+                    <p style="margin-top: 0.08in; page-break-after: avoid"><b>Açıklama</b></p>
+                </td>
+                <td width="14%" bgcolor="#deeaf6" style="background: #deeaf6" style="border: 1px solid #5b9bd5; padding-top: 0in; padding-bottom: 0in; padding-left: 0.08in; padding-right: 0.08in">
+                    <p style="margin-top: 0.08in; page-break-after: avoid">
+                        <b>
+                            Birim
+                            Fiyat
+                        </b>
+                    </p>
+                </td>
+                <td width="17%" bgcolor="#deeaf6" style="background: #deeaf6" style="border: 1px solid #5b9bd5; padding-top: 0in; padding-bottom: 0in; padding-left: 0.08in; padding-right: 0.08in">
+                    <p style="margin-top: 0.08in; page-break-after: avoid"><b>İndirim</b></p>
+                </td>
+                <td width="17%" bgcolor="#deeaf6" style="background: #deeaf6" style="border: 1px solid #5b9bd5; padding-top: 0in; padding-bottom: 0in; padding-left: 0.08in; padding-right: 0.08in">
+                    <p style="margin-top: 0.08in; page-break-after: avoid">
+                        <b>
+                            Satır
+                            Toplamı
+                        </b>
+                    </p>
+                </td>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model.FATURA_HAREKETS)
+            {
+                <tr valign="top">
+                    <td width="7%" style="border: 1px solid #5b9bd5; padding-top: 0in; padding-bottom: 0in; padding-left: 0.08in; padding-right: 0.08in">
+                        <p align="center" style="margin-top: 0.08in">
+                            @item.MIKTAR
+                            <br />
+
+                        </p>
+                    </td>
+                    <td width="12%" style="border: 1px solid #5b9bd5; padding-top: 0in; padding-bottom: 0in; padding-left: 0.08in; padding-right: 0.08in">
+                        <p align="center" style="margin-top: 0.08in">
+                            @item.STOKKODU
+                            <br />
+
+                        </p>
+                    </td>
+                    <td width="33%" style="border: 1px solid #5b9bd5; padding-top: 0in; padding-bottom: 0in; padding-left: 0.08in; padding-right: 0.08in">
+                        <p style="margin-top: 0.08in">
+                            @item.BIRIM
+                            <br />
+
+                        </p>
+                    </td>
+                    <td width="14%" style="border: 1px solid #5b9bd5; padding-top: 0in; padding-bottom: 0in; padding-left: 0.08in; padding-right: 0.08in">
+                        <p align="right" style="margin-top: 0.08in">
+                            @item.NETFIYAT
+                            <br />
+
+                        </p>
+                    </td>
+                    <td width="17%" style="border: 1px solid #5b9bd5; padding-top: 0in; padding-bottom: 0in; padding-left: 0.08in; padding-right: 0.08in">
+                        <p align="right" style="margin-top: 0.08in">
+                            <br />
+
+                        </p>
+                    </td>
+                    <td width="17%" style="border: 1px solid #5b9bd5; padding-top: 0in; padding-bottom: 0in; padding-left: 0.08in; padding-right: 0.08in">
+                        <p align="right" style="margin-top: 0.08in">
+                            <br />
+
+                        </p>
+                    </td>
+                </tr>
+
+
+            }
+
+            <tr valign="top">
+                <td width="7%" style="border: 1px solid #5b9bd5; padding-top: 0in; padding-bottom: 0in; padding-left: 0.08in; padding-right: 0.08in">
+                    <p align="center" style="margin-top: 0.08in">
+                        <br />
+
+                    </p>
+                </td>
+                <td width="12%" style="border: 1px solid #5b9bd5; padding-top: 0in; padding-bottom: 0in; padding-left: 0.08in; padding-right: 0.08in">
+                    <p align="center" style="margin-top: 0.08in">
+                        <br />
+
+                    </p>
+                </td>
+                <td width="33%" style="border: 1px solid #5b9bd5; padding-top: 0in; padding-bottom: 0in; padding-left: 0.08in; padding-right: 0.08in">
+                    <p style="margin-top: 0.08in">
+                        <br />
+
+                    </p>
+                </td>
+                <td width="14%" style="border: 1px solid #5b9bd5; padding-top: 0in; padding-bottom: 0in; padding-left: 0.08in; padding-right: 0.08in">
+                    <p align="right" style="margin-top: 0.08in">
+                        <br />
+
+                    </p>
+                </td>
+                <td width="17%" style="border: 1px solid #5b9bd5; padding-top: 0in; padding-bottom: 0in; padding-left: 0.08in; padding-right: 0.08in">
+                    <p align="right" style="margin-top: 0.08in">
+                        <br />
+
+                    </p>
+                </td>
+                <td width="17%" style="border: 1px solid #5b9bd5; padding-top: 0in; padding-bottom: 0in; padding-left: 0.08in; padding-right: 0.08in">
+                    <p align="right" style="margin-top: 0.08in">
+                        <br />
+
+                    </p>
+                </td>
+            </tr>
+            <tr valign="top">
+                <td width="7%" style="border: 1px solid #5b9bd5; padding-top: 0in; padding-bottom: 0in; padding-left: 0.08in; padding-right: 0.08in">
+                    <p align="center" style="margin-top: 0.08in">
+                        <br />
+
+                    </p>
+                </td>
+                <td width="12%" style="border: 1px solid #5b9bd5; padding-top: 0in; padding-bottom: 0in; padding-left: 0.08in; padding-right: 0.08in">
+                    <p align="center" style="margin-top: 0.08in">
+                        <br />
+
+                    </p>
+                </td>
+                <td width="33%" style="border: 1px solid #5b9bd5; padding-top: 0in; padding-bottom: 0in; padding-left: 0.08in; padding-right: 0.08in">
+                    <p style="margin-top: 0.08in">
+                        <br />
+
+                    </p>
+                </td>
+                <td width="14%" style="border: 1px solid #5b9bd5; padding-top: 0in; padding-bottom: 0in; padding-left: 0.08in; padding-right: 0.08in">
+                    <p align="right" style="margin-top: 0.08in">
+                        <br />
+
+                    </p>
+                </td>
+                <td width="17%" style="border: 1px solid #5b9bd5; padding-top: 0in; padding-bottom: 0in; padding-left: 0.08in; padding-right: 0.08in">
+                    <p align="right" style="margin-top: 0.08in">
+                        <br />
+
+                    </p>
+                </td>
+                <td width="17%" style="border: 1px solid #5b9bd5; padding-top: 0in; padding-bottom: 0in; padding-left: 0.08in; padding-right: 0.08in">
+                    <p align="right" style="margin-top: 0.08in">
+                        <br />
+
+                    </p>
+                </td>
+            </tr>
+            <tr valign="top">
+                <td width="7%" style="border: 1px solid #5b9bd5; padding-top: 0in; padding-bottom: 0in; padding-left: 0.08in; padding-right: 0.08in">
+                    <p align="center" style="margin-top: 0.08in">
+                        <br />
+
+                    </p>
+                </td>
+                <td width="12%" style="border: 1px solid #5b9bd5; padding-top: 0in; padding-bottom: 0in; padding-left: 0.08in; padding-right: 0.08in">
+                    <p align="center" style="margin-top: 0.08in">
+                        <br />
+
+                    </p>
+                </td>
+                <td width="33%" style="border: 1px solid #5b9bd5; padding-top: 0in; padding-bottom: 0in; padding-left: 0.08in; padding-right: 0.08in">
+                    <p style="margin-top: 0.08in">
+                        <br />
+
+                    </p>
+                </td>
+                <td width="14%" style="border: 1px solid #5b9bd5; padding-top: 0in; padding-bottom: 0in; padding-left: 0.08in; padding-right: 0.08in">
+                    <p align="right" style="margin-top: 0.08in">
+                        <br />
+
+                    </p>
+                </td>
+                <td width="17%" style="border: 1px solid #5b9bd5; padding-top: 0in; padding-bottom: 0in; padding-left: 0.08in; padding-right: 0.08in">
+                    <p align="right" style="margin-top: 0.08in">
+                        <br />
+
+                    </p>
+                </td>
+                <td width="17%" style="border: 1px solid #5b9bd5; padding-top: 0in; padding-bottom: 0in; padding-left: 0.08in; padding-right: 0.08in">
+                    <p align="right" style="margin-top: 0.08in">
+                        <br />
+
+                    </p>
+                </td>
+            </tr>
+            <tr valign="top">
+                <td width="7%" style="border: 1px solid #5b9bd5; padding-top: 0in; padding-bottom: 0in; padding-left: 0.08in; padding-right: 0.08in">
+                    <p align="center" style="margin-top: 0.08in">
+                        <br />
+
+                    </p>
+                </td>
+                <td width="12%" style="border: 1px solid #5b9bd5; padding-top: 0in; padding-bottom: 0in; padding-left: 0.08in; padding-right: 0.08in">
+                    <p align="center" style="margin-top: 0.08in">
+                        <br />
+
+                    </p>
+                </td>
+                <td width="33%" style="border: 1px solid #5b9bd5; padding-top: 0in; padding-bottom: 0in; padding-left: 0.08in; padding-right: 0.08in">
+                    <p style="margin-top: 0.08in">
+                        <br />
+
+                    </p>
+                </td>
+                <td width="14%" style="border: 1px solid #5b9bd5; padding-top: 0in; padding-bottom: 0in; padding-left: 0.08in; padding-right: 0.08in">
+                    <p align="right" style="margin-top: 0.08in">
+                        <br />
+
+                    </p>
+                </td>
+                <td width="17%" style="border: 1px solid #5b9bd5; padding-top: 0in; padding-bottom: 0in; padding-left: 0.08in; padding-right: 0.08in">
+                    <p align="right" style="margin-top: 0.08in">
+                        <br />
+
+                    </p>
+                </td>
+                <td width="17%" style="border: 1px solid #5b9bd5; padding-top: 0in; padding-bottom: 0in; padding-left: 0.08in; padding-right: 0.08in">
+                    <p align="right" style="margin-top: 0.08in">
+                        <br />
+
+                    </p>
+                </td>
+            </tr>
+            <tr valign="top">
+                <td width="7%" style="border: 1px solid #5b9bd5; padding-top: 0in; padding-bottom: 0in; padding-left: 0.08in; padding-right: 0.08in">
+                    <p align="center" style="margin-top: 0.08in">
+                        <br />
+
+                    </p>
+                </td>
+                <td width="12%" style="border: 1px solid #5b9bd5; padding-top: 0in; padding-bottom: 0in; padding-left: 0.08in; padding-right: 0.08in">
+                    <p align="center" style="margin-top: 0.08in">
+                        <br />
+
+                    </p>
+                </td>
+                <td width="33%" style="border: 1px solid #5b9bd5; padding-top: 0in; padding-bottom: 0in; padding-left: 0.08in; padding-right: 0.08in">
+                    <p style="margin-top: 0.08in">
+                        <br />
+
+                    </p>
+                </td>
+                <td width="14%" style="border: 1px solid #5b9bd5; padding-top: 0in; padding-bottom: 0in; padding-left: 0.08in; padding-right: 0.08in">
+                    <p align="right" style="margin-top: 0.08in">
+                        <br />
+
+                    </p>
+                </td>
+                <td width="17%" style="border: 1px solid #5b9bd5; padding-top: 0in; padding-bottom: 0in; padding-left: 0.08in; padding-right: 0.08in">
+                    <p align="right" style="margin-top: 0.08in">
+                        <br />
+
+                    </p>
+                </td>
+                <td width="17%" style="border: 1px solid #5b9bd5; padding-top: 0in; padding-bottom: 0in; padding-left: 0.08in; padding-right: 0.08in">
+                    <p align="right" style="margin-top: 0.08in">
+                        <br />
+
+                    </p>
+                </td>
+            </tr>
+            <tr valign="top">
+                <td width="7%" style="border: 1px solid #5b9bd5; padding-top: 0in; padding-bottom: 0in; padding-left: 0.08in; padding-right: 0.08in">
+                    <p align="center" style="margin-top: 0.08in">
+                        <br />
+
+                    </p>
+                </td>
+                <td width="12%" style="border: 1px solid #5b9bd5; padding-top: 0in; padding-bottom: 0in; padding-left: 0.08in; padding-right: 0.08in">
+                    <p align="center" style="margin-top: 0.08in">
+                        <br />
+
+                    </p>
+                </td>
+                <td width="33%" style="border: 1px solid #5b9bd5; padding-top: 0in; padding-bottom: 0in; padding-left: 0.08in; padding-right: 0.08in">
+                    <p style="margin-top: 0.08in">
+                        <br />
+
+                    </p>
+                </td>
+                <td width="14%" style="border: 1px solid #5b9bd5; padding-top: 0in; padding-bottom: 0in; padding-left: 0.08in; padding-right: 0.08in">
+                    <p align="right" style="margin-top: 0.08in">
+                        <br />
+
+                    </p>
+                </td>
+                <td width="17%" style="border: 1px solid #5b9bd5; padding-top: 0in; padding-bottom: 0in; padding-left: 0.08in; padding-right: 0.08in">
+                    <p align="right" style="margin-top: 0.08in">
+                        <br />
+
+                    </p>
+                </td>
+                <td width="17%" style="border: 1px solid #5b9bd5; padding-top: 0in; padding-bottom: 0in; padding-left: 0.08in; padding-right: 0.08in">
+                    <p align="right" style="margin-top: 0.08in">
+                        <br />
+
+                    </p>
+                </td>
+            </tr>
+            <tr valign="top">
+                <td width="7%" style="border-top: 1px solid #5b9bd5; border-bottom: 1px solid #5b9bd5; border-left: 1px solid #5b9bd5; border-right: none; padding-top: 0in; padding-bottom: 0in; padding-left: 0.08in; padding-right: 0in">
+                    <p align="right" style="margin-top: 0.08in">
+                        <br />
+
+                    </p>
+                </td>
+                <td width="12%" style="border-top: 1px solid #5b9bd5; border-bottom: 1px solid #5b9bd5; border-left: none; border-right: none; padding: 0in">
+                    <p align="right" style="margin-top: 0.08in">
+                        <br />
+
+                    </p>
+                </td>
+                <td width="33%" style="border-top: 1px solid #5b9bd5; border-bottom: 1px solid #5b9bd5; border-left: none; border-right: none; padding: 0in">
+                    <p align="right" style="margin-top: 0.08in">
+                        <br />
+
+                    </p>
+                </td>
+                <td width="14%" style="border-top: 1px solid #5b9bd5; border-bottom: 1px solid #5b9bd5; border-left: none; border-right: none; padding: 0in">
+                    <p align="right" style="margin-top: 0.08in">
+                        <br />
+
+                    </p>
+                </td>
+                <td width="17%" style="border-top: 1px solid #5b9bd5; border-bottom: 1px solid #5b9bd5; border-left: none; border-right: 1px solid #5b9bd5; padding-top: 0in; padding-bottom: 0in; padding-left: 0in; padding-right: 0.08in">
+                    <p align="right" style="margin-top: 0.08in">Toplam İndirim</p>
+                </td>
+                <td width="17%" style="border: 1px solid #5b9bd5; padding-top: 0in; padding-bottom: 0in; padding-left: 0.08in; padding-right: 0.08in">
+                    <p align="right" style="margin-top: 0.08in">
+                        <br />
+
+                    </p>
+                </td>
+            </tr>
+            <tr valign="top">
+                <td width="7%" style="border-top: 1px solid #5b9bd5; border-bottom: 1px solid #5b9bd5; border-left: 1px solid #5b9bd5; border-right: none; padding-top: 0in; padding-bottom: 0in; padding-left: 0.08in; padding-right: 0in">
+                    <p align="right" style="margin-top: 0.08in">
+                        <br />
+
+                    </p>
+                </td>
+                <td width="12%" style="border-top: 1px solid #5b9bd5; border-bottom: 1px solid #5b9bd5; border-left: none; border-right: none; padding: 0in">
+                    <p align="right" style="margin-top: 0.08in">
+                        <br />
+
+                    </p>
+                </td>
+                <td width="33%" style="border-top: 1px solid #5b9bd5; border-bottom: 1px solid #5b9bd5; border-left: none; border-right: none; padding: 0in">
+                    <p align="right" style="margin-top: 0.08in">
+                        <br />
+
+                    </p>
+                </td>
+                <td width="14%" style="border-top: 1px solid #5b9bd5; border-bottom: 1px solid #5b9bd5; border-left: none; border-right: none; padding: 0in">
+                    <p align="right" style="margin-top: 0.08in">
+                        <br />
+
+                    </p>
+                </td>
+                <td width="17%" style="border-top: 1px solid #5b9bd5; border-bottom: 1px solid #5b9bd5; border-left: none; border-right: 1px solid #5b9bd5; padding-top: 0in; padding-bottom: 0in; padding-left: 0in; padding-right: 0.08in">
+                    <p align="right" style="margin-top: 0.08in">Alt Toplam</p>
+                </td>
+                <td width="17%" style="border: 1px solid #5b9bd5; padding-top: 0in; padding-bottom: 0in; padding-left: 0.08in; padding-right: 0.08in">
+                    <p align="right" style="margin-top: 0.08in">
+                        <br />
+
+                    </p>
+                </td>
+            </tr>
+            <tr valign="top">
+                <td width="7%" style="border-top: 1px solid #5b9bd5; border-bottom: 1px solid #5b9bd5; border-left: 1px solid #5b9bd5; border-right: none; padding-top: 0in; padding-bottom: 0in; padding-left: 0.08in; padding-right: 0in">
+                    <p align="right" style="margin-top: 0.08in">
+                        <br />
+
+                    </p>
+                </td>
+                <td width="12%" style="border-top: 1px solid #5b9bd5; border-bottom: 1px solid #5b9bd5; border-left: none; border-right: none; padding: 0in">
+                    <p align="right" style="margin-top: 0.08in">
+                        <br />
+
+                    </p>
+                </td>
+                <td width="33%" style="border-top: 1px solid #5b9bd5; border-bottom: 1px solid #5b9bd5; border-left: none; border-right: none; padding: 0in">
+                    <p align="right" style="margin-top: 0.08in">
+                        <br />
+
+                    </p>
+                </td>
+                <td width="14%" style="border-top: 1px solid #5b9bd5; border-bottom: 1px solid #5b9bd5; border-left: none; border-right: none; padding: 0in">
+                    <p align="right" style="margin-top: 0.08in">
+                        <br />
+
+                    </p>
+                </td>
+                <td width="17%" style="border-top: 1px solid #5b9bd5; border-bottom: 1px solid #5b9bd5; border-left: none; border-right: 1px solid #5b9bd5; padding-top: 0in; padding-bottom: 0in; padding-left: 0in; padding-right: 0.08in">
+                    <p align="right" style="margin-top: 0.08in">Satış Vergisi</p>
+                </td>
+                <td width="17%" style="border: 1px solid #5b9bd5; padding-top: 0in; padding-bottom: 0in; padding-left: 0.08in; padding-right: 0.08in">
+                    <p align="right" style="margin-top: 0.08in">
+                        <br />
+
+                    </p>
+                </td>
+            </tr>
+            <tr valign="top">
+                <td width="7%" bgcolor="#5b9bd5" style="background: #5b9bd5" style="border: 1px solid #5b9bd5; padding-top: 0in; padding-bottom: 0in; padding-left: 0.08in; padding-right: 0.08in">
+                    <p align="right" style="margin-top: 0.08in">
+                        <br />
+
+                    </p>
+                </td>
+                <td width="12%" bgcolor="#5b9bd5" style="background: #5b9bd5" style="border: 1px solid #5b9bd5; padding-top: 0in; padding-bottom: 0in; padding-left: 0.08in; padding-right: 0.08in">
+                    <p align="right" style="margin-top: 0.08in">
+                        <br />
+
+                    </p>
+                </td>
+                <td width="33%" bgcolor="#5b9bd5" style="background: #5b9bd5" style="border: 1px solid #5b9bd5; padding-top: 0in; padding-bottom: 0in; padding-left: 0.08in; padding-right: 0.08in">
+                    <p align="right" style="margin-top: 0.08in">
+                        <br />
+
+                    </p>
+                </td>
+                <td width="14%" bgcolor="#5b9bd5" style="background: #5b9bd5" style="border: 1px solid #5b9bd5; padding-top: 0in; padding-bottom: 0in; padding-left: 0.08in; padding-right: 0.08in">
+                    <p align="right" style="margin-top: 0.08in">
+                        <br />
+
+                    </p>
+                </td>
+                <td width="17%" bgcolor="#5b9bd5" style="background: #5b9bd5" style="border: 1px solid #5b9bd5; padding-top: 0in; padding-bottom: 0in; padding-left: 0.08in; padding-right: 0.08in">
+                    <p align="right" style="margin-top: 0.08in"><font color="#ffffff"><b>Toplam</b></font></p>
+                </td>
+                <td width="17%" bgcolor="#5b9bd5" style="background: #5b9bd5" style="border: 1px solid #5b9bd5; padding-top: 0in; padding-bottom: 0in; padding-left: 0.08in; padding-right: 0.08in">
+                    <p align="right" style="margin-top: 0.08in">
+                        <br />
+
+                    </p>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <p style="margin-top: 0.25in; margin-bottom: 0.08in; line-height: 100%">
+        <font color="#5b9bd5">
+            <font size="3" style="font-size: 12pt">
+                <b>
+                    Bizimle
+                    çalıştığınız için teşekkür ederiz!
+                </b>
+            </font>
+        </font>
+    </p>
+    <div title="footer">
+        <p style="margin-top: 0.51in; margin-bottom: 0in"><font color="#2e74b5"><font face="Arial Black, serif">[Şirketiniz]</font></font></p>
+        <p style="margin-top: 0.03in; margin-bottom: 0in; line-height: 100%">
+            [Adres, Şehir, Posta Kodu]&nbsp;&nbsp;<font color="#5b9bd5"><span style="font-weight: normal">|&nbsp;&nbsp;</span></font>[Web
+            Adresi]
+        </p>
+        <p style="margin-top: 0.03in; margin-bottom: 0in; line-height: 100%">
+            t. [Telefon]&nbsp;&nbsp;<font color="#5b9bd5"><span style="font-weight: normal">|</span></font>&nbsp;&nbsp;f.[Faks]&nbsp;&nbsp;<font color="#5b9bd5"><span style="font-weight: normal">|&nbsp;&nbsp;</span></font>[E-posta]
+        </p>
+    </div>
+</body>
+</html>

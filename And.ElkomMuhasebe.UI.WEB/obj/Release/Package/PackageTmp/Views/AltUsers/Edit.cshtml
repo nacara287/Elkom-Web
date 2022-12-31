@@ -1,0 +1,994 @@
+﻿@model And.ElkomMuhasebe.Core.Model.Entity.Admin.AltUser
+
+@{
+    ViewBag.Title = "Alt Kullanıcı Düzenle";
+    Layout = "~/Views/Shared/yeni.cshtml";
+}
+
+    <div class="row">
+
+        @Html.AntiForgeryToken()
+
+        @Html.HiddenFor(model => model.ID)
+
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+        <div class="col-xl-6 col-lg-6">
+            <!-- START card -->
+            <div class="card">
+                <div class="card-header ">
+                    <div class="card-title">
+                        Alt Kullanıcı Bilgileri
+                    </div>
+                </div>
+                <div class="card-body">
+
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                <label>Kullanıcı Adı</label>
+                                    @Html.EditorFor(model => model.username, new { htmlAttributes = new { @class = "form-control" } })
+                                    @Html.ValidationMessageFor(model => model.username, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                <label>Kullanıcı Şifre</label>
+                                    @Html.EditorFor(model => model.password, new { htmlAttributes = new { @class = "form-control" } })
+                                    @Html.ValidationMessageFor(model => model.password, "", new { @class = "text-danger" })
+
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                <label>İsim</label>
+                                    @Html.EditorFor(model => model.name, new { htmlAttributes = new { @class = "form-control" } })
+                                    @Html.ValidationMessageFor(model => model.name, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                <label>Soyisim</label>
+                                    @Html.EditorFor(model => model.surname, new { htmlAttributes = new { @class = "form-control" } })
+                                    @Html.ValidationMessageFor(model => model.surname, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                <label>E-Posta</label>
+                                    @Html.EditorFor(model => model.mail, new { htmlAttributes = new { @class = "form-control form-control-sm", @placeholder = "...", @aria_label = "...", @aria_describedby = "button-addon2" } })
+                                    @Html.ValidationMessageFor(model => model.mail, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                <label>Telefon</label>
+                                    @Html.EditorFor(model => model.telephone, new { htmlAttributes = new { @class = "form-control" } })
+                                    @Html.ValidationMessageFor(model => model.telephone, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            @if (Model.Actıve == 1)
+                                {
+                                    <div class="form-check switch switch-lg success full-width right m-b-0">
+                                        <input type="checkbox" value="1" id="Actıve" name="Actıve" checked>
+                                        <label for="Actıve">Aktif</label>
+                                    </div>}
+                                else
+                                { <div class="form-check switch switch-lg success full-width right m-b-0">
+                                        <input type="checkbox" value="1" id="Actıve" name="Actıve">
+                                        <label for="Actıve">Aktif</label>
+                                    </div>
+
+                                }
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- END card -->
+        </div>
+
+        <div class="col-xl-6 col-lg-6">
+            <!-- START card -->
+            <div class="card">
+                <div class="card-header ">
+                    <div class="card-title">
+                        Rol Tanımları
+                    </div>
+                </div>
+                <div class="card-body">
+                    <table id="haktablo" class="table">
+                        <thead>
+                            <tr>
+                                <th>Haklar</th>
+                                <th>Görme</th>
+                                <th>Ekleme</th>
+                                <th>Silme</th>
+                                <th>Değiştirme</th>
+
+                            </tr>
+                            <tr>
+                                <th>Hepsini Seç/Bırak</th>
+                                <th><input id="hepsinisecgorme" onClick="toggle(this,'name1')" type="checkbox" />  </th>
+                                <th><input id="hepsinisecekle" onClick="toggle(this,'name2')" type="checkbox" />  </th>
+                                <th><input id="hepsinisecsilme" onClick="toggle(this,'name3')" type="checkbox" />  </th>
+                                <th><input id="hepsinisecdegistirme" onClick="toggle(this,'name4')" type="checkbox" />  </th>
+
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Firmalar</td>
+                                @if (Model.görme.Contains("Firmalar"))
+                                {
+                                    <td><input type="checkbox" name="name1" checked />  </td>
+                                }
+                                else
+                                {
+                                    <td><input type="checkbox" name="name1" />  </td>
+                                }
+                                @if (Model.ekleme.Contains("Firmalar"))
+                                {
+
+
+                                    <td><input type="checkbox" name="name2" checked />  </td>
+                                }
+                                else
+                                {
+                                    <td><input type="checkbox" name="name2" />  </td>
+                                }
+                                @if (Model.silme.Contains("Firmalar"))
+                                {
+
+
+                                    <td><input type="checkbox" name="name3" checked />  </td>
+                                }
+                                else
+                                {
+                                    <td><input type="checkbox" name="name3" />  </td>
+                                }
+                                @if (Model.degistir.Contains("Firmalar"))
+                                {
+
+
+                                    <td><input type="checkbox" name="name4" checked />  </td>
+                                }
+                                else
+                                {
+                                    <td><input type="checkbox" name="name4" />  </td>
+                                }
+
+
+                            </tr>
+                     
+                            <tr>
+                                <td>Cariler</td>
+                                @if (Model.görme.Contains("Cariler"))
+                                {
+                                    <td><input type="checkbox" name="name1" checked />  </td>
+                                }
+                                else
+                                {
+                                    <td><input type="checkbox" name="name1" />  </td>
+                                }
+                                @if (Model.ekleme.Contains("Cariler"))
+                                {
+
+
+                                    <td><input type="checkbox" name="name2" checked />  </td>
+                                }
+                                else
+                                {
+                                    <td><input type="checkbox" name="name2" />  </td>
+                                }
+                                @if (Model.silme.Contains("Cariler"))
+                                {
+
+
+                                    <td><input type="checkbox" name="name3" checked />  </td>
+                                }
+                                else
+                                {
+                                    <td><input type="checkbox" name="name3" />  </td>
+                                }
+                                @if (Model.degistir.Contains("Cariler"))
+                                {
+
+
+                                    <td><input type="checkbox" name="name4" checked />  </td>
+                                }
+                                else
+                                {
+                                    <td><input type="checkbox" name="name4" />  </td>
+                                }
+
+
+                            </tr>
+                            <tr>
+                                <td>Cari Hareketleri Ve Fişleri</td>
+                                @if (Model.görme.Contains("Cari Hareketleri Ve Fişleri"))
+                                {
+                                    <td><input type="checkbox" name="name1" checked />  </td>
+                                }
+                                else
+                                {
+                                    <td><input type="checkbox" name="name1" />  </td>
+                                }
+                                @if (Model.ekleme.Contains("Cari Hareketleri Ve Fişleri"))
+                                {
+
+
+                                    <td><input type="checkbox" name="name2" checked />  </td>
+                                }
+                                else
+                                {
+                                    <td><input type="checkbox" name="name2" />  </td>
+                                }
+                                @if (Model.silme.Contains("Cari Hareketleri Ve Fişleri"))
+                                {
+
+
+                                    <td><input type="checkbox" name="name3" checked />  </td>
+                                }
+                                else
+                                {
+                                    <td><input type="checkbox" name="name3" />  </td>
+                                }
+                                @if (Model.degistir.Contains("Cari Hareketleri Ve Fişleri"))
+                                {
+
+
+                                    <td><input type="checkbox" name="name4" checked />  </td>
+                                }
+                                else
+                                {
+                                    <td><input type="checkbox" name="name4" />  </td>
+                                }
+
+
+                            </tr>
+                            <tr>
+                                <td>Stoklar</td>
+                                @if (Model.görme.Contains("Stoklar"))
+                                {
+                                    <td><input type="checkbox" name="name1" checked />  </td>
+                                }
+                                else
+                                {
+                                    <td><input type="checkbox" name="name1" />  </td>
+                                }
+                                @if (Model.ekleme.Contains("Stoklar"))
+                                {
+
+
+                                    <td><input type="checkbox" name="name2" checked />  </td>
+                                }
+                                else
+                                {
+                                    <td><input type="checkbox" name="name2" />  </td>
+                                }
+                                @if (Model.silme.Contains("Stoklar"))
+                                {
+
+
+                                    <td><input type="checkbox" name="name3" checked />  </td>
+                                }
+                                else
+                                {
+                                    <td><input type="checkbox" name="name3" />  </td>
+                                }
+                                @if (Model.degistir.Contains("Stoklar"))
+                                {
+
+
+                                    <td><input type="checkbox" name="name4" checked />  </td>
+                                }
+                                else
+                                {
+                                    <td><input type="checkbox" name="name4" />  </td>
+                                }
+
+                            </tr>
+                            <tr>
+                                <td>Stok Hareketleri Ve Fişleri</td>
+                                @if (Model.görme.Contains("Stoklar"))
+                                {
+                                    <td><input type="checkbox" name="name1" checked />  </td>
+                                }
+                                else
+                                {
+                                    <td><input type="checkbox" name="name1" />  </td>
+                                }
+                                @if (Model.ekleme.Contains("Stoklar"))
+                                {
+
+
+                                    <td><input type="checkbox" name="name2" checked />  </td>
+                                }
+                                else
+                                {
+                                    <td><input type="checkbox" name="name2" />  </td>
+                                }
+                                @if (Model.silme.Contains("Stoklar"))
+                                {
+
+
+                                    <td><input type="checkbox" name="name3" checked />  </td>
+                                }
+                                else
+                                {
+                                    <td><input type="checkbox" name="name3" />  </td>
+                                }
+                                @if (Model.degistir.Contains("Stoklar"))
+                                {
+
+
+                                    <td><input type="checkbox" name="name4" checked />  </td>
+                                }
+                                else
+                                {
+                                    <td><input type="checkbox" name="name4" />  </td>
+                                }
+
+                            </tr>
+                            <tr>
+                                <td>Kasalar</td>
+                                @if (Model.görme.Contains("Kasalar"))
+                                {
+                                    <td><input type="checkbox" name="name1" checked />  </td>
+                                }
+                                else
+                                {
+                                    <td><input type="checkbox" name="name1" />  </td>
+                                }
+                                @if (Model.ekleme.Contains("Kasalar"))
+                                {
+
+
+                                    <td><input type="checkbox" name="name2" checked />  </td>
+                                }
+                                else
+                                {
+                                    <td><input type="checkbox" name="name2" />  </td>
+                                }
+                                @if (Model.silme.Contains("Kasalar"))
+                                {
+
+
+                                    <td><input type="checkbox" name="name3" checked />  </td>
+                                }
+                                else
+                                {
+                                    <td><input type="checkbox" name="name3" />  </td>
+                                }
+                                @if (Model.degistir.Contains("Kasalar"))
+                                {
+
+
+                                    <td><input type="checkbox" name="name4" checked />  </td>
+                                }
+                                else
+                                {
+                                    <td><input type="checkbox" name="name4" />  </td>
+                                }
+
+                            </tr>
+                            <tr>
+                                <td>Kasa Hareketleri Ve Fişleri</td>
+                                @if (Model.görme.Contains("Kasa Hareketleri Ve Fişleri"))
+                                {
+                                    <td><input type="checkbox" name="name1" checked />  </td>
+                                }
+                                else
+                                {
+                                    <td><input type="checkbox" name="name1" />  </td>
+                                }
+                                @if (Model.ekleme.Contains("Kasa Hareketleri Ve Fişleri"))
+                                {
+
+
+                                    <td><input type="checkbox" name="name2" checked />  </td>
+                                }
+                                else
+                                {
+                                    <td><input type="checkbox" name="name2" />  </td>
+                                }
+                                @if (Model.silme.Contains("Kasa Hareketleri Ve Fişleri"))
+                                {
+
+
+                                    <td><input type="checkbox" name="name3" checked />  </td>
+                                }
+                                else
+                                {
+                                    <td><input type="checkbox" name="name3" />  </td>
+                                }
+                                @if (Model.degistir.Contains("Kasa Hareketleri Ve Fişleri"))
+                                {
+
+
+                                    <td><input type="checkbox" name="name4" checked />  </td>
+                                }
+                                else
+                                {
+                                    <td><input type="checkbox" name="name4" />  </td>
+                                }
+
+                            </tr>
+                            <tr>
+                                <td>İrsaliyeler</td>
+                                @if (Model.görme.Contains("İrsaliyeler"))
+                                {
+                                    <td><input type="checkbox" name="name1" checked />  </td>
+                                }
+                                else
+                                {
+                                    <td><input type="checkbox" name="name1" />  </td>
+                                }
+                                @if (Model.ekleme.Contains("İrsaliyeler"))
+                                {
+
+
+                                    <td><input type="checkbox" name="name2" checked />  </td>
+                                }
+                                else
+                                {
+                                    <td><input type="checkbox" name="name2" />  </td>
+                                }
+                                @if (Model.silme.Contains("İrsaliyeler"))
+                                {
+
+
+                                    <td><input type="checkbox" name="name3" checked />  </td>
+                                }
+                                else
+                                {
+                                    <td><input type="checkbox" name="name3" />  </td>
+                                }
+                                @if (Model.degistir.Contains("İrsaliyeler"))
+                                {
+
+
+                                    <td><input type="checkbox" name="name4" checked />  </td>
+                                }
+                                else
+                                {
+                                    <td><input type="checkbox" name="name4" />  </td>
+                                }
+
+                            </tr>
+                            <tr>
+                                <td>Faturalar</td>
+                                @if (Model.görme.Contains("Faturalar"))
+                                {
+                                    <td><input type="checkbox" name="name1" checked />  </td>
+                                }
+                                else
+                                {
+                                    <td><input type="checkbox" name="name1" />  </td>
+                                }
+                                @if (Model.ekleme.Contains("Faturalar"))
+                                {
+
+
+                                    <td><input type="checkbox" name="name2" checked />  </td>
+                                }
+                                else
+                                {
+                                    <td><input type="checkbox" name="name2" />  </td>
+                                }
+                                @if (Model.silme.Contains("Faturalar"))
+                                {
+
+
+                                    <td><input type="checkbox" name="name3" checked />  </td>
+                                }
+                                else
+                                {
+                                    <td><input type="checkbox" name="name3" />  </td>
+                                }
+                                @if (Model.degistir.Contains("Faturalar"))
+                                {
+
+
+                                    <td><input type="checkbox" name="name4" checked />  </td>
+                                }
+                                else
+                                {
+                                    <td><input type="checkbox" name="name4" />  </td>
+                                }
+
+                            </tr>
+                            <tr>
+                                <td>E-Faturalar</td>
+                                @if (Model.görme.Contains("E-Faturalar"))
+                                {
+                                    <td><input type="checkbox" name="name1" checked />  </td>
+                                }
+                                else
+                                {
+                                    <td><input type="checkbox" name="name1" />  </td>
+                                }
+                                @if (Model.ekleme.Contains("E-Faturalar"))
+                                {
+
+
+                                    <td><input type="checkbox" name="name2" checked />  </td>
+                                }
+                                else
+                                {
+                                    <td><input type="checkbox" name="name2" />  </td>
+                                }
+                                @if (Model.silme.Contains("E-Faturalar"))
+                                {
+
+
+                                    <td><input type="checkbox" name="name3" checked />  </td>
+                                }
+                                else
+                                {
+                                    <td><input type="checkbox" name="name3" />  </td>
+                                }
+                                @if (Model.degistir.Contains("E-Faturalar"))
+                                {
+
+
+                                    <td><input type="checkbox" name="name4" checked />  </td>
+                                }
+                                else
+                                {
+                                    <td><input type="checkbox" name="name4" />  </td>
+                                }
+
+                            </tr>
+                            <tr>
+                                <td>Sipariş</td>
+                                @if (Model.görme.Contains("Sipariş"))
+                                {
+                                    <td><input type="checkbox" name="name1" checked />  </td>
+                                }
+                                else
+                                {
+                                    <td><input type="checkbox" name="name1" />  </td>
+                                }
+                                @if (Model.ekleme.Contains("Sipariş"))
+                                {
+
+
+                                    <td><input type="checkbox" name="name2" checked />  </td>
+                                }
+                                else
+                                {
+                                    <td><input type="checkbox" name="name2" />  </td>
+                                }
+                                @if (Model.silme.Contains("Sipariş"))
+                                {
+
+
+                                    <td><input type="checkbox" name="name3" checked />  </td>
+                                }
+                                else
+                                {
+                                    <td><input type="checkbox" name="name3" />  </td>
+                                }
+                                @if (Model.degistir.Contains("Sipariş"))
+                                {
+
+
+                                    <td><input type="checkbox" name="name4" checked />  </td>
+                                }
+                                else
+                                {
+                                    <td><input type="checkbox" name="name4" />  </td>
+                                }
+
+                            </tr>
+                            <tr>
+                                <td>Üretim</td>
+                                @if (Model.görme.Contains("Üretim"))
+                                {
+                                    <td><input type="checkbox" name="name1" checked />  </td>
+                                }
+                                else
+                                {
+                                    <td><input type="checkbox" name="name1" />  </td>
+                                }
+                                @if (Model.ekleme.Contains("Üretim"))
+                                {
+
+
+                                    <td><input type="checkbox" name="name2" checked />  </td>
+                                }
+                                else
+                                {
+                                    <td><input type="checkbox" name="name2" />  </td>
+                                }
+                                @if (Model.silme.Contains("Üretim"))
+                                {
+
+
+                                    <td><input type="checkbox" name="name3" checked />  </td>
+                                }
+                                else
+                                {
+                                    <td><input type="checkbox" name="name3" />  </td>
+                                }
+                                @if (Model.degistir.Contains("Üretim"))
+                                {
+
+
+                                    <td><input type="checkbox" name="name4" checked />  </td>
+                                }
+                                else
+                                {
+                                    <td><input type="checkbox" name="name4" />  </td>
+                                }
+
+                            </tr>
+                            <tr>
+                                <td>Çekler</td>
+                                @if (Model.görme.Contains("Çekler"))
+                                {
+                                    <td><input type="checkbox" name="name1" checked />  </td>
+                                }
+                                else
+                                {
+                                    <td><input type="checkbox" name="name1" />  </td>
+                                }
+                                @if (Model.ekleme.Contains("Çekler"))
+                                {
+
+
+                                    <td><input type="checkbox" name="name2" checked />  </td>
+                                }
+                                else
+                                {
+                                    <td><input type="checkbox" name="name2" />  </td>
+                                }
+                                @if (Model.silme.Contains("Çekler"))
+                                {
+
+
+                                    <td><input type="checkbox" name="name3" checked />  </td>
+                                }
+                                else
+                                {
+                                    <td><input type="checkbox" name="name3" />  </td>
+                                }
+                                @if (Model.degistir.Contains("Çekler"))
+                                {
+
+
+                                    <td><input type="checkbox" name="name4" checked />  </td>
+                                }
+                                else
+                                {
+                                    <td><input type="checkbox" name="name4" />  </td>
+                                }
+
+                            </tr>
+                            <tr>
+                                <td>Senetler</td>
+                                @if (Model.görme.Contains("Senetler"))
+                                {
+                                    <td><input type="checkbox" name="name1" checked />  </td>
+                                }
+                                else
+                                {
+                                    <td><input type="checkbox" name="name1" />  </td>
+                                }
+                                @if (Model.ekleme.Contains("Senetler"))
+                                {
+
+
+                                    <td><input type="checkbox" name="name2" checked />  </td>
+                                }
+                                else
+                                {
+                                    <td><input type="checkbox" name="name2" />  </td>
+                                }
+                                @if (Model.silme.Contains("Senetler"))
+                                {
+
+
+                                    <td><input type="checkbox" name="name3" checked />  </td>
+                                }
+                                else
+                                {
+                                    <td><input type="checkbox" name="name3" />  </td>
+                                }
+                                @if (Model.degistir.Contains("Senetler"))
+                                {
+
+
+                                    <td><input type="checkbox" name="name4" checked />  </td>
+                                }
+                                else
+                                {
+                                    <td><input type="checkbox" name="name4" />  </td>
+                                }
+
+                            </tr>
+                            <tr>
+                                <td>Bankalar</td>
+                                @if (Model.görme.Contains("Bankalar"))
+                                {
+                                    <td><input type="checkbox" name="name1" checked />  </td>
+                                }
+                                else
+                                {
+                                    <td><input type="checkbox" name="name1" />  </td>
+                                }
+                                @if (Model.ekleme.Contains("Bankalar"))
+                                {
+
+
+                                    <td><input type="checkbox" name="name2" checked />  </td>
+                                }
+                                else
+                                {
+                                    <td><input type="checkbox" name="name2" />  </td>
+                                }
+                                @if (Model.silme.Contains("Bankalar"))
+                                {
+
+
+                                    <td><input type="checkbox" name="name3" checked />  </td>
+                                }
+                                else
+                                {
+                                    <td><input type="checkbox" name="name3" />  </td>
+                                }
+                                @if (Model.degistir.Contains("Bankalar"))
+                                {
+
+
+                                    <td><input type="checkbox" name="name4" checked />  </td>
+                                }
+                                else
+                                {
+                                    <td><input type="checkbox" name="name4" />  </td>
+                                }
+
+                            </tr>
+                            <tr>
+                                <td>Banka Hareketleri Ve Fişleri</td>
+                                @if (Model.görme.Contains("Banka Hareketleri Ve Fişleri"))
+                                {
+                                    <td><input type="checkbox" name="name1" checked />  </td>
+                                }
+                                else
+                                {
+                                    <td><input type="checkbox" name="name1" />  </td>
+                                }
+                                @if (Model.ekleme.Contains("Banka Hareketleri Ve Fişleri"))
+                                {
+
+
+                                    <td><input type="checkbox" name="name2" checked />  </td>
+                                }
+                                else
+                                {
+                                    <td><input type="checkbox" name="name2" />  </td>
+                                }
+                                @if (Model.silme.Contains("Banka Hareketleri Ve Fişleri"))
+                                {
+
+
+                                    <td><input type="checkbox" name="name3" checked />  </td>
+                                }
+                                else
+                                {
+                                    <td><input type="checkbox" name="name3" />  </td>
+                                }
+                                @if (Model.degistir.Contains("Banka Hareketleri Ve Fişleri"))
+                                {
+
+
+                                    <td><input type="checkbox" name="name4" checked />  </td>
+                                }
+                                else
+                                {
+                                    <td><input type="checkbox" name="name4" />  </td>
+                                }
+                            </tr>
+                            <tr>
+                                <td>Personeller</td>
+                                @if (Model.görme.Contains("Personeller"))
+                                {
+                                    <td><input type="checkbox" name="name1" checked />  </td>
+                                }
+                                else
+                                {
+                                    <td><input type="checkbox" name="name1" />  </td>
+                                }
+                                @if (Model.ekleme.Contains("Personeller"))
+                                {
+
+
+                                    <td><input type="checkbox" name="name2" checked />  </td>
+                                }
+                                else
+                                {
+                                    <td><input type="checkbox" name="name2" />  </td>
+                                }
+                                @if (Model.silme.Contains("Personeller"))
+                                {
+
+
+                                    <td><input type="checkbox" name="name3" checked />  </td>
+                                }
+                                else
+                                {
+                                    <td><input type="checkbox" name="name3" />  </td>
+                                }
+                                @if (Model.degistir.Contains("Personeller"))
+                                {
+
+
+                                    <td><input type="checkbox" name="name4" checked />  </td>
+                                }
+                                else
+                                {
+                                    <td><input type="checkbox" name="name4" />  </td>
+                                }
+
+                            </tr>
+                            <tr>
+                                <td>Personel Hareketleri Ve Fişleri</td>
+                                @if (Model.görme.Contains("Personel Hareketleri Ve Fişleri"))
+                                {
+                                    <td><input type="checkbox" name="name1" checked />  </td>
+                                }
+                                else
+                                {
+                                    <td><input type="checkbox" name="name1" />  </td>
+                                }
+                                @if (Model.ekleme.Contains("Personel Hareketleri Ve Fişleri"))
+                                {
+
+
+                                    <td><input type="checkbox" name="name2" checked />  </td>
+                                }
+                                else
+                                {
+                                    <td><input type="checkbox" name="name2" />  </td>
+                                }
+                                @if (Model.silme.Contains("Personel Hareketleri Ve Fişleri"))
+                                {
+
+
+                                    <td><input type="checkbox" name="name3" checked />  </td>
+                                }
+                                else
+                                {
+                                    <td><input type="checkbox" name="name3" />  </td>
+                                }
+                                @if (Model.degistir.Contains("Personel Hareketleri Ve Fişleri"))
+                                {
+
+
+                                    <td><input type="checkbox" name="name4" checked />  </td>
+                                }
+                                else
+                                {
+                                    <td><input type="checkbox" name="name4" />  </td>
+                                }
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <div id="butonlar" class="fixed-bottom py-1 text-center">
+            <button type="submit" onclick="arayaekle()" class="btn btn-sm btn-primary btn-icon-split">
+                <span class="icon text-white-50">
+                    <i class="fas fa-save"></i>
+                </span>
+                <span class="text">Kaydet</span>
+
+            </button>
+            <a href="/AltUsers/Edit" class="btn btn-sm btn-secondary btn-icon-split">
+                <span class="icon text-white-50">
+                    <i class="fas fa-power-off"></i>
+                </span>
+                <span class="text">İptal</span>
+            </a>
+        </div>
+    </div>
+
+
+@section script{
+    <script type="text/javascript">
+        var ekleme = [];
+        var silme = [];
+        var görme = [];
+        var degistirme = [];
+
+        function toggle(source, name) {
+            checkboxes = document.getElementsByName(name);
+            for (var i = 0, n = checkboxes.length; i < n; i++) {
+                checkboxes[i].checked = source.checked;
+            }
+        }
+        function arayaekle() {
+            var user = { ID: @Model.ID 
+                    , username: document.getElementById("username").value, password: document.getElementById("password").value, name: document.getElementById("name").value, surname: document.getElementById("surname").value, mail: document.getElementById("mail").value, telephone: document.getElementById("telephone").value, Actıve: document.getElementById("Actıve").value }
+            var oTable = document.getElementById('haktablo');
+
+            //gets rows of table
+            var rowLength = oTable.rows.length;
+
+            //loops through rows
+            for (i = 2; i < rowLength; i++) {
+                var oCells = oTable.rows.item(i).cells;
+                var cellLength = oCells.length;
+
+                for (var j = 0; j < cellLength; j++) {
+
+                    // get your cell info here
+                    if (j == 1) {
+                        var cellVal = oCells.item(j).firstChild;
+                        if (cellVal.checked == 1)
+                            görme.push(oCells.item(0).innerHTML);
+                    }
+                    if (j == 2) {
+                        var cellVal = oCells.item(j).firstChild;
+                        if (cellVal.checked == 1)
+                            ekleme.push(oCells.item(0).innerHTML);
+                    }
+                    if (j == 3) {
+                        var cellVal = oCells.item(j).firstChild;
+                        if (cellVal.checked == 1)
+                            silme.push(oCells.item(0).innerHTML);
+                    }
+                    if (j == 4) {
+                        var cellVal = oCells.item(j).firstChild;
+                        if (cellVal.checked == 1)
+                            degistirme.push(oCells.item(0).innerHTML);
+                    }
+
+                }
+            }
+
+            $.ajax({
+                type: "POST",
+
+                dataType: "json",
+                contentType: "application/json; charset=utf-8",
+                url: "/AltUsers/Edit/",
+                data: JSON.stringify({
+                    altUser: user,
+                    Ekleme: ekleme,
+                    Gorme: görme,
+                    Silme: silme,
+                    Degistirme: degistirme
+                }),
+                success: function (result) {
+                    historysend("/Altusers/");
+
+                },
+                error: function (result) {
+                    alert('Hata!');
+                }
+            });
+        }
+
+
+
+
+
+
+    </script>
+
+
+}
+
+
+

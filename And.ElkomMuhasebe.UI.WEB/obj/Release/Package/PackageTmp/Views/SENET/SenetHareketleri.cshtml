@@ -1,0 +1,324 @@
+﻿
+@{@model And.ElkomMuhasebe.UI.WEB.Controllers.CARI_HAREKETController.yenimodel
+
+ViewBag.Title = "Senet Hareketleri";
+ViewBag.Extra = Model.kodu;
+Layout = "~/Views/Shared/yeni.cshtml";
+}
+
+
+
+<div class="row py-2">
+
+    <div class="col">
+        <a id="carilistesi" href="/Senet/AlınanFisler" class="btn btn-sm btn-secondary  mr-1">
+            <span class="icon">
+                <i class="fas fa-list"></i>
+            </span>
+            <span class="text">Portfoydaki Senetler Listesi</span>
+        </a>
+        <a id="kart-tab" href="/Senet/VerilenFisler" class="btn btn-sm btn-secondary  mr-1 ">
+            <span class="icon">
+                <i class="far fa-address-card"></i>
+            </span>
+            <span class="text">Firmadaki Senetler Listesi</span>
+        </a>
+
+        <div class=" col">
+            <a class="btn btn-sm btn-outline-primary btn-icon-split float-right collapsed" data-toggle="collapse" href="#collapseFiltre" role="button" aria-expanded="false" aria-controls="collapseCariHareketFiltre">
+                <span class="icon">
+                    <i class="fas fa-filter"></i>
+                </span>
+                <span class="text">Filtre</span>
+            </a>
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="col mb-2">
+        <div class="collapse" id="collapseFiltre" style="">
+            
+            <div class="card">
+                <div class="row p-2">
+                    <div class="col-6 mb-2">
+                        <div class="input-group input-group-sm">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text">Tarih</span>
+                            </div>
+                            <input type="date" id="ilktarih" aria-label="First name" value="@DateTime.Now.Year.ToString("D" + 4)-01-01" class="form-control">
+                            <input type="date" id="sontarih" aria-label="Last name" value="@DateTime.Now.Year.ToString("D" + 4)-@DateTime.Now.Month.ToString("D" + 2)-@DateTime.Now.Day.ToString("D" + 2)" class="form-control">
+                        </div>
+                    </div>
+                </div>
+                <button class="btn btn-sm btn-primary" onclick="tabloyenile()">Filtreyi Uygula</button>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<div class="card">
+   <div class="table-responsive">            
+        <div class="col-sm-12">
+            <table id="bootstrap-table" class="table-bordered table-sm" data-show-search-clear-button="true"
+                    data-show-footer="true" data-footer-style="footerStyle" data-show-print="true"
+                    data-single-select="true" data-show-refresh="true" data-icon-size="sm"
+                    data-side-pagination="server"
+                    data-pagination="true"
+                    data-page-size="10"
+                    data-page-list="[10, 20, 50, 100, 200, 300]" data-show-export="true" data-reorderable-columns="true">
+                <thead>
+                    <tr>
+
+                        <th data-field="ID" data-print-ignore="true" class="text-center" data-visible="false" data-sortable="true" data-footer-formatter="idFormatter">ID</th>
+
+                        <th data-field="TARIH" data-sortable="true">
+                            Tarih
+                        </th>
+
+                        <th data-field="PORTFOYNO" data-sortable="true">Portfoy No</th>
+                        <th data-field="SENETDURUMU" data-sortable="true">Senet Durumu</th>
+
+                        <th data-field="HARAKET">Hareket</th>
+                        <th data-field="DOSYANO">Belge No</th>
+
+                        <th data-field="ACIKLAMA">Açıklama</th>
+
+
+
+                    </tr>
+                </thead>
+                <tbody>
+                </tbody>
+
+            </table>
+        <!-- /.card-body -->
+        </div>
+    <!-- /.card -->
+    </div>
+</div>
+
+
+@section script{
+    <script type="text/javascript">
+        window.onload = function () {
+            const str = window.location.href;
+
+
+        };
+        function pad(d) {
+            return (d < 10) ? '0' + d.toString() : d.toString();
+        }
+        Date.prototype.formatMM = function () {
+            return (pad(this.getDate()) +   "/" +pad(this.getMonth() + 1) +
+
+                "/" + this.getFullYear());
+        }
+
+        function numberformatter(value, row, index) {
+            if (!value)
+                return "0.00";
+            else {
+                return [
+
+                    numberWithCommas((Number(value.toString().replace(",", "."))).toFixed(2))
+                ].join('');
+            }
+        }
+        function numberWithCommas(x) {
+            if (x != null)
+                return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+            else {
+                return 0;
+            }
+        }
+        function priceFormatter(data) {
+            var field = this.field
+
+            var toplam = data.map(function (row) {
+                if (row[field])
+                    return +Number(row[field].toString().replace(",", "."))
+                else {
+                    return +Number("0")
+                }
+            }).reduce(function (sum, i) {
+                return sum + i
+            }, 0);
+            return numberformatter(toplam) + " TL"
+        }
+        function get_query_params(p) {
+            var date = new Date($('#ilktarih').val());
+            var dateson = new Date($('#sontarih').val());
+
+            var arr = [{ verismi: "TARIH", deger: date.formatMMDDYYYY(), deger2: dateson.formatMMDDYYYY(), filtretipi: 4 }]
+
+            if (p.sort != null) {
+                return {
+
+                    extraParam: 'abc',
+                    search: p.search,
+                    sort: p.sort,
+                    order: p.order,
+                    limit: p.limit,
+                    offset: p.offset,
+
+                    sort: p.sort,
+                    id: @Model.id,
+                    filterler: arr
+                }
+            } else {
+                   return {
+                    extraParam: 'abc',
+                       search: p.search,
+                    sort: p.sort,
+                    order: p.order,
+                    limit: p.limit,
+                    offset: p.offset,
+
+                       sort: "ID",
+                       id: 1,
+                       filterler: arr
+                }
+
+            }
+    }
+
+
+        window.onload = function () {
+            const str = window.location.href;
+         
+        };
+
+
+        var $table = $('#bootstrap-table');
+
+        function operateFormatter(value, row, index) {
+            return [
+               '<div class="d-flex justify-content-start">',
+                 
+                    '</div>',
+            ].join('');
+        }
+        function detailFormatter(index, row) {
+            var html = []
+            $.each(row, function (key, value) {
+                html.push('<p><b>' + key + ':</b> ' + value + '</p>')
+            })
+            return html.join('')
+        }
+        $().ready(function () {
+            window.operateEvents = {
+           
+            };
+
+            $table.bootstrapTable({
+                type: "POST",
+                url: "/SENET/GetHareketData",
+                method: 'post',
+                contentType: 'application/x-www-form-urlencoded',
+                queryParams: get_query_params,
+                detailView: true,
+                detailFormatter: detailFormatter,
+              printPageBuilder: function (table) {
+        return `
+<html>
+  <head>
+  <style type="text/css" media="print">
+  page {
+    size: auto;
+    margin: 25px 0 25px 0;
+  }
+  </style>
+  <style type="text/css" media="all">
+  table {
+    border-collapse: collapse;
+    font-size: 12px;
+  }
+  table, th, td {
+    border: 1px solid grey;
+  }
+  th, td {
+    text-align: center;
+    vertical-align: middle;
+  }
+  p {
+    font-weight: bold;
+    margin-left:20px;
+  }
+  table {
+    width:94%;
+    margin-left:3%;
+    margin-right:3%;
+  }
+  div.bs-table-print {
+    text-align:center;
+  }
+    h1.bs-table-print {
+    text-align:center;
+  }
+  </style>
+    <title>@Session["FirmaAdı"]</title>
+     </head>
+  <body>
+
+     <h1 class="bs-table-print">@Model.kodu/@Model.ismi Hareket Raporu</h1>
+
+  <div class="bs-table-print">${table}</div>
+  </body>
+</html>`
+      },
+                clickToSelect: true,
+                showRefresh: true,
+
+                search: true,
+                showToggle: true,
+                showColumns: true,
+
+                searchAlign: 'left',
+
+                locale: 'tr-TR',
+                formatShowingRows: function (pageFrom, pageTo, totalRows) {
+                    return "Toplam " + totalRows+" Kayıt";
+                },
+                formatRecordsPerPage: function (pageNumber) {
+                    return pageNumber + " Adet Listeleniyor";
+                },
+
+            });
+
+            //activate the tooltips after the data table is initialized
+            $('[rel="tooltip"]').tooltip();
+
+            $(window).resize(function () {
+                $table.bootstrapTable('resetView');
+            });
+
+
+        })
+
+        function idFormatter() {
+            return 'Toplam'
+        }
+
+        function nameFormatter(data) {
+            return data.length
+        }
+
+
+        function footerStyle(column) {
+            return {
+                id: {
+                    classes: 'uppercase'
+                },
+                name: {
+                    css: { 'font-weight': 'normal' }
+                },
+                price: {
+                    css: { color: 'red' }
+                }
+            }[column.field]
+        }
+
+
+    </script>
+}

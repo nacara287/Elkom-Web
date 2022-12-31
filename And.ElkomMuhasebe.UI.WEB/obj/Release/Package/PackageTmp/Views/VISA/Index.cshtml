@@ -1,0 +1,368 @@
+﻿@{
+    ViewBag.Title = "Visa Listesi";
+
+    Layout = "~/Views/Shared/yeni.cshtml";
+}
+
+
+
+
+
+<div class="row py-2">
+
+    <div class="col">
+        <a href="/CARI_HAREKET/CARIFIS/GirişFiş" class="btn btn-sm btn-secondary mr-1 ">
+            <span class="icon">
+                <i class="fas fa-plus-circle"></i>
+            </span>
+            <span class="text">Yeni Visa için Cari Fişi</span>
+        </a>
+
+        
+
+    </div>
+</div>
+<div class="row">
+    <div class="col mb-2">
+        <div class="collapse" id="collapseFiltre" style=""><button class="btn btn-sm btn-primary" onclick="tabloyenile()">Filtreyi Uygula</button>
+            <div class="card card-body">
+                <div class="row pb-2">
+
+
+                    <div class="col-6 mb-2">
+                        <div class="input-group input-group-sm">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text">Tarih</span>
+                            </div>
+                            <input type="date" id="ilktarih" aria-label="First name" value="@DateTime.Now.Year.ToString("D" + 4)-01-01" class="form-control">
+                            <input type="date" id="sontarih" aria-label="Last name" value="@DateTime.Now.Year.ToString("D" + 4)-12-30" class="form-control">
+                        </div>
+                    </div>
+                    <div class="col-6 mb-2">
+                        <div class="input-group input-group-sm">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text">Vade</span>
+                            </div>
+                            <input type="date" id="vadeilktarih" aria-label="First name" value="@DateTime.Now.Year.ToString("D" + 4)-01-01" class="form-control">
+                            <input type="date" id="vadesontarih" aria-label="Last name" value="@DateTime.Now.Year.ToString("D" + 4)-@DateTime.Now.Month.ToString("D" + 2)-@DateTime.Now.Day.ToString("D" + 2)" class="form-control">
+                        </div>
+                    </div>
+
+                    <div class="col-6 mb-2">
+                        <div class="input-group input-group-sm">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text">Tutar:</span>
+                            </div>
+                            <input type="number" id="bbsa" aria-label="First name" class="form-control" value="0">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text">den Büyük</span>
+                            </div>
+                            <input type="number" id="bksa" aria-label="Last name" class="form-control" value="0">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text">den Küçük</span>
+                            </div>
+                        </div>
+                    </div>
+
+
+
+
+
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+<div class="row">
+    <div class="col-12">
+        <div class="card">
+
+            <!-- /.card-header -->
+            <div class="card-body">
+                <div id="example2_wrapper" class="table-responsive">
+
+                    <div class="col-sm-12">
+                        <table id="bootstrap-table" class="table-bordered table-sm" data-show-search-clear-button="true"
+                               data-show-footer="true" data-footer-style="footerStyle" data-show-print="true"
+                               data-single-select="true" data-show-refresh="true" data-icon-size="sm"
+                               data-side-pagination="server"
+                               data-pagination="true"
+                               data-page-size="10"
+                                data-page-list="[10, 20, 50, 100, 200, 300]" data-show-export="true" data-reorderable-columns="true">
+                            <thead>
+                                <tr>
+                                    <th data-field="actions" data-print-ignore="true" class="td-actions text-right no-print" data-events="operateEvents" data-formatter="operateFormatter">İşlemler</th>
+                                    <th data-field="state" class="no-print" data-print-ignore="true" data-checkbox="true"></th>
+                                    <th data-field="ID" data-print-ignore="true" class="text-center" data-sortable="true" data-footer-formatter="idFormatter" data-visible="false">ID</th>
+                                    <th data-field="BANKAKODU" data-sortable="true">Banka Kodu</th>
+                                    <th data-field="PORTFOYNO" data-sortable="true">Portfoy No</th>
+
+                                    <th data-field="DURUMU" data-sortable="true">Durumu</th>
+                                    <th data-field="CARIID" data-sortable="true">Cari Kodu</th>
+                                    <th data-field="VADE" data-sortable="true">Vade<a class="no-print" style="color:transparent;">-----------------------------------------</a></th>
+
+                                    <th data-field="TARIHI" data-sortable="true">Tarihi</th>
+                                     <th data-field="ACIKLAMA" data-sortable="true">Açıklama<a class="no-print" style="color:transparent;">-----------------------------------------</a></th>
+                                    <th data-field="TUTAR" data-align="right" data-footer-formatter="priceFormatter" data-sortable="true" data-formatter="numberformatter">Tutar</th>
+                                    <th data-field="SORUMLULUK_MERKEZI" data-sortable="true">S Merkezi</th>
+
+                                </tr>
+                            </thead>
+
+                            <tbody>
+                            </tbody>
+
+                        </table>
+
+
+                        <!-- /.card-body -->
+                    </div>
+                    <!-- /.card -->
+
+
+                </div>
+                <!-- /.col -->
+            </div>
+            <!-- /.row -->
+        </div>
+    </div>
+</div>
+
+
+
+@section script{
+    <script type="text/javascript">
+
+
+            function pad(d) {
+                return (d < 10) ? '0' + d.toString() : d.toString();
+            }
+            Date.prototype.formatMM = function () {
+                return (pad(this.getDate()) + "/" + pad(this.getMonth() + 1) +
+
+                    "/" + this.getFullYear());
+            }
+
+            function numberformatter(value, row, index) {
+                if (!value)
+                    return "0.00";
+                else {
+                    return [
+
+                        numberWithCommas((Number(value.toString().replace(",", "."))).toFixed(2))
+                    ].join('');
+                }
+            }
+            function numberWithCommas(x) {
+                return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+            }
+
+            function priceFormatter(data) {
+                var field = this.field
+
+                var toplam = data.map(function (row) {
+                    if (row[field])
+                        return +Number(row[field].toString().replace(",", "."))
+                    else {
+                        return +Number("0")
+                    }
+                }).reduce(function (sum, i) {
+                    return sum + i
+                }, 0);
+                return numberformatter(toplam) + " TL"
+            }
+            function get_query_params(p) {
+                var date = new Date($('#ilktarih').val());
+                var dateson = new Date($('#sontarih').val());
+
+                var vadedate = new Date($('#vadeilktarih').val());
+                var vadedateson= new Date($('#vadesontarih').val());
+                var arr = [{ verismi: "TARIHI", deger: date.formatMMDDYYYY(), deger2: dateson.formatMMDDYYYY(), filtretipi: 4 }];
+                arr.push({ verismi: "TUTAR", deger: document.getElementById("bbsa").value, deger2: document.getElementById("bksa").value, filtretipi: 3 });
+                arr.push({ verismi: "VADE", deger: vadedate.formatMMDDYYYY(), deger2: vadedateson.formatMMDDYYYY(), filtretipi: 4 });
+                if (p.sort != null) {
+                    return {
+
+                        extraParam: 'abc',
+                        search: p.search,
+                        sort: p.sort,
+                        order: p.order,
+                        limit: p.limit,
+                        offset: p.offset,
+
+                        sort: p.sort,
+
+                        filterler: arr
+                    }
+                } else {
+                    return {
+                        extraParam: 'abc',
+                        search: p.search,
+                        sort: p.sort,
+                        order: p.order,
+                        limit: p.limit,
+                        offset: p.offset,
+
+                        sort: "ID",
+
+                        filterler: arr
+                    }
+
+                }
+            }
+
+
+            var $table = $('#bootstrap-table');
+
+
+            function operateFormatter(value, row, index) {
+                return [
+                    '<a rel="tooltip" title="Cari Hareketleri" class="btn btn-link btn-sm table-action view" href="javascript:void(0)">',
+                    '<i class="fa fa-eye"></i>',
+                    '</a>',
+                    '<a rel="tooltip" title="Düzenle" class="btn btn-link btn-sm table-action edit" href="javascript:void(0)">',
+                    '<i class="fa fa-edit"></i>',
+                    '</a>'
+                ].join('');
+            }
+
+            $().ready(function () {
+                window.operateEvents = {
+                    'click .view': function (e, value, row, index) {
+                        info = JSON.stringify(row);
+
+
+                        //    swal('You click view icon, row: ', info);
+                        
+                    },
+                    'click .edit': function (e, value, row, index) {
+                        info = JSON.stringify(row);
+
+                        //   swal('You click edit icon, row: ', info);
+                        
+                    },
+
+                };
+
+                $table.bootstrapTable({
+
+                    type: "POST",
+                    url: "/VISA/GETVISA",
+                    method: 'post',
+                    contentType: 'application/x-www-form-urlencoded',
+                    queryParams: get_query_params,
+                           printPageBuilder: function (table) {
+        return `
+<html>
+  <head>
+  <style type="text/css" media="print">
+  page {
+    size: auto;
+    margin: 25px 0 25px 0;
+  }
+  </style>
+  <style type="text/css" media="all">
+    @@media print
+{
+    .no-print, .no-print *
+    {
+        display: none !important;
+    }
+}
+  table {
+    border-collapse: collapse;
+    font-size: 12px;
+  }
+  table, th, td {
+    border: 1px solid grey;
+  }
+  th, td {
+    text-align: center;
+    vertical-align: middle;
+  }
+  p {
+    font-weight: bold;
+    margin-left:20px;
+  }
+  table {
+    width:94%;
+    margin-left:3%;
+    margin-right:3%;
+  }
+  div.bs-table-print {
+    text-align:center;
+  }
+    h1.bs-table-print {
+    text-align:center;
+  }
+ </style>
+      <title>@Session["FirmaAdı"]</title>
+     </head>
+  <body>
+     <h1 class="bs-table-print">Visa Listesi</h1>
+
+  <div class="bs-table-print">  <table class="table-bordered table-sm"><thead>` + $table.children('thead').html() + '</thead><tbody>' + $table.children('tbody').html()+ "<tbody></table></div></body></html></div>"
+
+      },
+                    clickToSelect: true,
+                    showRefresh: true,
+
+                    search: true,
+                    showToggle: true,
+                    showColumns: true,
+                    locale: 'tr-TR',
+                    searchAlign: 'left',
+                    formatShowingRows: function (pageFrom, pageTo, totalRows) {
+                        return "Toplam " + totalRows+" Kayıt";
+                    },
+                    formatRecordsPerPage: function (pageNumber) {
+                        return pageNumber + " Adet Listeleniyor";
+                    },
+
+                });
+
+                $table.on('click-row.bs.table', function (e, row, $element) {
+
+                });
+                $table.on('  dbl-click-row.bs.table', function (e, row, $element) {
+
+                });
+
+                //activate the tooltips after the data table is initialized
+                $('[rel="tooltip"]').tooltip();
+
+                $(window).resize(function () {
+                    $table.bootstrapTable('resetView');
+                });
+
+
+            })
+
+            function idFormatter() {
+                return 'Toplam'
+            }
+
+            function nameFormatter(data) {
+                return data.length
+            }
+
+
+            function footerStyle(column) {
+                return {
+                    id: {
+                        classes: 'uppercase'
+                    },
+                    name: {
+                        css: { 'font-weight': 'normal' }
+                    },
+                    price: {
+                        css: { color: 'red' }
+                    }
+                }[column.field]
+            }
+
+
+    </script>
+}

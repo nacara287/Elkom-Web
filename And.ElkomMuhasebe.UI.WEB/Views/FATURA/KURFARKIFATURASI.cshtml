@@ -1,0 +1,483 @@
+﻿
+@{
+    ViewBag.Title = "KURFARKIFATURASI";
+    Layout = "~/Views/Shared/yeni.cshtml";
+}
+
+<h2>KURFARKIFATURASI</h2>
+
+
+<div class="row">
+    <!--  Sol Bölüm -->
+    <div class="col-md-3 order-2 mb-3">
+        <div class="card">
+            <div class="card-body">
+                <div class="form-group">
+                    <input id="FisNo" type="text" class="form-control form-control-sm" placeholder="Fatura Numarası" />
+                </div>
+                <div class="form-group col-md-2">
+                    <label>Fiş Tarihi</label>
+                    <input id="Tarih" type="datetime-local" class="form-control form-control-sm" value="@DateTime.Now.Year.ToString("D" + 4)-@DateTime.Now.Month.ToString("D" + 2)-@DateTime.Now.Day.ToString("D" + 2)@Html.Raw("T")@DateTime.Now.Hour.ToString("D" + 2):@DateTime.Now.Minute.ToString("D" + 2)">
+                </div>
+
+
+            </div>
+        </div>
+
+    </div>
+    <!-- Sağ Bölüm -->
+    <div class="col-md-9 order-1 mb-3">
+        <div class="card">
+            <div class="card-body">
+                <div class="form-group row">
+                    <label for="colFormLabelSm" class="col-sm-2 col-form-label col-form-label-sm">
+                        Cari
+                        Adı
+                    </label>
+                    <div class="col-sm-8">
+                        <input id="CariKodu" type="text" class="form-control form-control-sm" placeholder="Ad Soyad / Ünvan" required="">
+                    </div>
+                    <div class="col-sm-2">
+                        <button type="button" id="ButonCariSec" class="btn btn-success btn-fill" data-toggle="modal" data-target="#ModalCariSec">
+                            <i class="fa fa-search" aria-hidden="true"></i>
+                        </button>
+                    </div>
+                </div>
+
+
+
+
+            </div>
+        </div>
+    </div>
+</div>
+<div id="butonlar" class="fixed-bottom py-1 text-center">
+    <button type="button" onclick="butongonder()" class="btn btn-sm btn-primary btn-icon-split">
+        <span class="icon text-white-50">
+            <i class="fas fa-save"></i>
+        </span>
+        <span class="text">Kaydet</span>
+    </button>
+    <a href="@Url.RequestContext.HttpContext.Request.Url.ToString()" class="btn btn-sm btn-secondary btn-icon-split">
+        <span class="icon text-white-50">
+            <i class="fas fa-power-off"></i>
+        </span>
+        <span class="text">İptal</span>
+    </a>
+</div>
+
+
+<div class="modal fade" id="ModalCariSec" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="vertical-alignment-helper">
+        <div class="modal-dialog modal-xl modal-lg vertical-align-center" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title" id="myModalLabel">Cari Seç</h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+
+                </div>
+                <div class="modal-body">
+                    <div id="FaturaCariSecDataTablo_wrapper" class="dataTables_wrapper form-inline dt-bootstrap no-footer">
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <div class="table-responsive">
+                                    <table id="caritablo" class="table-bordered table-sm" data-maintain-meta-data="true" data-maintain-selected="true" data-show-search-clear-button="true" data-advanced-search="true"
+                                           data-id-table="advancedTable" data-show-footer="true" data-footer-style="footerStyle"
+                                           data-single-select="true">
+                                        <thead>
+                                            <tr>
+                                                <th data-field="state" class="no-print" data-checkbox="true"></th>
+                                                <th data-field="ID" class="text-center" data-visible="false" data-sortable="true" data-footer-formatter="idFormatter">ID</th>
+
+                                                <th data-field="CARIKOD" data-sortable="true">Cari Kodu</th>
+                                                <th data-field="FIRMAUNVANI" data-sortable="true" data-footer-formatter="nameFormatter">Cari İsmi</th>
+                                                <th data-field="PARABIRIMI" data-sortable="true">ParaBirimi</th>
+                                                <th data-field="BAKIYE" data-sortable="true" data-footer-formatter="priceFormatter">Bakiye</th>
+
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @foreach (var item in Model.cARI_BASLIKs)
+                                            {
+                                                <tr>
+                                                    <td></td>
+
+                                                    <td>
+                                                        @item.ID
+                                                    </td>
+                                                    <td>@item.CARIKOD</td>
+
+                                                    <td>@item.FIRMAUNVANI</td>
+                                                    <td>@item.PARABIRIMI</td>
+                                                    <td>@(item.TOPLAMBORC - item.TOPLAMALACAK)</td>
+
+
+                                                </tr>
+                                            }
+                                        </tbody>
+                                    </table><div id="FaturaCariSecDataTablo_processing" class="dataTables_processing panel panel-default" style="display: none;">İşleniyor...</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-primary" id="FaturaCariSecButon" data-dismiss="modal" onclick="butoncarigetir()">Seç</button>
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Vazgeç</button>
+                    </div>
+
+
+
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+@section script{
+
+    <script type="text/javascript">
+
+
+
+        var bakiyefiltre = null;
+        var carid=0;
+        var caridg;
+        var carikodu;
+        var kasaid;
+        var kasadg;
+        var kasakodu;
+        var birim;
+
+         var kdv;
+        var gecicicarpan;
+
+        var $table = $('#bootstrap-table');
+        var $caritable = $('#caritablo');
+        var $kasatable = $('#kasatablo');
+        var parakuru;
+
+        function kurgetir() {
+            var e = document.getElementById("ParaBirimi");
+            document.getElementById("ParaBirimiKuru").value = e.options[e.selectedIndex].value;
+            var tutar = parseFloat(document.getElementById("Mıktar").value) * parseFloat(document.getElementById("Tutar").value) * parseFloat(document.getElementById("ParaBirimiKuru").value);
+            document.getElementById("NetTutar").value = tutar - (parseFloat(tutar) * parseFloat(document.getElementById('iskonto').value) / 100);
+        }
+        function tutargetir() {
+
+
+            var tutar = parseFloat(document.getElementById("Mıktar").value) * parseFloat(document.getElementById("Tutar").value) * parseFloat(document.getElementById("ParaBirimiKuru").value);
+            document.getElementById("NetTutar").value = tutar - (parseFloat(tutar) * parseFloat(document.getElementById('iskonto').value) / 100);
+            kdvgetir();
+        }
+         function kdvgetir() {
+             var tutar = parseFloat(document.getElementById("NetTutar").value);
+
+             document.getElementById("KDVTutar").value = (tutar * kdv / 100) + tutar;
+        }
+            function stoklistele() {
+
+
+            $.ajax({
+                type: "POST",
+
+
+                dataType: "json",
+                contentType: "application/json; charset=utf-8",
+                url: "/STOK_HAREKET/stokgetir/",
+                data: JSON.stringify({
+
+                    carid: carid,
+                     TIPI:  @if (Url.RequestContext.HttpContext.Request.Url.ToString().Contains("GirişFiş")) { @:0
+                }else
+                    {@:1
+
+                    }
+
+
+
+
+                }),
+                success: function (result) {
+                    $kasatable.bootstrapTable('load', result);
+                },
+                error: function (result) {
+                    toastr["error"]('error');
+                }
+            });
+
+
+        }
+        function butoncarigetir() {
+
+            carid = caridg;
+            document.getElementById("CariKodu").value = carikodu;
+            document.getElementById("ModalCariSec").style.display = "none";
+            var sel = document.getElementById("ParaBirimi");
+              var opts = sel.options;
+            for (var opt, j = 0; opt = opts[j]; j++) {
+                if (opt.text == parakuru) {
+      sel.selectedIndex = j;
+      break;
+                }
+
+            }
+                kurgetir();
+
+        }
+        function butonkasagetir() {
+
+            kasaid = kasadg;
+            document.getElementById("Stok").value = kasakodu;
+            document.getElementById("ModalStokSec").style.display = "none";
+
+
+        }
+
+        $().ready(function () {
+
+            $caritable.bootstrapTable({
+
+                toolbar: ".toolbar",
+                clickToSelect: true,
+
+
+                search: true,
+
+
+                pagination: true,
+                searchAlign: 'left',
+                pageSize: 8,
+
+                pageList: [8, 10, 25, 50, 100],
+                locale: 'tr-TR',
+                formatShowingRows: function (pageFrom, pageTo, totalRows) {
+                    return "Toplam " + totalRows+" Kayıt";
+                },
+                formatRecordsPerPage: function (pageNumber) {
+                    return pageNumber + " Adet Listeleniyor";
+                },
+
+            });
+
+            $caritable.on('click-row.bs.table', function (e, row, $element) {
+                caridg = row.ID;
+                 carid = row.ID;
+                carikodu = row.CARIKOD;
+                parakuru = row.PARABIRIMI;
+
+            });
+            $caritable.on('  dbl-click-row.bs.table', function (e, row, $element) {
+
+                carid = row.ID;
+                parakuru = row.PARABIRIMI;
+                document.getElementById("CariKodu").value = row.CARIKOD;
+                     $('#ModalCariSec').modal('hide');
+                       var sel = document.getElementById("ParaBirimi");
+              var opts = sel.options;
+                for (var opt, j = 0; opt = opts[j]; j++) {
+                    if (opt.text == parakuru) {
+                        sel.selectedIndex = j;
+                        break;
+                    }
+                }
+                   kurgetir();
+
+            });
+
+            //activate the tooltips after the data table is initialized
+            $('[rel="tooltip"]').tooltip();
+
+            $(window).resize(function () {
+                $caritable.bootstrapTable('resetView');
+            });
+
+
+
+            $kasatable.bootstrapTable({
+
+                toolbar: ".toolbar",
+                clickToSelect: true,
+
+
+                search: true,
+
+
+                pagination: true,
+                searchAlign: 'left',
+                pageSize: 8,
+
+                pageList: [8, 10, 25, 50, 100],
+                locale: 'tr-TR',
+                formatShowingRows: function (pageFrom, pageTo, totalRows) {
+                    return "Toplam " + totalRows+" Kayıt";
+                },
+                formatRecordsPerPage: function (pageNumber) {
+                    return pageNumber + " Adet Listeleniyor";
+                },
+
+            });
+
+            $kasatable.on('click-row.bs.table', function (e, row, $element) {
+                kasaidg = row.ID;
+                kasakodu = row.STOKKODU;
+                gecicicarpan = row.STOKBIRIM2ÇARPAN;
+                document.getElementById("Tutar").value = row.TUTAR;
+                document.getElementById("iskonto").value = row.ISKONTO;
+                document.getElementById("Birim").value = row.STOKBIRIM1;
+
+                if (row.KDVFIYATADAHIL == "Hayır")
+                    kdv = row.KDV;
+                else {
+                    kdv = 0;
+                }
+            });
+            $kasatable.on('  dbl-click-row.bs.table', function (e, row, $element) {
+                kasaidg = row.ID;
+                   gecicicarpan = row.STOKBIRIM2ÇARPAN;
+                document.getElementById("iskonto").value = row.ISKONTO;
+                document.getElementById("Birim").value = row.STOKBIRIM1;
+
+                document.getElementById("Stok").value = row.STOKKODU;
+                document.getElementById("Tutar").value = row.TUTAR;
+                if (row.KDVFIYATADAHIL == "Hayır")
+                    kdv = row.KDV;
+                else {
+                    kdv = 0;
+                }
+
+                $('#ModalStokSec').modal('hide');
+
+            });
+
+            //activate the tooltips after the data table is initialized
+            $('[rel="tooltip"]').tooltip();
+
+            $(window).resize(function () {
+                $kasatable.bootstrapTable('resetView');
+            });
+
+
+        })
+        function butonlistele() {
+
+            $table.append('<tr data-index="0"><td>' + document.getElementById('Stok').value + '</td><td>' + document.getElementById('Açıklama').value + '</td><td>' + document.getElementById('Mıktar').value + '</td><td>' + document.getElementById('Birim').value + '</td><td>' + document.getElementById('Tutar').value + '</td><td>' + document.getElementById('iskonto').value + '</td><td>' + document.getElementById('ParaBirimi').options[document.getElementById('ParaBirimi').selectedIndex].text + '</td><td>' + document.getElementById('ParaBirimiKuru').value + '</td><td class="countable">' + document.getElementById('NetTutar').value + '</td><td class="countablekdv">' + document.getElementById('KDVTutar').value + '</td><td> <button  type="button" id="deleteRowBtn" onclick="deleteRow(this)" class="btn btn-danger btn-sm btn-rounded">  <span class="icon text-white-50">    <i class="fas fa-trash-alt"></i> </span></button></td></tr>');
+            yenile();
+
+
+
+
+
+
+        }
+        function yenile() {maskla();
+            var sum = 0;
+            var sumkdv = 0;
+            var table = document.getElementById("bootstrap-table");
+            var ths = table.getElementsByTagName('th');
+            var tds = table.getElementsByClassName('countable');
+            var tdskdv = table.getElementsByClassName('countablekdv');
+            for (var i = 0; i < tds.length; i++) {
+                sum += isNaN(tds[i].innerText) ? 0 : parseFloat(tds[i].innerText);
+            }
+            for (var i = 0; i < tdskdv.length; i++) {
+                sumkdv += isNaN(tdskdv[i].innerText) ? 0 : parseFloat(tdskdv[i].innerText);
+            }
+            document.getElementById("toplam").innerHTML = numberformatter(sum);
+            document.getElementById("kdvtoplam").innerHTML = numberformatter(sumkdv);
+
+        }
+        function deleteRow(btn) {
+  var row = btn.parentNode.parentNode;
+            row.parentNode.removeChild(row);
+                yenile();
+}
+        function butongonder() {
+
+        
+
+
+           
+          
+
+
+            $.ajax({
+                type: "POST",
+
+
+                dataType: "json",
+                contentType: "application/json; charset=utf-8",
+                url: "/FATURA/kurfaturasıdatagonder/",
+                data: JSON.stringify({
+                    CARIKOD: document.getElementById("CariKodu").value,
+                    FISNO: document.getElementById("FisNo").value,
+                    TARIH: (document.getElementById("Tarih").value )
+                 
+
+                       } )
+           ,
+                success: function (result) {
+                        window.location = "/FATURA/FATURALISTE";
+                    },
+                error: function (result) {
+                        toastr["error"]('error');
+                    }
+            });
+
+        }
+
+        function idFormatter() {
+            return 'Toplam'
+        }
+
+        function nameFormatter(data) {
+            return data.length
+        }
+
+
+        function numberformatter(value, row, index) {
+            if (!value)
+                return "0.00";
+            else {
+                return [
+
+                    numberWithCommas((Number(value.toString().replace(",", "."))).toFixed(2))
+                ].join('');
+            }
+        }
+        function numberWithCommas(x) {
+            return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+        }
+        function priceFormatter(data) {
+            var field = this.field
+
+            var toplam = data.map(function (row) {
+                if (row[field])
+                    return +Number(row[field].toString().replace(",", "."))
+                else {
+                    return +Number("0")
+                }
+            }).reduce(function (sum, i) {
+                return sum + i
+            }, 0);
+            return numberWithCommas(toplam) + " TL"
+        }
+
+        function footerStyle(column) {
+            return {
+                id: {
+                    classes: 'uppercase'
+                },
+                name: {
+                    css: { 'font-weight': 'normal' }
+                },
+                price: {
+                    css: { color: 'red' }
+                }
+            }[column.field]
+        }
+
+
+    </script>
+}

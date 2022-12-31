@@ -1,0 +1,31 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Npgsql.NodaTime</name>
+    </assembly>
+    <members>
+        <member name="F:Npgsql.NodaTime.DateHandler._convertInfinityDateTime">
+            <summary>
+            Whether to convert positive and negative infinity values to Instant.{Max,Min}Value when
+            an Instant is requested
+            </summary>
+        </member>
+        <member name="F:Npgsql.NodaTime.TimestampHandler._convertInfinityDateTime">
+            <summary>
+            Whether to convert positive and negative infinity values to Instant.{Max,Min}Value when
+            an Instant is requested
+            </summary>
+        </member>
+        <member name="T:Npgsql.NpgsqlNodaTimeExtensions">
+            <summary>
+            Extension adding the NodaTime plugin to an Npgsql type mapper.
+            </summary>
+        </member>
+        <member name="M:Npgsql.NpgsqlNodaTimeExtensions.UseNodaTime(Npgsql.TypeMapping.INpgsqlTypeMapper)">
+            <summary>
+            Sets up NodaTime mappings for the PostgreSQL date/time types.
+            </summary>
+            <param name="mapper">The type mapper to set up (global or connection-specific)</param>
+        </member>
+    </members>
+</doc>

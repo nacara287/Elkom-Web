@@ -1,0 +1,687 @@
+﻿@model  And.ElkomMuhasebe.UI.WEB.Controllers.CARI_BASLIKController.modelimiz
+
+@{
+    ViewBag.Title = "Cari Listesi";
+    Layout = "~/Views/Shared/yeni.cshtml";
+}
+
+<!-- Butonlar -->
+<div class="card border-0 mb-2 bg-transparent shadow-none">
+    <div class="card-body p-0 ">
+
+        <a href="/CARI_BASLIK/CREATE" class="btn btn-sm btn-secondary  mr-1 ">
+            <span class="icon">
+                <i class="fas fa-plus-circle"></i>
+            </span>
+            <span class="text">Yeni</span>
+        </a>
+
+        <a id="genelhareket-tab" href="/CARI_HAREKET/INDEX/" class="btn btn-sm btn-secondary  mr-1">
+
+            <span class="text">Genel Hareketleri</span>
+        </a>
+
+        <a id="girisfis" href="/CARI_HAREKET/CARIFISKART?tip=0" class="btn btn-sm btn-secondary  mr-1 ">
+
+            <span class="text">Yeni Tahsilat Fişi</span>
+        </a>
+        <a id="cıkısfis" href="/CARI_HAREKET/CARIFISKART?tip=1" class="btn btn-sm btn-secondary  mr-1 ">
+
+            <span class="text">Yeni Teddiye Fişi</span>
+        </a>
+
+        <a data-toggle="modal" data-target="#ModalAraDevir" class="btn btn-sm btn-secondary  mr-1 ">
+
+            <span class="text">Yeni Ara Devir </span>
+        </a>
+
+
+        <a id="efatura" href="/FATURA/EFATURAKART?tip=2" class="btn btn-sm btn-secondary mr-1 ">
+
+            <span class="text">Yeni E-Fatura/E-Arşiv</span>
+        </a>
+
+
+        <div class="btn-group" role="group">
+            <button id="btnGroupDrop1" type="button" class="btn btn-sm btn-dark btn-icon-split dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <span class="icon">
+                    <i class="fas fa-chart-bar"></i>
+                </span>
+                Raporlar
+            </button>
+            <div class="dropdown-menu" aria-labelledby="btnGroupDrop1" style="">
+
+                <a data-toggle="modal" data-target="#Modalcaridetaylırapor"  class="dropdown-item">Cari Detaylı Durum Raporu</a>
+
+
+            </div>
+        </div>
+        <div class="btn-group" role="group">
+            <button id="btnGroupDrop1" type="button" class="btn btn-sm btn-dark btn-icon-split dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <span class="icon">
+                    <i class="fas fa-chart-bar"></i>
+                </span>
+                Analizler
+            </button>
+            <div class="dropdown-menu" aria-labelledby="btnGroupDrop1" style="">
+                <a class="dropdown-item" data-toggle="modal" data-target="#Modalduraganrapor">Durağan Cari Durum Analizi</a>
+                <a target="_blank" href="/Fatura/aylaragoremaliyet" class="dropdown-item">Aylara Göre Satış Karlılık Analizi</a>
+            </div>
+        </div>
+        <a class="btn btn-sm btn-outline-primary btn-icon-split float-right collapsed" data-toggle="collapse" href="#collapseFiltre" role="button" aria-expanded="false" aria-controls="collapseCariHareketFiltre">
+            <span class="icon">
+                <i class="fas fa-filter"></i>
+            </span>
+            <span class="text">Filtre</span>
+        </a>
+
+    </div>
+</div>
+<!-- Filtreler -->
+<div class="row">
+    <div class="col">
+        <div class="collapse" id="collapseFiltre" style="">
+            <div class="card card-body p-2  mb-3">
+                <div class="row pb-2">
+                    <div class="col">
+                        <div class="input-group input-group-sm">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text">Aktiflik Durumu</span>
+                            </div>
+                            <select id="aktifpasif" class="form-control form-control-sm">
+
+                                <option value="1">Sadece Aktifler</option>
+                                <option value="0">Sadece Pasifler</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col">
+                        <div class="input-group input-group-sm">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text">Bakiye Durumu</span>
+                            </div>
+                            <select id="bakiyelistesi" class="form-control form-control-sm">
+                                <option value="0">Hepsi</option>
+                                <option value="1">Borçlu</option>
+                                <option value="2">Alacaklı</option>
+                                <option value="3">Bakiyeli</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col">
+                        <div class="input-group input-group-sm">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text">Bakiyesi:</span>
+                            </div>
+                            <input type="text" id="bbs" aria-label="First name" class="form-control" value="0">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text">den Büyük</span>
+                            </div>
+                            <input type="text" id="bks" aria-label="Last name" class="form-control" value="0">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text">den Küçük</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row pb-2">
+                    <div class="col">
+                        <div class="form-input-group ">
+                            <label>Kategori-1</label>
+                            <select class="form-control js-example-basic-single" id="Cari_KOD1" name="Cari.KOD1">
+                                <option selected="selected">Seçiniz</option>
+                                @{
+
+                                    if (Model.cARI_KOD1s != null)
+                                    {
+                                        foreach (var item in Model.cARI_KOD1s)
+                                        {
+
+                                            <option>@item.KOD</option>
+
+                                        }
+                                    }}
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col">
+                        <div class="form-input-group ">
+                            <label>Kategori-2</label>
+                            <select class="form-control js-example-basic-single" id="Cari_KOD2" name="Cari.KOD2">
+                                <option selected="selected">Seçiniz</option>
+                                @{
+
+                                    if (Model.cARI_KOD2s != null)
+                                    {
+                                        foreach (var item in Model.cARI_KOD2s)
+                                        {
+
+                                            <option>@item.KOD</option>
+
+                                        }
+                                    }}
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <button class="btn btn-sm btn-primary" onclick="tabloyenile()">Filtreyi Uygula</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Liste -->
+<div class="card">
+    <div class="">
+        <div class="table-responsive">
+            <div class="col-sm-12">
+                <table id="bootstrap-table" class="table-bordered table-sm" data-show-search-clear-button="true"
+                       data-show-footer="true" data-footer-style="footerStyle" data-show-print="true"
+                       data-single-select="true" data-show-refresh="true" data-icon-size="sm"
+                       data-side-pagination="server"
+                       data-pagination="true"
+                       data-page-size="10"
+                       data-page-list="[10, 20, 50, 100, 200, 300]" data-show-export="true" data-reorderable-columns="true">
+                    <thead>
+                        <tr>
+                            <th data-field="state" class="no-print" data-print-ignore="true" data-checkbox="true"></th>
+                            <th data-field="actions" data-print-ignore="true" class="td-actions no-print" data-events="operateEvents" data-formatter="operateFormatter">İşlemler</th>
+                            <th data-field="ID" data-print-ignore="true" data-visible="false" class="text-center" data-sortable="true" data-footer-formatter="idFormatter">ID</th>
+                            <th data-field="FIRMAUNVANI" data-sortable="true" data-footer-formatter="nameFormatter">Cari İsmi</th>
+                            <th data-field="CARIKOD" data-sortable="true">Cari Kodu</th>
+                            <th data-field="ISIL">Şehir</th>
+                            <th data-field="ISTEL" data-align="right">Telefon</th>
+                            <th data-field="BAKIYE" class="td-actions text-right" data-align="right" data-sortable="true" data-formatter="numberformatter">Bakiye</th>
+                            <th data-field="DOVIZBAKIYE" data-visible="false" class="td-actions text-right no-print" data-align="right" data-sortable="true">Döviz Bakiye</th>
+
+                        </tr>
+                    </thead>
+                    <tbody>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="Modalcaridetaylırapor"  role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="vertical-alignment-helper">
+        <div class="modal-dialog modal-l  modal-lg vertical-align-center" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title" id="myModalLabel">Yeni Detaylı Cari Hareket Raporu</h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+
+                </div>
+                <div class="modal-body">
+                    <div class="form-group-attached">
+
+
+
+                       
+                            <div class="col-6 mb-2">
+                                <div class="input-group input-group-sm">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text">Cari</span>
+                                    </div>
+                                    <select id="CariKodu"  class="form-control  select2bs4" style="width: 100%;">
+                                      
+                                        </select>
+                                </div>
+                            </div>
+                            <div class="col-6 mb-2">
+                                <div class="input-group input-group-sm">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text">Tarih</span>
+                                    </div>
+                                    <input type="date" id="ilktarih" aria-label="First name" value="@DateTime.Now.Year.ToString("D" + 4)-01-01" class="form-control">
+                                    <input type="date" id="sontarih" aria-label="Last name" value="@DateTime.Now.Year.ToString("D" + 4)-12-30" class="form-control">
+                                </div>
+                            </div>
+
+                       
+
+
+
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-primary" onclick="detayliraporyazdir()" data-dismiss="modal">Oluştur</button>
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Vazgeç</button>
+                    </div>
+
+
+
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="Modalduraganrapor" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="vertical-alignment-helper">
+        <div class="modal-dialog modal-xl  modal-lg vertical-align-center" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title" id="myModalLabel">Yeni Durağan Cari Raporu</h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+
+                </div>
+                <div class="modal-body">
+                    <div class="form-group-attached">
+
+
+
+                        <div class="row clearfix">
+                            <div class="col-md-6">
+                                <div class="form-group form-group-default required">
+                                    <label>
+                                        Gün
+                                    </label>
+
+                                    <input id="gun" name="gun" class="form-control col-form-label-sm" type="text" value="0">
+
+
+
+                                </div>
+
+                            </div>
+
+
+                        </div>
+
+
+
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-primary" onclick="duragancari()" data-dismiss="modal">Oluştur</button>
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Vazgeç</button>
+                    </div>
+
+
+
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="ModalAraDevir" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="vertical-alignment-helper">
+        <div class="modal-dialog modal-xl  modal-lg vertical-align-center" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title" id="myModalLabel">Yeni Ara Devir</h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+
+                </div>
+                <div class="modal-body">
+                    <div class="form-group-attached">
+
+
+
+                        <div class="row clearfix">
+                            <div class="col-md-6">
+                                <div class="form-group form-group-default required">
+                                    <label>
+                                        Devir Alacak
+                                    </label>
+
+                                    <input id="deviralacak" name="Hareket.ALACAK" onchange="tutargetir()" class="form-control col-form-label-sm" type="text" value="0">
+
+
+
+                                </div>
+
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group form-group-default required">
+                                    <label>
+                                        Devir Borç
+                                    </label>
+
+                                    <input id="devirborc" name="Hareket.BORC" onchange="tutargetir()" class="form-control col-form-label-sm" type="text" value="0">
+
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+
+
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-primary" onclick="aradevirolustur()" data-dismiss="modal">Oluştur</button>
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Vazgeç</button>
+                    </div>
+
+
+
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@section script{
+    <script type="text/javascript" defer>
+        var carikod = "";
+        function pad(d) {
+            return (d < 10) ? '0' + d.toString() : d.toString();
+
+        }
+        $('.select2').select2()
+
+        function detayliraporyazdir() {
+            var cari = document.getElementById("CariKodu").options[document.getElementById("CariKodu").selectedIndex].value;
+            window.location = "/CARI_HAREKET/Rapor?id=" + cari + "&ilktarih=" + document.getElementById("ilktarih").value + "&sontarih=" + document.getElementById("sontarih").value;
+        }
+        //Initialize Select2 Elements
+        $('.select2bs4').select2({
+            theme: 'bootstrap4',
+            placeholder: "Cari adı veya kodu ile ara",
+            ajax: {
+                url: '/CARI_BASLIK/getcarid',
+                processResults: function (data) {
+                    // Transforms the top-level key of the response object from 'items' to 'results'
+                    return {
+                        results: data
+
+                    };
+                }
+                // Additional AJAX parameters go here; see the end of this chapter for the full code of this example
+            }
+        });
+
+        function aradevirolustur() {
+            $.ajax({
+                type: "POST",
+
+                dataType: "json",
+                contentType: "application/json; charset=utf-8",
+                url: "/CARI_BASLIK/aradevirolustur/",
+                data: JSON.stringify({
+                    borcmiktar: document.getElementById("devirborc").value,
+                    alacakmiktar: document.getElementById("deviralacak").value,
+                    carikod: carikod,
+                }),
+                success: function (result) {
+                  alert("Devir Hareketi Oluşturuldu!")
+
+                }
+                ,
+                error: function (result) {
+                    alert('Başarısız');
+                }
+            });
+        }
+        function get_query_params(p) {
+
+            var a = document.getElementById("bakiyelistesi");
+            var bakiye = a.options[a.selectedIndex].value;
+            var b = document.getElementById("aktifpasif");
+            var aktiflik = b.options[b.selectedIndex].value;
+            var kategselect1 = document.getElementById("Cari_KOD1");
+            var kategselect2 = document.getElementById("Cari_KOD2");
+            var kategori1 = kategselect1.options[kategselect1.selectedIndex].innerHTML;
+            var kategori2 = kategselect2.options[kategselect2.selectedIndex].innerHTML;
+            var arr = [{ verismi: "BAKIYE", deger: document.getElementById("bbs").value, deger2: document.getElementById("bks").value, filtretipi: 3 }]
+            arr.push({ verismi: "BAKIYE", deger: bakiye, deger2: "", filtretipi: 5 });
+            arr.push({ verismi: "AKTIF", deger: aktiflik, deger2: "", filtretipi: 2 });
+            if (kategori1!="Seçiniz")
+                arr.push({ verismi: "KOD1", deger: kategori1, deger2: "", filtretipi: 6 });
+            if (kategori2 != "Seçiniz")
+            arr.push({ verismi: "KOD2", deger: kategori2, deger2: "", filtretipi: 6 });
+            if (p.sort != null) {
+                return {
+
+                    extraParam: 'abc',
+                    search: p.search,
+                    sort: p.sort,
+                    order: p.order,
+                    limit: p.limit,
+                    offset: p.offset,
+
+                    sort: p.sort,
+
+                    filterler: arr
+                }
+            } else {
+                return {
+                    extraParam: 'abc',
+                    search: p.search,
+                    sort: p.sort,
+                    order: p.order,
+                    limit: p.limit,
+                    offset: p.offset,
+
+                    sort: "ID",
+
+                    filterler: arr
+                }
+
+            }
+        }
+
+                var arr = [{ verismi: "ISLEMTURU", deger :"1", deger2: "", filtretipi: 2 }]
+                arr.push({ verismi: "ISLEMTURU", deger: "1", deger2: "", filtretipi: 2 });
+        function duragancari() {
+
+            $.ajax({
+                type: "POST",
+                url: "/CARI_BASLIK/duragancariraporjson",
+                data: { gun: parseFloat(document.getElementById("gun").value)
+        }
+                       ,
+                        success: function () {
+                            window.location = "/CARI_BASLIK/duragancarirapor";
+                        }
+                    });
+                }
+
+
+
+
+        var $table = $('#bootstrap-table');
+
+        function numberformatter(value, row, index) {
+            if (!value)
+                return "0.00";
+            else {
+                return [
+
+                    numberWithCommas((Number(value.toString().replace(",", "."))).toFixed(2))
+                ].join('');
+            }
+        }
+        function numberWithCommas(x) {
+            return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+        }
+        function priceFormatter(data) {
+            var field = this.field
+
+            var toplam = data.map(function (row) {
+                if (row[field])
+                    return +Number(row[field].toString().replace(",", "."))
+                else {
+                    return +Number("0")
+                }
+            }).reduce(function (sum, i) {
+                return sum + i
+            }, 0);
+            return numberformatter(toplam) + " TL"
+        }
+        function operateFormatter(value, row, index) {
+            return [
+                '<div class="d-flex justify-content-start">',
+                '<a rel="tooltip" title="Hareketleri" class="btn btn-link btn-sm table-action view" href="javascript:void(0)"><i class="fa fa-eye text-warning"></i></a>',
+                '<a rel="tooltip" title="Düzenle"     class="btn btn-link btn-sm table-action edit" href="javascript:void(0)"><i class="fa fa-edit text-primary"></i></a>',
+                '</div>',
+            ].join('');
+        }
+
+        $().ready(function () {
+            window.operateEvents = {
+                'click .view': function (e, value, row, index) {
+                    info = JSON.stringify(row);
+
+                    historysend("/CARI_HAREKET/Index/" + row.ID);
+
+                    //    swal('You click view icon, row: ', info);
+
+                },
+                'click .edit': function (e, value, row, index) {
+                    info = JSON.stringify(row);
+                    historysend("/CARI_BASLIK/Edit/" + row.ID);
+
+                    //   swal('You click edit icon, row: ', info);
+
+                },
+                'click .remove': function (e, value, row, index) {
+                    console.log(row);
+                    window.location = "/CARI_BASLIK/Delete/" + row.ID;
+                    $table.bootstrapTable('remove', {
+                        field: 'ID',
+                        values: [row.ID]
+                    });
+                }
+            };
+
+            $table.bootstrapTable({
+                type: "POST",
+                url: "/CARI_BASLIK/GetData",
+                method: 'post',
+                contentType: 'application/x-www-form-urlencoded',
+                queryParams: get_query_params,
+        printPageBuilder: function (table) {
+        return `
+<html>
+  <head>
+  <style type="text/css" media="print">
+  page {
+    size: auto;
+    margin: 25px 0 25px 0;
+  }
+  </style>
+  <style type="text/css" media="all">
+    @@media print
+{
+    .no-print, .no-print *
+    {
+        display: none !important;
+    }
+}
+  table {
+    border-collapse: collapse;
+    font-size: 12px;
+  }
+  table, th, td {
+    border: 1px solid grey;
+  }
+  th, td {
+    text-align: center;
+    vertical-align: middle;
+  }
+  p {
+    font-weight: bold;
+    margin-left:20px;
+  }
+  table {
+    width:94%;
+    margin-left:3%;
+    margin-right:3%;
+  }
+  div.bs-table-print {
+    text-align:center;
+  }
+    h1.bs-table-print {
+    text-align:center;
+  }
+ </style>
+      <title>@Session["FirmaAdı"]</title>
+     </head>
+  <body>
+      <h1 class="bs-table-print">Cari Listesi</h1>
+
+  <div class="bs-table-print">  <table class="table-bordered table-sm"><thead>` + $table.children('thead').html() + '</thead><tbody>' + $table.children('tbody').html()+ "<tbody></table></div></body></html></div>"
+
+      },
+                clickToSelect: true,
+                showRefresh: true,
+
+                search: true,
+                showToggle: true,
+                showColumns: true,
+
+                searchAlign: 'left',
+
+                locale: 'tr-TR',
+                formatShowingRows: function (pageFrom, pageTo, totalRows) {
+                    return "Toplam " + totalRows+" Kayıt";
+                },
+                formatRecordsPerPage: function (pageNumber) {
+                    return pageNumber + " Adet Listeleniyor";
+                },
+
+
+            });
+
+            $table.on('check.bs.table', function (e, row) {
+
+                document.getElementById("girisfis").href = "/CARI_HAREKET/CARIFISKART/tip=1?carid=" + row.ID;
+                document.getElementById("cıkısfis").href = "/CARI_HAREKET/CARIFISKART/tip=2?carid=" + row.ID;
+
+                document.getElementById("efatura").href = "/FATURA/EFATURAKART?tip=2&carid=" + row.ID;
+                carikod = row.CARIKOD;
+            });
+            $table.on('click-row.bs.table', function (e, row, $element) {
+
+                document.getElementById("girisfis").href = "/CARI_HAREKET/CARIFISKART/tip=1?carid=" + row.ID;
+                document.getElementById("cıkısfis").href = "/CARI_HAREKET/CARIFISKART/tip=2?carid=" + row.ID;
+
+                document.getElementById("efatura").href = "/FATURA/EFATURAKART?tip=2&carid=" + row.ID;
+                carikod = row.CARIKOD;
+            });
+            $table.on('dbl-click-row.bs.table', function (e, row, $element) {
+
+                historysend("/CARI_HAREKET/Index/" + row.ID);
+
+
+            });
+            //activate the tooltips after the data table is initialized
+            $('[rel="tooltip"]').tooltip();
+
+            $(window).resize(function () {
+                $table.bootstrapTable('resetView');
+            });
+
+
+        })
+
+        function idFormatter() {
+            return 'Toplam'
+        }
+
+        function nameFormatter(data) {
+            return data.length
+        }
+
+
+
+        function footerStyle(column) {
+            return {
+                id: {
+                    classes: 'uppercase'
+                },
+                name: {
+                    css: { 'font-weight': 'normal' }
+                },
+                price: {
+                    css: { color: 'red' }
+                }
+            }[column.field]
+        }
+
+
+    </script>
+}

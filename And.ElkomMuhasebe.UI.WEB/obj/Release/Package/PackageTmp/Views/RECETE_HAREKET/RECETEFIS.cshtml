@@ -1,0 +1,607 @@
+﻿@model And.ElkomMuhasebe.UI.WEB.Controllers.RECETE_HAREKETController.modelimiz
+
+@{
+    ViewBag.Title = "Stok Üretim Fişi Oluştur";
+
+    Layout = "~/Views/Shared/yeni.cshtml";
+}
+
+
+<!-- Fiş bilgileri -->
+<div class="card">
+    <div class="card-body p-3">
+        <div class="form-row">
+
+            <div class="form-group col-md-3">
+                <label>Fiş Numarası</label>
+                <input id="FisNo" type="text" class="form-control form-control-sm" placeholder="Fiş Numarası" readonly required="" value="@("URTM"+Model.STOK_URETIM_FISIS)">
+            </div>
+            <div class="form-group col-md-3">
+                <label>Fiş Tarihi</label>
+                <input id="Tarih" type="datetime-local" class="form-control form-control-sm" value="@DateTime.Now.Year.ToString("D" + 4)-@DateTime.Now.Month.ToString("D" + 2)-@DateTime.Now.Day.ToString("D" + 2)@Html.Raw("T")@DateTime.Now.Hour.ToString("D" + 2):@DateTime.Now.Minute.ToString("D" + 2)">
+            </div>
+
+            <div class="form-group col-md-3">
+                <label>Fiş Notu</label>
+                <input id="Not" type="text" class="form-control form-control-sm" placeholder="Not">
+            </div>
+        </div>
+        <!-- Liste -->
+        <div class="table-responsive">
+            <table id="bootstrap-table" class="table">
+                <thead>
+                    <tr>
+
+                        <th data-field="RECETEKODU" data-sortable="true">Reçete Kodu</th>
+
+
+                         <th data-field="ACIKLAMA" data-sortable="true">Açıklama<a class="no-print" style="color:transparent;">-----------------------------------------</a></th>
+                        <th data-field="MIKTAR" data-sortable="true">Mıktar</th>
+                        <th data-field="BIRIM" data-sortable="true">Birim Fiyatı</th>
+
+
+                        <th data-field="NETTUTAR" data-sortable="true">Net Tutar</th>
+
+                        <th width="8%&qucot;"></th>
+                    </tr>
+                    <tr>
+
+                        <td>
+                            <input type="text" class="form-control form-control-sm" data-toggle="modal" data-target="#ModalStokSec" name="Stok" id="Recete" placeholder="StokAdı" onchange="tutargetir()">
+
+                        </td>
+
+                        <td>
+                            <input type="text" class="form-control form-control-sm" value="Açıklama" id="Açıklama" onchange="tutargetir()">
+                        </td>
+                        <td>
+                            <input type="text" class="form-control form-control-sm" name="Mıktar" id="Mıktar" value="0" onchange="tutargetir()">
+                        </td>
+                        <td>
+                            <input type="text" class="form-control form-control-sm" name="Birim" id="Birim" value="" readonly onchange="tutargetir()">
+
+                        </td>
+
+
+                        <td>
+                            <input type="text" class="form-control form-control-sm text-right" readonly value="0.00" name="NetTutar" id="NetTutar" onchange="tutargetir()" placeholder="Net Tutar" required="">
+                        </td>
+
+                        <td w="">
+                            <button type="button" id="addRowBtn" onclick="butonlistele()"  class="btn btn-success btn-sm btn-rounded">
+                                <span class="icon text-white-50">
+                                    <i class="fas fa-plus"></i>
+                                </span>
+                            </button>
+
+                        </td>
+                    </tr>
+                </thead>
+                <tbody>
+                </tbody>
+            </table>
+        </div>
+
+
+    </div>
+    <!-- Alt toplamlar -->
+    <div class="card-footer ">
+        <div class="row">
+            <div class="col-md-6">
+                <p> </p>
+                <p></p>
+                <p> </p>
+            </div>
+            <div class="col-md-6">
+                <div class="form-group row mb-1">
+                    <label for="toplam" class="col-sm-6 text-right col-form-label">Toplam Tutar</label>
+                    <div class="col-sm-6">
+                        <input type="text" id="toplam" class="form-control text-right form-control-sm" placeholder="0.00" readonly>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!-- butonlar -->
+<div class="py-2">
+    <button aria-label="" class="btn btn-primary " onclick="butongonder(this)">
+        <span class="icon text-white-50">
+            <i class="fas fa-save"></i>
+        </span>
+        <span class="text">Kaydet</span>
+    </button>
+    <a aria-label="" class="btn btn-secondary " href="@Url.RequestContext.HttpContext.Request.Url.ToString()" type="reset">
+        <span class="icon text-white-50">
+            <i class="fas fa-power-off"></i>
+        </span>
+        <span class="text">İptal</span>
+    </a>
+</div>
+
+
+
+
+
+
+
+
+<div class="modal fade" id="ModalStokSec" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="vertical-alignment-helper">
+        <div class="modal-dialog modal-xl  modal-lg vertical-align-center" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title" id="myModalLabel">Reçete Seç</h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+
+                </div>
+                <div class="modal-body">
+                    <div id="FaturaCariSecDataTablo_wrapper" class="dataTables_wrapper form-inline dt-bootstrap no-footer">
+
+                        <div class="col-sm-12">
+                            <div class="table-responsive">
+                                <table id="kasatablo" class="table-bordered table-sm" data-show-search-clear-button="true"
+                                       data-show-footer="true" data-footer-style="footerStyle" data-show-print="true"
+                                       data-single-select="true" data-show-refresh="true" data-icon-size="sm"
+                                       data-side-pagination="server"
+                                       data-pagination="true"
+                                       data-page-size="10"
+                                        data-page-list="[10, 20, 50, 100, 200, 300]" data-show-export="true" data-reorderable-columns="true">
+                                    <thead>
+                                        <tr>
+
+                                            <th data-field="state" class="no-print" data-print-ignore="true" data-checkbox="true"></th>
+                                            <th data-field="ID" data-print-ignore="true" class="text-center" data-sortable="true" data-footer-formatter="idFormatter" data-visible="false">ID</th>
+                                            <th data-field="TARIH" data-sortable="true">Tarih</th>
+                                            <th data-field="RECETEKODU" data-sortable="true">Reçete Kodu</th>
+
+                                            <th data-field="RECETEADI" data-sortable="true">Reçete Adı</th>
+
+
+
+                                             <th data-field="ACIKLAMA" data-sortable="true">Açıklama<a class="no-print" style="color:transparent;">-----------------------------------------</a></th>
+                                            <th data-field="URETIM_ADET" data-sortable="true">Üretim Kalem Sayısı</th>
+                                            <th data-field="SON_URETIM_MALIYET" data-align="right" data-sortable="true" data-formatter="numberformatter">Üretim Maliyeti</th>
+
+
+                                        </tr>
+                                    </thead>
+
+                                    <tbody>
+                                    </tbody>
+
+                                </table>
+                            </div>
+                        </div>
+
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-primary" onclick="butonkasagetir()" data-dismiss="modal">Seç</button>
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Vazgeç</button>
+                    </div>
+
+
+
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+@section script{
+    <script type="text/javascript">
+
+
+
+        var bakiyefiltre = null;
+        var carid="";
+        var caridg;
+        var carikodu;
+        var kasaid;
+        var kasadg;
+        var kasakodu;
+        var birim;
+
+        function get_query_params(p) {
+
+
+
+
+            var arr = [{ verismi: "TARIH", deger: "01/01/2000", deger2: "01/01/2090", filtretipi: 4 }];
+
+
+            if (p.sort != null) {
+                return {
+
+                    extraParam: 'abc',
+                    search: p.search,
+                    sort: p.sort,
+                    order: p.order,
+                    limit: p.limit,
+                    offset: p.offset,
+
+                    sort: p.sort,
+
+                    filterler: arr
+                }
+            } else {
+                return {
+                    extraParam: 'abc',
+                    search: p.search,
+                    sort: p.sort,
+                    order: p.order,
+                    limit: p.limit,
+                    offset: p.offset,
+
+                    sort: "ID",
+
+                    filterler: arr
+                }
+
+            }
+        }
+
+        var $table = $('#bootstrap-table');
+        var $caritable = $('#caritablo');
+        var $kasatable = $('#kasatablo');
+        var parakuru;
+
+        function tutargetir() {
+
+            var tutar = parseFloat(document.getElementById("Mıktar").value) * parseFloat(document.getElementById("Birim").value) ;
+            document.getElementById("NetTutar").value = tutar ;
+            }
+        function butoncarigetir() {
+
+            carid = caridg;
+            document.getElementById("CariKodu").value = carikodu;
+            document.getElementById("ModalCariSec").style.display = "none";
+            var sel = document.getElementById("ParaBirimi");
+              var opts = sel.options;
+            for (var opt, j = 0; opt = opts[j]; j++) {
+                if (opt.text == parakuru) {
+      sel.selectedIndex = j;
+      break;
+                }
+
+            }
+                kurgetir();
+
+        }
+
+        function butonkasagetir() {
+
+            kasaid = kasadg;
+            document.getElementById("Recete").value = kasakodu;
+            document.getElementById("ModalStokSec").style.display = "none";
+            document.getElementById("Açıklama").focus();
+
+
+        }
+        function addRow(tableID) {
+
+            var table = document.getElementById(tableID);
+
+            var rowCount = table.rows.length;
+            var row = table.insertRow(rowCount);
+
+            var cell1 = row.insertCell(0);
+            var element1 = document.createElement("input");
+            element1.type = "text";
+            element1.name = "txtbox[]";
+            cell1.appendChild(element1);
+
+            var cell2 = row.insertCell(1);
+            var element2 = document.createElement("input");
+            element2.type = "text";
+            element2.name = "txtbox[]";
+            cell2.appendChild(element2);
+
+            var cell3 = row.insertCell(2);
+            var element3 = document.createElement("input");
+            element3.type = "text";
+            element3.name = "txtbox[]";
+            cell3.appendChild(element3);
+            var cell4 = row.insertCell(3);
+            var element4 = document.createElement("input");
+            element4.type = "text";
+            element4.name = "txtbox[]";
+            cell4.appendChild(element4);
+
+            var cell5 = row.insertCell(4);
+            var element5 = document.createElement("input");
+            element5.type = "text";
+            element5.name = "txtbox[]";
+            cell5.appendChild(element5);
+
+            var cell6 = row.insertCell(5);
+            var element6 = document.createElement("input");
+            element6.type = "text";
+            element6.name = "txtbox[]";
+            cell6.appendChild(element6);
+            var cell7 = row.insertCell(6);
+            var element7 = document.createElement("input");
+            element7.type = "text";
+            element7.name = "txtbox[]";
+            cell7.appendChild(element7);
+
+        }
+
+        $().ready(function () {
+
+
+
+
+            $kasatable.bootstrapTable({
+                type: "POST",
+                url: "/RECETE/FisData",
+                method: 'post',
+                contentType: 'application/x-www-form-urlencoded',
+                queryParams: get_query_params,
+                clickToSelect: true,
+
+
+                search: true,
+
+
+                pagination: true,
+                searchAlign: 'left',
+                pageSize: 8,
+
+                pageList: [8, 10, 25, 50, 100],
+                locale: 'tr-TR',
+                formatShowingRows: function (pageFrom, pageTo, totalRows) {
+                    return "Toplam " + totalRows+" Kayıt";
+                },
+                formatRecordsPerPage: function (pageNumber) {
+                    return pageNumber + " Adet Listeleniyor";
+                },
+
+            });
+
+            $kasatable.on('click-row.bs.table', function (e, row, $element) {
+                kasaidg = row.ID;
+                kasakodu = row.RECETEKODU;
+
+                document.getElementById("Birim").value = row.SON_URETIM_MALIYET;
+
+                document.getElementById("Recete").value = row.RECETEKODU;
+
+
+            });
+            $kasatable.on('  dbl-click-row.bs.table', function (e, row, $element) {
+                kasaidg = row.ID;
+                kasakodu = row.RECETEKODU;
+
+                document.getElementById("Birim").value = row.SON_URETIM_MALIYET;
+
+                document.getElementById("Recete").value = row.RECETEKODU;
+                $('#ModalStokSec').modal('hide');
+                document.getElementById("Açıklama").focus();
+
+                setTimeout(function () { $('#Mıktar').focus() }, 800);
+            });
+
+            //activate the tooltips after the data table is initialized
+            $('[rel="tooltip"]').tooltip();
+
+            $(window).resize(function () {
+                $kasatable.bootstrapTable('resetView');
+            });
+
+
+        })
+        function butonlistele() {
+
+
+            $table.append('<tr data-index="0"><td>' + document.getElementById('Recete').value + '</td><td>' + document.getElementById('Açıklama').value + '</td><td>' + document.getElementById('Mıktar').value + '</td><td>' + document.getElementById('Birim').value + '</td><td class="countable">' + numberformatter(document.getElementById('NetTutar').value) + '</td><td> <button  type="button" id="deleteRowBtn" onclick="deleteRow(this)" class="btn btn-danger btn-sm btn-rounded">  <span class="icon text-white-50">    <i class="fas fa-trash-alt"></i> </span></button></td></tr>');
+            document.getElementById("Recete").value = "";
+            document.getElementById("Açıklama").value = "";
+            document.getElementById("Mıktar").value = 0;
+
+            yenile();
+
+
+
+
+
+
+        }
+        function yenile() {maskla();
+            var sum = 0;
+
+            var table = document.getElementById("bootstrap-table");
+            var ths = table.getElementsByTagName('td');
+            var tds = table.getElementsByClassName('countable');
+
+            for (var i = 0; i < tds.length; i++) {
+                var text = tds[i].innerText.toString().replaceAll(/,/g, '')
+                sum += isNaN(text) ? 0 : parseFloat(text);
+            }
+
+            document.getElementById("toplam").value = numberformatter(sum);
+            for (var i = 0; i < ths.length; i++) {
+                ths[i].getElementsByTagName("input")[0].value = null;
+
+            }
+
+        }
+        function deleteRow(btn) {
+  var row = btn.parentNode.parentNode;
+            row.parentNode.removeChild(row);
+                yenile();
+}
+        function butongonder(buton) {
+           
+            var arr = [];
+
+
+            var oTable = document.getElementById('bootstrap-table');
+
+            //gets rows of table
+            var rowLength = oTable.rows.length;
+
+            //loops through rows
+            for (i = 2; i < rowLength; i++) {
+
+                //gets cells of current row
+                var oCells = oTable.rows.item(i).cells;
+
+                //gets amount of cells of current row
+                var cellLength = oCells.length;
+
+                //loops through each cell in current row
+                for (var j = 0; j < cellLength; j++) {
+
+                    // get your cell info here
+
+                    var cellVal = oCells.item(j).innerHTML;
+                    var cellVal = oCells.item(j).innerHTML;
+
+                    var Stoka;
+                    var Miktar;
+                    var Birim;
+                    var Acıklama;
+
+                    var Tutar;
+                    var İskonto;
+                    var Parabirimi;
+                    var Parabirimi;
+                    var Parakuru;
+                    var NetTutar;
+                    if (j == 0)
+                        Stoka = oCells.item(j).innerHTML;
+                    if (j == 1)
+                        Acıklama = oCells.item(j).innerHTML;
+                    if (j == 2)
+                        Miktar = oCells.item(j).innerHTML;
+                    if (j == 3)
+                        Birim = oCells.item(j).innerHTML;
+
+
+                    if (j ==4)
+                        NetTutar = oCells.item(j).innerHTML;
+
+
+
+                }
+                arr.push({ RECETEKODU: Stoka, ACIKLAMA: Acıklama, MIKTAR: Miktar, BIRIM: Birim,  NETTUTAR: NetTutar });
+            }
+
+            if (arr.length == 0) {
+                toastr["error"]("Lütfen Kalem Giriniz!")
+            } else {
+                buton.disabled = true;
+                       $.ajax({
+                type: "POST",
+
+
+                dataType: "json",
+                contentType: "application/json; charset=utf-8",
+                url: "/RECETE_HAREKET/datagonder/",
+                data: JSON.stringify({
+
+                    FISNO: document.getElementById("FisNo").value,
+                    TARIH: (document.getElementById("Tarih").value ),
+                    NOT: document.getElementById("Not").value,
+                    TUTAR: document.getElementById("toplam").value,
+                    gelenhareket: arr,
+                } )
+           ,
+                           success: function (result) {
+                               toastr["success"]("Başarıyla Kayıt Edildi!");
+                               historysend("/RECETE_HAREKET/RECETEFISLISTE");
+                       
+                    },
+                error: function (result) {
+                    toastr["error"]('Lütfen Bilgileri Eksik  Ya da Yanlış Girmeyiniz');
+                    }
+            });
+            }
+
+
+        }
+
+        function idFormatter() {
+            return 'Toplam'
+        }
+
+        function nameFormatter(data) {
+            return data.length
+        }
+
+
+        function numberformatter(value, row, index) {
+            if (!value)
+                return "0.00";
+            else {
+                return [
+
+                    numberWithCommas((Number(value.toString().replace(",", "."))).toFixed(2))
+                ].join('');
+            }
+        }
+        function numberWithCommas(x) {
+            return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+        }
+        function priceFormatter(data) {
+            var field = this.field
+
+            var toplam = data.map(function (row) {
+                if (row[field])
+                    return +Number(row[field].toString().replace(",", "."))
+                else {
+                    return +Number("0")
+                }
+            }).reduce(function (sum, i) {
+                return sum + i
+            }, 0);
+            return numberWithCommas(toplam) + " TL"
+        }
+        function priceFormatter(data) {
+            var field = this.field
+
+            var toplam = data.map(function (row) {
+                return +Number(row[field].toString().replace(",", "."))
+            }).reduce(function (sum, i) {
+                return sum + i
+            }, 0);
+            return numberWithCommas(toplam) + " TL"
+        }
+
+        function footerStyle(column) {
+            return {
+                id: {
+                    classes: 'uppercase'
+                },
+                name: {
+                    css: { 'font-weight': 'normal' }
+                },
+                price: {
+                    css: { color: 'red' }
+                }
+            }[column.field]
+        }
+
+
+    </script>
+}
+
+

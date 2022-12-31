@@ -1,0 +1,66 @@
+﻿
+@{
+    var modela = Session["Rapora"] as And.ElkomMuhasebe.UI.WEB.Controllers.CARI_BASLIKController.duraganrapormodel;
+    Layout = null;
+}
+<html>
+<head>
+    <meta http-equiv="content-type" content="text/html;charset=UTF-8" />
+    <meta charset="utf-8" />
+    <title>Rapor</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, shrink-to-fit=no" />
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-F3w7mX95PdgyTmZZMECAngseQB83DfGTowi0iMjiWaeVhAn4FJkqJByhZMI3AhiU" crossorigin="anonymous">
+
+</head>
+<body>
+    <h2>Durağan Cari Durum Raporu</h2>
+    <div class="table-responsive">
+        <table class="table table-striped table-sm">
+            <thead>
+                <tr>
+                    <th>CARİKODU</th>
+                    <th>ADISOYADI</th>
+                    <th>ENSONHAR.</th>
+                    <th>GÜN</th>
+                    <th>EVRAK CİNSİ</th>
+                    <th>EVRAK NO</th>
+                    <th>MEBLAĞ</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in modela.hareketler)
+                {
+                    <tr>
+                        <td>@modela.cariler[modela.hareketler.IndexOf(item)].CARIKOD</td>
+                        <td>@modela.cariler[modela.hareketler.IndexOf(item)].FIRMAUNVANI</td>
+                        <td>@item.TARIHSAAT.ToShortDateString()</td>
+                        <td>@((DateTime.Now-item.TARIHSAAT).Days)</td>
+                        <td>@item.ISLEMTURU.ToString()</td>
+                        <td>@item.ISLEMNO</td>
+                        @if (item.TIPI == And.ElkomMuhasebe.Core.Model.Entity.FirmaDB.CARI_HAREKET.tip.Giriş)
+                        {
+                            <td>@(item.ALACAK)</td>
+
+                        }
+                        else
+                        {
+                            <td>@(item.BORC)</td>
+                        }
+                    </tr>
+
+                }
+
+            </tbody>
+        </table>
+    </div>
+</body>
+<script type="text/javascript">
+    window.onload = function () { window.print(); }
+    window.onafterprint = function () {
+        window.location.href = "/Home";
+    }
+</script>
+</html>
+
+

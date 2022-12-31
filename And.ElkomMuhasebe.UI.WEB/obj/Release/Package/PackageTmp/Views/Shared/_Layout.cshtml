@@ -1,0 +1,1126 @@
+﻿@{
+    var user = Session["LoginUser"] as And.ElkomMuhasebe.Core.Model.Entity.Admin.User;
+    var altuser = Session["LoginAltUser"] as And.ElkomMuhasebe.Core.Model.Entity.Admin.AltUser;
+    var firma = Session["SeciliFirma"] as And.ElkomMuhasebe.Core.Model.Entity.Admin.UserFirma;
+    var sayfa = Url.RequestContext.HttpContext.Request.Url.ToString();
+
+    var bildirimler = Session["Bildirimler"] as List<And.ElkomMuhasebe.Core.Model.Entity.FirmaDB.UYARILAR>;
+}
+
+<!DOCTYPE html>
+<html lang="tr">
+ 
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Elkom Web Portal</title>
+
+    <!-- Theme style -->
+    <link rel="stylesheet" href="~/dist/css/adminlte.min.css">
+
+    <!-- Toastr -->
+    <link rel="stylesheet" href="~/assets/plugins/toastr/toastr.min.css">
+    <!-- Toastr -->
+
+    <link rel="icon" href="~/dist/img/favicon.png">
+    <link rel="stylesheet" href="~/assets/plugins/pace-progress/themes/purple/pace-theme-flash.css">
+    <!-- Google Font: Source Sans Pro -->
+    <link rel="stylesheet"
+          href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="~/assets/plugins/fontawesome-free/css/all.min.css">
+
+    <!-- bootstrap-table -->
+    <link rel="stylesheet" href="https://unpkg.com/bootstrap-table@1.19.1/dist/bootstrap-table.min.css">
+    <!-- overlayScrollbars -->
+    <link rel="stylesheet" href="~/assets/plugins/overlayScrollbars/css/OverlayScrollbars.min.css">
+    <!-- Daterange picker -->
+    <link rel="stylesheet" href="~/assets/plugins/daterangepicker/daterangepicker.css">
+    <!-- Select2 -->
+    <link rel="stylesheet" href="~/assets/plugins/select2/css/select2.min.css">
+    <link rel="stylesheet" href="~/assets/plugins/select2-bootstrap4-theme/select2-bootstrap4.min.css">
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/akottr/dragtable@master/dragtable.css">
+    <link href="https://unpkg.com/jquery-resizable-columns@0.2.3/dist/jquery.resizableColumns.css" rel="stylesheet">
+    <link href="https://unpkg.com/jquery-resizable-columns@0.2.3/dist/jquery.resizableColumns.css" rel="stylesheet">
+    <!-- Harici Style  -->
+    <style>
+        tr.noprint {
+            border-radius: 0.25rem;
+            background-color: #007bff;
+        }
+        @@media print
+{
+    .no-print, .no-print *
+    {
+        display: none !important;
+    }
+}
+    </style>
+</head>
+<body class="hold-transition sidebar-mini layout-fixed ">
+    <div class="wrapper">
+
+        <!-- Preloader -->
+        <div class="preloader flex-column justify-content-center align-items-center">
+            <img class="animation__shake" src="~/dist/img/AdminLTELogo.png" alt="ElkomWebLogo" height="60" width="60">
+        </div>
+
+        <!-- Navbar -->
+        <nav class="main-header navbar navbar-expand navbar-white navbar-light">
+            <!-- Left navbar links -->
+            <ul class="navbar-nav">
+                <li class="nav-item tikla">
+                    <a class="nav-link" data-widget="pushmenu" href="#" role="button"><i class="fas fa-bars"></i></a>
+                </li>
+                <li class="nav-item tikla d-none d-sm-inline-block">
+                    <a href="index3.html" class="nav-link">
+                        @if (firma != null)
+                        {
+                            @firma.Companyname <small>Dönem @DateTime.Now.Year</small>
+                        }
+                    </a>
+                </li>
+            </ul>
+
+            <!-- Right navbar links -->
+            <ul class="navbar-nav ml-auto">
+
+                <!-- Notifications Dropdown Menu -->
+                <li class="nav-item tikla dropdown">
+                    <a class="nav-link" data-toggle="dropdown" href="#">
+                        <i class="far fa-bell"></i>
+                        <span class="badge badge-warning navbar-badge">15</span>
+                    </a>
+                    <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right" style="min-width:350px;">
+                        <span class="dropdown-item dropdown-header">Bildirimler</span>
+                        <div class="dropdown-divider"></div>
+                        @if (bildirimler != null)
+                        {
+                            foreach (var item in bildirimler.Where(x => x.okunmus == false))
+                            {
+                                <a href="@item.url" onclick="bildirimsil(@item.ID,@item.url)" class="dropdown-item">
+                                    <i class="fas fa-file mr-2"></i> @item.isim
+                                    <span class="float-right text-muted text-sm">Yakında</span>
+                                </a>
+                                <div class="dropdown-divider"></div>
+                            }
+                        }
+                        <a href="#" class="dropdown-item dropdown-footer">Tümü</a>
+                    </div>
+                </li>
+                <li class="nav-item tikla">
+                    <a class="nav-link" data-widget="fullscreen" title="Full Ekran" href="#" role="button">
+                        <i class="fas fa-expand-arrows-alt"></i>
+                    </a>
+                </li>
+                <!-- Kullanıcı Dropdown Menu -->
+                <li class="nav-item tikla dropdown">
+                    <a class="nav-link" data-toggle="dropdown" href="#">
+                        <i class="far fa-user"></i>
+                        @{ if (Session["LoginUser"] != null)
+                            {
+                                @user.name.ToUpper()
+                                @:
+                                @user.surname.ToUpper()
+                            }
+
+                            if (Session["LoginAltUser"] != null)
+                            {
+                                @altuser.name.ToUpper()
+                                @:
+                                @altuser.surname.ToUpper()
+                            }
+                        }
+                    </a>
+                    <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right">
+                        <span class="dropdown-item dropdown-header">Sistem Araçları</span>
+                        <div class="dropdown-divider"></div>
+                        <a class="dropdown-item" href="/Firmas/Edit/1"> Firma Tanımları /E-Fatura Bilgileri</a>
+
+                        <a class="dropdown-item" href="/S_MERKEZI/"> Sorumluluk Merkezleri</a>
+                        <a class="dropdown-item" href="/DEPO/"> Depolar</a>
+                        <a class="dropdown-item" href="/Firmas/VeriYukle"> Devir Verisi Yükle</a>
+                        <div class="dropdown-divider"></div>
+                        @{ if (Session["LoginUser"] != null)
+                            {
+                                <a class="dropdown-item" href="/AltUsers/">Alt Kullanıcılar</a>
+                                <div class="dropdown-divider"></div>
+                            }}
+                        <a class="dropdown-item" href="/KUR_BASLIK/">Kur Tanımları</a>
+                        <div class="dropdown-divider"></div>
+
+                        <input type="checkbox" name="darkmode" id="dark-mode" value="Koyu Tema" checked="">Koyu Tema
+
+                        <div class="dropdown-divider"></div>
+                        <form action="/Exit" method="post">
+                            <a class="dropdown-item" onclick="$(this).closest('form').submit()">Çıkış</a>
+                        </form>
+                    </div>
+                </li>
+            </ul>
+        </nav>
+        <!-- /.navbar -->
+        <!-- Main Sidebar Container -->
+        <aside class="main-sidebar sidebar-dark-indigo   elevation-4">
+            <!-- Brand Logo -->
+            <a href="/" class="brand-link">
+                <img src="~/dist/img/AdminLTELogo.png" alt="Elkom Web Portal Logo" class="brand-image img-circle elevation-3"
+                     style="opacity: .8">
+                <span class="brand-text font-weight-light">Elkom Web Portal</span>
+            </a>
+
+            <!-- Sidebar -->
+            <div class="sidebar">
+                @if ( (user != null && !string.IsNullOrEmpty(user.kullanma)))
+                {
+
+                    <!-- Sidebar Menu -->
+                    <nav class="mt-2">
+                        <ul class="nav nav-pills nav-sidebar flex-column text-sm  nav-child-indent" data-widget="treeview" role="menu"
+                            data-accordion="false">
+                            <!-- Add icons to the links using the .nav-icon class
+                with font-awesome or any other icon font library -->
+                            <li class="nav-item tikla ">
+                                <a href="/HOME/Panel" class="nav-link active panel">
+                                    <i class="nav-icon fas fa-tachometer-alt"></i>
+                                    <p>
+                                        Panel
+                                    </p>
+                                </a>
+                            </li>
+
+                            @if ((altuser != null && altuser.görme.Contains("Cariler")) || (user != null && user.kullanma.Contains("Cariler")))
+                            {
+                                <li class="nav-item tikla">
+                                    <a href="#" class="nav-link">
+                                        <i class="nav-icon fas fa-address-card"></i>
+                                        <p>
+                                            Cari
+                                            <i class="fas fa-angle-left right"></i>
+                                        </p>
+                                    </a>
+                                    <ul class="nav nav-treeview">
+                                        <li class="nav-item tikla">
+                                            <a href="/CARI_BASLIK/" class="nav-link">
+                                                <i class="far fa-circle nav-icon text-info"></i>
+                                                <p>Cari Listesi</p>
+                                            </a>
+                                        </li>
+                                        <li class="nav-item tikla">
+                                            <a href="/CARI_BASLIK/CREATE" class="nav-link">
+                                                <i class="far fa-circle nav-icon text-primary"></i>
+                                                <p>Yeni Cari</p>
+                                            </a>
+                                        </li>
+                                        <li class="nav-item tikla">
+                                            <a href="/CARI_HAREKET/INDEX" class="nav-link">
+                                                <i class="far fa-circle nav-icon text-maroon"></i>
+                                                <p>Cari Genel Hareket Listesi</p>
+                                            </a>
+                                        </li>
+                                        @if ((altuser != null && altuser.görme.Contains("Cari Hareketleri Ve Fişleri")) || (user != null))
+                                        {
+                                            <li class="nav-item">
+                                                <a href="#" class="nav-link">
+                                                    <i class="far fa-circle nav-icon"></i>
+                                                    <p>
+                                                        Cari Fişleri
+                                                        <i class="right fas fa-angle-left"></i>
+                                                    </p>
+                                                </a>
+                                                <ul class="nav nav-treeview">
+                                                    <li class="nav-item tikla">
+                                                        <a href="/CARI_HAREKET/CARIFISLISTE" class="nav-link">
+                                                            <i class="far fa-circle nav-icon text-info"></i>
+                                                            <p>Fiş Listesi</p>
+                                                        </a>
+                                                    </li>
+                                                    <li class="nav-item tikla">
+                                                        <a href="/CARI_HAREKET/CARIFISKART?tip=1" class="nav-link">
+                                                            <i class="far fa-circle nav-icon text-primary"></i>
+                                                            <p>Tahsilat Fişi(Giriş)</p>
+                                                        </a>
+                                                    </li>
+                                                    <li class="nav-item tikla">
+                                                        <a href="/CARI_HAREKET/CARIFISKART?tip=2" class="nav-link">
+                                                            <i class="far fa-circle nav-icon text-maroon"></i>
+                                                            <p>Tediye Fişi(Çıkış)</p>
+                                                        </a>
+                                                    </li>
+                                                </ul>
+                                            </li>
+
+
+
+                                        }
+                                    </ul>
+                                </li>
+                            }
+
+                            @if ((altuser != null && altuser.görme.Contains("Stoklar")) || (user != null && user.kullanma.Contains("Stoklar")))
+                            {
+                                <li class="nav-item tikla">
+                                    <a href="#" class="nav-link">
+                                        <i class="nav-icon fas fa-cubes"></i>
+                                        <p>
+                                            Stok
+                                            <i class="fas fa-angle-left right"></i>
+                                        </p>
+                                    </a>
+                                    <ul class="nav nav-treeview">
+                                        <li class="nav-item tikla">
+                                            <a href="/STOKS/" class="nav-link">
+                                                <i class="far fa-circle nav-icon"></i>
+                                                <p>Stok Listesi</p>
+                                            </a>
+                                        </li>
+                                        <li class="nav-item tikla">
+                                            <a href="/STOKS/CREATE" class="nav-link">
+                                                <i class="far fa-circle nav-icon"></i>
+                                                <p>Yeni Stok</p>
+                                            </a>
+                                        </li>
+                                        <li class="nav-item tikla">
+                                            <a href="/STOK_HAREKET/INDEX" class="nav-link">
+                                                <i class="far fa-circle nav-icon"></i>
+                                                <p>Genel Stok Hareket Listesi</p>
+                                            </a>
+                                        </li>
+                                        @if ((altuser != null && altuser.görme.Contains("Stok Hareketleri ve Fişleri")) || user != null)
+                                        {
+                                            <li class="nav-item">
+                                                <a href="#" class="nav-link">
+                                                    <i class="far fa-circle nav-icon"></i>
+                                                    <p>
+                                                        Stok Fişleri
+                                                        <i class="right fas fa-angle-left"></i>
+                                                    </p>
+                                                </a>
+                                                <ul class="nav nav-treeview">
+                                                    <li class="nav-item tikla">
+                                                        <a href="/STOK_HAREKET/STOKFISLISTE/" class="nav-link">
+                                                            <i class="far fa-dot-circle nav-icon"></i>
+                                                            <p>Stok Fiş Listesi</p>
+                                                        </a>
+                                                    </li>
+                                                    <li class="nav-item tikla">
+                                                        <a href="/STOK_HAREKET/STOKFISKART?tip=1" class="nav-link">
+                                                            <i class="far fa-dot-circle nav-icon"></i>
+                                                            <p>Stok Giriş Fişi</p>
+                                                        </a>
+                                                    </li>
+                                                    <li class="nav-item tikla">
+                                                        <a href="/STOK_HAREKET/STOKFISKART?tip=2" class="nav-link">
+                                                            <i class="far fa-dot-circle nav-icon"></i>
+                                                            <p>Stok Çıkış Fişi</p>
+                                                        </a>
+                                                    </li>
+                                                </ul>
+                                            </li>
+
+                                        }
+                                    </ul>
+                                </li>
+                            }
+                            @if ((altuser != null && altuser.görme.Contains("Sipariş")) || (user != null && user.kullanma.Contains("Sipariş")))
+                            {/*
+                                                    <!-- Sipariş -->
+                                                    <li class="nav-item tikla">
+                                                        <a href="#" class="nav-link">
+                                                            <i class="nav-icon fas fa-shopping-cart"></i>
+                                                            <p>
+                                                                Sipariş
+                                                                <i class="fas fa-angle-left right"></i>
+                                                            </p>
+                                                        </a>
+                                                        <ul class="nav nav-treeview">
+                                                            <li class="nav-item tikla">
+                                                                <a href="/SIPARIS_FIS/SIPARISLISTE" class="nav-link">
+                                                                    <i class="far fa-circle nav-icon"></i>
+                                                                    <p>Sipariş Listesi</p>
+                                                                </a>
+                                                            </li>
+                                                            <li class="nav-item tikla">
+                                                                <a href="/SIPARIS_FIS/SIPARISOLUSTUR/GirişFiş" class="nav-link">
+                                                                    <i class="far fa-circle nav-icon"></i>
+                                                                    <p>Yeni Alış</p>
+                                                                </a>
+                                                            </li>
+                                                            <li class="nav-item tikla">
+                                                                <a href="/SIPARIS_FIS/SIPARISOLUSTUR/Çıkış" class="nav-link">
+                                                                    <i class="far fa-circle nav-icon"></i>
+                                                                    <p>Yeni Satış</p>
+                                                                </a>
+                                                            </li>
+                                                        </ul>
+                                                    </li>*/
+                            }
+                            @if ((altuser != null && altuser.görme.Contains("Üretim")) || (user != null && user.kullanma.Contains("Üretim")))
+                            {/*
+                                                    <!-- Üretim -->
+                                                    <li class="nav-item tikla">
+                                                        <a href="#" class="nav-link">
+                                                            <i class="nav-icon fas fa-hammer"></i>
+                                                            <p>
+                                                                Üretim
+                                                                <i class="fas fa-angle-left right"></i>
+                                                            </p>
+                                                        </a>
+                                                        <ul class="nav nav-treeview">
+                                                            <li class="nav-item tikla">
+                                                                <a href="/RECETE" class="nav-link">
+                                                                    <i class="far fa-circle nav-icon"></i>
+                                                                    <p>Üretim Reçeteleri</p>
+                                                                </a>
+                                                            </li>
+                                                            <li class="nav-item tikla">
+                                                                <a href="/RECETE/CREATE" class="nav-link">
+                                                                    <i class="far fa-circle nav-icon"></i>
+                                                                    <p>Yeni Reçete</p>
+                                                                </a>
+                                                            </li>
+                                                            <li class="nav-item tikla">
+                                                                <a href="/RECETE_HAREKET/RECETEFISLISTE" class="nav-link">
+                                                                    <i class="far fa-circle nav-icon"></i>
+                                                                    <p>Üretim Fiş Listesi</p>
+                                                                </a>
+                                                            </li>
+                                                            <li class="nav-item tikla">
+                                                                <a href="/RECETE_HAREKET/RECETEFIS" class="nav-link">
+                                                                    <i class="far fa-circle nav-icon"></i>
+                                                                    <p>Yeni Üretim Fişi</p>
+                                                                </a>
+                                                            </li>
+                                                        </ul>
+                                                    </li>*/
+                            }
+                            <!-- Kasa -->
+                            @if ((altuser != null && altuser.görme.Contains("Kasalar")) || (user != null && user.kullanma.Contains("Kasalar")))
+                            {
+                                <li class="nav-item tikla">
+                                    <a href="#" class="nav-link">
+                                        <i class="nav-icon fas fa-cash-register"></i>
+                                        <p>
+                                            Kasa
+                                            <i class="fas fa-angle-left right"></i>
+                                        </p>
+                                    </a>
+                                    <ul class="nav nav-treeview">
+                                        <li class="nav-item tikla">
+                                            <a href="/KASAS" class="nav-link">
+                                                <i class="far fa-circle nav-icon"></i>
+                                                <p>Kasa Listesi</p>
+                                            </a>
+                                        </li>
+                                        <li class="nav-item tikla">
+                                            <a href="/KASAS/CREATE" class="nav-link">
+                                                <i class="far fa-circle nav-icon"></i>
+                                                <p>Yeni Kasa</p>
+                                            </a>
+                                        </li>
+                                        <li class="nav-item tikla">
+                                            <a href="/KASA_HAREKET/INDEX" class="nav-link">
+                                                <i class="far fa-circle nav-icon"></i>
+                                                <p>Genel Kasa Hareketleri</p>
+                                            </a>
+                                        </li>
+                                        @if ((altuser != null && altuser.görme.Contains("Kasa Hareketleri Ve Fişleri")) || (user != null))
+                                        {
+                                            <li class="nav-item">
+                                                <a href="#" class="nav-link">
+                                                    <i class="far fa-circle nav-icon"></i>
+                                                    <p>
+                                                        Kasa Fişleri
+                                                        <i class="right fas fa-angle-left"></i>
+                                                    </p>
+                                                </a>
+                                                <ul class="nav nav-treeview">
+                                                    <li class="nav-item tikla">
+                                                        <a href="/KASA_HAREKET/KASAFISKART?tip=1" class="nav-link">
+                                                            <i class="far fa-dot-circle nav-icon"></i>
+                                                            <p>Kasa Giriş Fişi</p>
+                                                        </a>
+                                                    </li>
+                                                    <li class="nav-item tikla">
+                                                        <a href="/KASA_HAREKET/KASAFISKART?tip=2" class="nav-link">
+                                                            <i class="far fa-dot-circle nav-icon"></i>
+                                                            <p>Kasa Çıkış Fişi</p>
+                                                        </a>
+                                                    </li>
+                                                    <li class="nav-item tikla">
+                                                        <a href="/KASA_HAREKET/KASAFISLISTE" class="nav-link">
+                                                            <i class="far fa-dot-circle nav-icon"></i>
+                                                            <p>Kasa Fiş Listesi</p>
+                                                        </a>
+                                                    </li>
+                                                </ul>
+                                            </li>
+
+                                        }
+
+                                        <!-- Gelir/Gider -->
+                                        <li class="nav-item tikla">
+                                            <a href="/GELIR_BASLIK/" class="nav-link">
+                                                <i class="far fa-circle nav-icon"></i>
+                                                <p>Gelirler</p>
+                                            </a>
+                                        </li>
+                                        <li class="nav-item tikla">
+                                            <a href="/GIDER_BASLIK/" class="nav-link">
+                                                <i class="far fa-circle nav-icon"></i>
+                                                <p>Giderler</p>
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </li>
+                            }
+
+                            @if ((altuser != null && altuser.görme.Contains("Çekler")) || (user != null && user.kullanma.Contains("Çekler")))
+                            {
+                                <li class="nav-item tikla">
+                                    <a href="#" class="nav-link">
+                                        <i class="nav-icon fas fa-file-invoice-dollar"></i>
+                                        <p>
+                                            Çek
+                                            <i class="fas fa-angle-left right"></i>
+                                        </p>
+                                    </a>
+                                    <ul class="nav nav-treeview">
+                                        <li class="nav-item tikla">
+                                            <a href="/CEK/AlınanFisler" class="nav-link">
+                                                <i class="far fa-circle nav-icon"></i>
+                                                <p>Alınan Çekler</p>
+                                            </a>
+                                        </li>
+                                        <li class="nav-item tikla">
+                                            <a href="/CEK/VERILENFISLER" class="nav-link">
+                                                <i class="far fa-circle nav-icon"></i>
+                                                <p>Verilen Çekler</p>
+                                            </a>
+                                        </li>
+                                        <li class="nav-item tikla">
+                                            <a href="/CEK/CEKISLEMLERI" class="nav-link">
+                                                <i class="far fa-circle nav-icon"></i>
+                                                <p>Çek İşlemleri</p>
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </li>
+                            }
+
+                            @if ((altuser != null && altuser.görme.Contains("Senetler")) || (user != null && user.kullanma.Contains("Senetler")))
+                            {
+                                <li class="nav-item tikla">
+                                    <a href="#" class="nav-link">
+                                        <i class="nav-icon fas fa-file-invoice-dollar"></i>
+                                        <p>
+                                            Senet
+                                            <i class="fas fa-angle-left right"></i>
+                                        </p>
+                                    </a>
+                                    <ul class="nav nav-treeview">
+                                        <li class="nav-item tikla">
+                                            <a href="/SENET/SENETISLEMLERI" class="nav-link">
+                                                <i class="far fa-circle nav-icon"></i>
+                                                <p>Senet İşlemleri</p>
+                                            </a>
+                                        </li>
+                                        <li class="nav-item tikla">
+                                            <a href="/SENET/AlınanSenetler" class="nav-link">
+                                                <i class="far fa-circle nav-icon"></i>
+                                                <p>Alınan Senetler</p>
+                                            </a>
+                                        </li>
+                                        <li class="nav-item tikla">
+                                            <a href="/SENET/VERILENSENETLER" class="nav-link">
+                                                <i class="far fa-circle nav-icon"></i>
+                                                <p>Verilen Senetler</p>
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </li>
+                            }
+                            @if ((altuser != null && altuser.görme.Contains("Fatura")) || (user != null && user.kullanma.Contains("Fatura")))
+                            {/*
+                                                    <li class="nav-item tikla">
+                                                        <a href="#" class="nav-link">
+                                                            <i class="nav-icon fas fa-file-invoice"></i>
+                                                            <p>
+                                                                Kağıt Faturalar
+                                                                <i class="fas fa-angle-left right"></i>
+                                                            </p>
+                                                        </a>
+                                                        <ul class="nav nav-treeview">
+                                                            <li class="nav-item tikla">
+                                                                <a href="/FATURA/FATURALISTE" class="nav-link">
+                                                                    <i class="nav-icon far fa-circle text-danger"></i>
+                                                                    <p>Kağıt Fatura Listesi</p>
+                                                                </a>
+                                                            </li>
+                                                            <li class="nav-item tikla">
+                                                                <a href="/FATURA/FATURAOLUSTUR/GirişFiş" class="nav-link">
+                                                                    <i class="nav-icon far fa-circle text-success"></i>
+                                                                    <p>Yeni Kağıt Fatura Alış</p>
+                                                                </a>
+                                                            </li>
+                                                            <li class="nav-item tikla">
+                                                                <a href="/FATURA/FATURAOLUSTUR/Çıkış" class="nav-link">
+                                                                    <i class="nav-icon far fa-circle text-success"></i>
+                                                                    <p>Yeni Kağıt Fatura Satış</p>
+                                                                </a>
+                                                            </li>
+
+                                                        </ul>
+                                                    </li>*/
+                            }
+
+                            @if ((altuser != null && altuser.görme.Contains("E-Faturalar")) || (user != null && user.kullanma.Contains("E-Faturalar")))
+                            {
+                                <li class="nav-item tikla">
+                                    <a href="#" class="nav-link">
+                                        <i class="nav-icon fas fa-file-invoice"></i>
+                                        <p>
+                                            E-Fatura/E-Arşiv Fatura
+                                            <i class="fas fa-angle-left right"></i>
+                                        </p>
+                                    </a>
+                                    <ul class="nav nav-treeview">
+                                        <li class="nav-item tikla">
+                                            <a href="/FATURA/EFATURALISTESI?tip=1" class="nav-link">
+                                                <i class="nav-icon far fa-circle text-danger"></i>
+                                                <p>Alış Faturaları(Gelen)</p>
+                                            </a>
+                                        </li>
+                                        <li class="nav-item tikla">
+                                            <a href="/FATURA/EFATURALISTESI?tip=0" class="nav-link">
+                                                <i class="nav-icon far fa-circle text-success"></i>
+                                                <p>Satış Fatuaları(Giden)</p>
+                                            </a>
+                                        </li>
+                                        <li class="nav-item tikla">
+                                            <a href="/FATURA/EFATURALISTESI?tip=2" class="nav-link">
+                                                <i class="far fa-circle nav-icon text-orange"></i>
+                                                <p>Taslaklar</p>
+                                            </a>
+                                        </li>
+
+                                        <li class="nav-item tikla">
+                                            <a href="/FATURA/EFATURAKART?tip=2" class="nav-link">
+                                                <i class="far fa-circle nav-icon text-orange"></i>
+                                                <p>Satış Faturası Oluştur</p>
+                                            </a>
+                                        </li>
+                                        <li class="nav-item tikla">
+                                            <a href="/FATURA/EFATURAKART?tip=1" class="nav-link">
+                                                <i class="far fa-circle nav-icon text-orange"></i>
+                                                <p>Alış Faturası Oluştur</p>
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </li>
+                            }
+
+                            @if ((altuser != null && altuser.görme.Contains("İrsaliyeler")) || (user != null && user.kullanma.Contains("İrsaliyeler")))
+                            {
+                                <li class="nav-item tikla">
+                                    <a href="#" class="nav-link">
+                                        <i class="nav-icon fas fa-truck-moving"></i>
+                                        <p>
+                                            İrsaliye
+                                            <i class="fas fa-angle-left right"></i>
+                                        </p>
+                                    </a>
+                                    <ul class="nav nav-treeview">
+                                        <li class="nav-item tikla">
+                                            <a href="/IRSALIYE/IRSALIYEKART?tip=1" class="nav-link">
+                                                <i class="nav-icon far fa-circle text-warning"></i>
+                                                <p>Alış İrsaliysi</p>
+                                            </a>
+                                        </li>
+
+                                        <li class="nav-item tikla">
+                                            <a href="/IRSALIYE/IRSALIYEKART?tip=2" class="nav-link">
+                                                <i class="nav-icon far fa-circle text-danger"></i>
+                                                <p>Satış İrsaliyesi</p>
+                                            </a>
+                                        </li>
+                                        <li class="nav-item tikla">
+                                            <a href="/IRSALIYE/IRSALIYELISTE" class="nav-link">
+                                                <i class="far fa-circle nav-icon"></i>
+                                                <p>İrsaliye Listesi</p>
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </li>
+                            }
+
+                            @if ((altuser != null && altuser.görme.Contains("Bankalar")) || (user != null && user.kullanma.Contains("Bankalar")))
+                            {
+                                <li class="nav-item tikla">
+                                    <a href="#" class="nav-link">
+                                        <i class="nav-icon fas fa-money-check"></i>
+                                        <p>
+                                            Banka
+                                            <i class="fas fa-angle-left right"></i>
+                                        </p>
+                                    </a>
+                                    <ul class="nav nav-treeview">
+                                        <li class="nav-item tikla">
+                                            <a href="/BANKAS" class="nav-link">
+                                                <i class="far fa-circle nav-icon"></i>
+                                                <p>Banka Listesi</p>
+                                            </a>
+                                        </li>
+                                        <li class="nav-item tikla">
+                                            <a href="/BANKAS/CREATE" class="nav-link">
+                                                <i class="far fa-circle nav-icon"></i>
+                                                <p>Yeni Banka</p>
+                                            </a>
+                                        </li>
+                                        <li class="nav-item tikla">
+                                            <a href="/BANKA_HAREKET/INDEX" class="nav-link">
+                                                <i class="far fa-circle nav-icon"></i>
+                                                <p>Banka Genel Hareket</p>
+                                            </a>
+                                        </li>
+                                        @if ((altuser != null && altuser.görme.Contains("Banka Hareketleri Ve Fişleri")) || (user != null))
+                                        {
+                                            <li class="nav-item">
+                                                <a href="#" class="nav-link">
+                                                    <i class="far fa-circle nav-icon"></i>
+                                                    <p>
+                                                        Banka Fişleri
+                                                        <i class="right fas fa-angle-left"></i>
+                                                    </p>
+                                                </a>
+                                                <ul class="nav nav-treeview">
+                                                    <li class="nav-item tikla">
+                                                        <a href="/BANKA_HAREKET/BANKAFISLISTE" class="nav-link">
+                                                            <i class="far fa-circle nav-icon"></i>
+                                                            <p>Banka Fiş Listesi</p>
+                                                        </a>
+                                                    </li>
+                                                    <li class="nav-item tikla">
+                                                        <a href="/BANKA_HAREKET/BANKAFISKART?tip=1" class="nav-link">
+                                                            <i class="far fa-circle nav-icon"></i>
+                                                            <p>Banka Giriş(Çek/Senet)</p>
+                                                        </a>
+                                                    </li>
+                                                    <li class="nav-item tikla">
+                                                        <a href="/BANKA_HAREKET/BANKAFISKART?tip=2" class="nav-link">
+                                                            <i class="far fa-circle nav-icon"></i>
+                                                            <p>Banka Çıkış(Çek/Senet)</p>
+                                                        </a>
+                                                    </li>
+                                                </ul>
+                                            </li>
+
+                                        }
+
+                                        <li class="nav-item ">
+                                            <a href="#" class="nav-link">
+                                                <i class="far fa-circle nav-icon"></i>
+                                                <p>Banka İşlemleri</p>
+                                                <i class="right fas fa-angle-left"></i>
+                                            </a>
+                                            <ul class="nav nav-treeview">
+                                                <li class="nav-item tikla">
+                                                    <a href="/BANKA_HAREKET/CekIslemleri" class="nav-link">
+                                                        <i class="far fa-circle nav-icon"></i>
+                                                        <p>Banka Çek/Senet İşlemleri</p>
+                                                    </a>
+                                                </li>
+
+                                                <li class="nav-item tikla">
+                                                    <a href="/Visa/" class="nav-link">
+                                                        <i class="far fa-circle nav-icon"></i>
+                                                        <p>Visa Listesi</p>
+                                                    </a>
+                                                </li>
+                                                <li class="nav-item tikla">
+                                                    <a href="/Visa/VisaIslemleri" class="nav-link">
+                                                        <i class="far fa-circle nav-icon"></i>
+                                                        <p>Visa İşlemleri</p>
+                                                    </a>
+                                                </li>
+                                            </ul>
+                                        </li>
+                                    </ul>
+                                </li>
+                            }
+
+                            @if ((altuser != null && altuser.görme.Contains("Personeller")) || (user != null && user.kullanma.Contains("Personeller")))
+                            {/*
+                                                    <li class="nav-item tikla">
+                                                        <a href="#" class="nav-link">
+                                                            <i class="nav-icon fas fa-user-friends"></i>
+                                                            <p>
+                                                                Personel
+                                                                <i class="fas fa-angle-left right"></i>
+                                                            </p>
+                                                        </a>
+                                                        <ul class="nav nav-treeview">
+                                                            <li class="nav-item tikla">
+                                                                <a href="/PERSONELS" class="nav-link">
+                                                                    <i class="far fa-circle nav-icon"></i>
+                                                                    <p>Personel Listesi</p>
+                                                                </a>
+                                                            </li>
+                                                            <li class="nav-item tikla">
+                                                                <a href="/PERSONEL_HAREKET/GENEL" class="nav-link">
+                                                                    <i class="far fa-circle nav-icon"></i>
+                                                                    <p>Personel Genel Hareketleri</p>
+                                                                </a>
+                                                            </li>
+                                                            @if ((altuser != null && altuser.görme.Contains("Personel Hareketleri Ve Fişleri")) || (user != null))
+                                                            {
+                                                                <li class="nav-item">
+                                                                    <a href="#" class="nav-link">
+                                                                        <i class="far fa-circle nav-icon"></i>
+                                                                        <p>
+                                                                            Personel Fişleri
+                                                                            <i class="right fas fa-angle-left"></i>
+                                                                        </p>
+                                                                    </a>
+                                                                    <ul class="nav nav-treeview">
+                                                                        <li class="nav-item tikla">
+                                                                            <a href="/PERSONEL_HAREKET/PERSONELLISTE" class="nav-link">
+                                                                                <i class="far fa-circle nav-icon"></i>
+                                                                                <p>Personel Fiş Listesi</p>
+                                                                            </a>
+                                                                        </li>
+                                                                        <li class="nav-item tikla">
+                                                                            <a href="/PERSONEL_HAREKET/PERSONELFIS" class="nav-link">
+                                                                                <i class="far fa-circle nav-icon"></i>
+                                                                                <p>Personel Ödeme Fişi</p>
+                                                                            </a>
+                                                                        </li>
+                                                                        <li class="nav-item tikla">
+                                                                            <a href="/PERSONEL_HAREKET/PERSONELTAHAKKUKLISTE" class="nav-link">
+                                                                                <i class="far fa-circle nav-icon"></i>
+                                                                                <p>Personel Tahakkuk Listesi</p>
+                                                                            </a>
+                                                                        </li>
+
+                                                                        <li class="nav-item tikla">
+                                                                            <a href="/PERSONEL_HAREKET/PERSONELTAHAKUK" class="nav-link">
+                                                                                <i class="far fa-circle nav-icon"></i>
+                                                                                <p>Personel Tahakkuk Fişi</p>
+                                                                            </a>
+                                                                        </li>
+                                                                    </ul>
+                                                                </li>
+
+                                                            }
+                                                        </ul>
+                                                    </li>*/
+                            }
+                            <li class="nav-item tikla">
+                                <a data-toggle="modal" data-target="#feedbackmodal" class="nav-link">
+                                    <i class="nav-icon far fa-circle text-danger"></i>
+                                    <p class="text">Sorun Bildir</p>
+                                </a>
+                            </li>
+                        </ul>
+                    </nav>
+                    <!-- /.sidebar-menu -->}
+                </div>
+            <!-- /.sidebar -->
+        </aside>
+        <!-- /.main-sidebar -->
+        <!-- Content Wrapper. Contains page content -->
+        <div class="content-wrapper">
+
+            <div class="bodycontent">
+                @RenderBody()
+            </div>
+
+        </div>
+
+    </div>
+    <!-- ./wrapper -->
+    <!-- Hata Bildir Modal -->
+    <div class="modal" id="feedbackmodal" tabindex="-1" role="dialog">
+        <div class="modal-dialog modal-xl" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Hata Bildir</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+
+                    <input class="form-control form-control-m" id="hataaa" value="" placeholder="..." />
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" onclick="hatagonder()">Gönder</button>
+                    <button type="button" class="btn btn-outline-dark" data-dismiss="modal">Kapat</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- jQuery -->
+    <script src="~/assets/plugins/jquery/jquery.min.js"></script>
+    <script src="https://unpkg.com/jquery-resizable-columns@0.2.3/dist/jquery.resizableColumns.min.js"></script>
+    <!-- jQuery UI 1.11.4 -->
+    <script src="~/assets/plugins/jquery-ui/jquery-ui.min.js"></script>
+    <!-- Resolve conflict in jQuery UI tooltip with Bootstrap tooltip -->
+    <script>
+        $.widget.bridge('uibutton', $.ui.button)
+    </script>
+    <!-- Bootstrap 4 -->
+    <script src="~/assets/plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <!-- ChartJS -->
+    <script src="~/assets/plugins/chart.js/Chart.min.js"></script>
+    <!-- daterangepicker -->
+    <script src="~/assets/plugins/moment/moment.min.js"></script>
+    <script src="~/assets/plugins/daterangepicker/daterangepicker.js"></script>
+    <!-- Tempusdominus Bootstrap 4 -->
+    <script src="~/assets/plugins/tempusdominus-bootstrap-4/js/tempusdominus-bootstrap-4.min.js"></script>
+    <!-- overlayScrollbars -->
+    <script src="~/assets/plugins/overlayScrollbars/js/jquery.overlayScrollbars.min.js"></script>
+    <!-- AdminLTE App -->
+    <script src="~/dist/js/adminlte.js"></script>
+    <!-- Toastr Notifications -->
+
+
+
+    <script src="~/assets/plugins/toastr/toastr.min.js"></script>
+    <!-- Select2 -->
+    <script src="~/assets/plugins/select2/js/select2.min.js"></script>
+    <!-- InputMask -->
+    <script src="~/assets/plugins/moment/moment.min.js"></script>
+    <script src="~/assets/plugins/inputmask/jquery.inputmask.min.js"></script>
+
+    <!-- Bootstrap  Table -->
+    <script src="https://unpkg.com/jquery-resizable-columns@0.2.3/dist/jquery.resizableColumns.min.js"></script>
+    <script src="https://unpkg.com/bootstrap-table@1.19.1/dist/bootstrap-table.min.js"></script>
+    <script src="https://unpkg.com/bootstrap-table@1.19.1/dist/extensions/resizable/bootstrap-table-resizable.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/tableexport.jquery.plugin@1.10.21/tableExport.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/tableexport.jquery.plugin@1.10.21/libs/jsPDF/jspdf.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/tableexport.jquery.plugin@1.10.21/libs/jsPDF-AutoTable/jspdf.plugin.autotable.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/jqueryui@1.11.1/jquery-ui.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/akottr/dragtable@master/jquery.dragtable.js"></script>
+    <script src="https://unpkg.com/bootstrap-table@1.18.3/dist/extensions/reorder-columns/bootstrap-table-reorder-columns.min.js"></script>
+    <script src="https://unpkg.com/bootstrap-table@1.18.3/dist/extensions/print/bootstrap-table-print.min.js"></script>
+    <script src="https://unpkg.com/bootstrap-table@1.18.3/dist/extensions/toolbar/bootstrap-table-toolbar.min.js"></script>
+    <script src="https://unpkg.com/bootstrap-table@1.18.3/dist/extensions/export/bootstrap-table-export.min.js"></script>
+    <script src="https://unpkg.com/bootstrap-table@1.19.1/dist/extensions/resizable/bootstrap-table-resizable.min.js"></script>
+    <script src="~/assets/plugins/bootstrap-table/js/bootstrap-table-tr-TR.js" type="text/javascript"></script>
+    <script src="~/assets/plugins/toastr/toastr.min.js"></script>
+
+    <!-- pace-progress -->
+    <!-- pace-progress -->
+    <script src="~/assets/plugins/pace-progress/pace.js"></script>
+    <!-- Sayfa Scriptleri -->
+    <script type="text/javascript" charset="utf-8">
+
+
+
+        document.querySelector('body').addEventListener('keydown', function (event) {
+
+            // Get key code
+            var code = event.keyCode || event.which;
+            var ele = document.activeElement;
+
+            // Check if the key pressed is Tab (code = 9)
+            if (code === 9 && ele.id == "addRowBtn") {
+
+                // Keep the following line to prevent the default behavior of the Tab key
+                event.preventDefault();
+                butonlistele();
+
+
+                // The tab key has been pressed
+                // Do some awesome stuff here
+                //...
+            }
+        });
+
+         function historysend(urla) {
+
+
+        $.ajax({
+            type: "POST",
+
+
+            dataType: "json",
+            contentType: "application/json; charset=utf-8",
+            url: "/HOME/sendhistory/",
+            data: JSON.stringify({ url: "@Session["LastPage"]" }),
+            success: function (result) {
+
+                if (!urla.includes("Uye-Giris") )
+                    $('.bodycontent').load(urla);
+                else
+                    window.location = urla;
+            },
+            error: function (result) {
+                toastr["error"]('error');
+            }
+        });
+
+    }
+        window.onpopstate = function () {
+            if (!urla.includes("Uye-Giris"))
+                 $('.bodycontent').load("@Session["History"]");
+            else
+                window.location = urla;
+
+        }; history.pushState({}, '');
+        function hatagonder() {
+
+            $.ajax({
+                type: "POST",
+
+
+                dataType: "json",
+                contentType: "application/json; charset=utf-8",
+                url: "/HOME/fedbackgonder/",
+                data: JSON.stringify({ gelenhata: document.getElementById("hataaa").value }),
+                success: function (result) {
+                    $('#feedbackmodal').modal('hide');
+
+                },
+                error: function (result) {
+                    alert('error');
+                }
+            });
+        }
+
+
+        $().ready(function () {
+
+
+            toastr.options = {
+                "closeButton": false,
+                "debug": false,
+                "newestOnTop": false,
+                "progressBar": false,
+                "positionClass": "toast-top-right",
+                "preventDuplicates": false,
+                "onclick": null,
+                "showDuration": "300",
+                "hideDuration": "1000",
+                "timeOut": "5000",
+                "extendedTimeOut": "1000",
+                "showEasing": "swing",
+                "hideEasing": "linear",
+                "showMethod": "fadeIn",
+                "hideMethod": "fadeOut"
+            }
+        });
+        function kaydet() {
+
+            $.ajax({
+                type: "POST",
+
+
+                dataType: "json",
+                contentType: "application/json; charset=utf-8",
+                url: "/HOME/panelkaydet/",
+
+                success: function (result) {
+
+
+                },
+                error: function (result) {
+                    alert('error');
+                }
+            });
+
+        }
+
+        $("li .tikla a").click(function (e) {
+
+            var ulr = $(this).attr("href");
+
+            historysend(ulr);
+
+            return false;
+        });
+
+        $(".dropdown-item").click(function (e) {
+
+            var ulr = $(this).attr("href");
+            historysend(ulr);
+
+
+            return false;
+        });
+        $(".panel").click(function (e) {
+
+            var ulr = $(this).attr("href");
+
+            historysend(ulr);
+
+            return false;
+        });
+    </script>
+    <script type="text/javascript">
+        $('.dropdown-menu a.dropdown-toggle').on('click', function (e) {
+            if (!$(this).next().hasClass('show')) {
+                $(this).parents('.dropdown-menu').first().find('.show').removeClass('show');
+            }
+            var $subMenu = $(this).next('.dropdown-menu');
+            $subMenu.toggleClass('show');
+
+
+            $(this).parents('li.nav-item.dropdown.show').on('hidden.bs.dropdown', function (e) {
+                $('.dropdown-submenu .show').removeClass('show');
+            });
+
+
+            return false;
+        });
+        function bildirimsil(data) {
+
+            $.ajax({
+                type: "POST",
+
+
+                dataType: "json",
+                contentType: "application/json; charset=utf-8",
+                url: "/HOME/bildirimsil/",
+                data: JSON.stringify({ id: data }),
+
+                success: function (result, url) {
+                    window.location = url;
+                },
+                error: function (result) {
+                    alert('error');
+                }
+            });
+
+        }
+        function bildirimsayısıgizle() {
+            document.getElementById("bildirimsayı").innerHTML = "";
+
+            $.ajax({
+                type: "POST",
+
+
+                dataType: "json",
+                contentType: "application/json; charset=utf-8",
+                url: "/HOME/bildirimtemizle/",
+
+
+                success: function (result) {
+
+                },
+                error: function (result) {
+                    alert('error');
+                }
+            });
+
+        }
+    </script>
+
+    @RenderSection("script", required: false)
+
+</body>
+</html>

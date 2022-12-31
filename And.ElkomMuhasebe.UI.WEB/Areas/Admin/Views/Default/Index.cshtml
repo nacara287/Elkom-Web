@@ -1,0 +1,14 @@
+﻿
+@{
+    ViewBag.Title = "Admine Hoşgeldiniz";
+    var user= Session["AdminLoginUser"] as And.ElkomMuhasebe.Core.Model.Entity.Admin.User;
+}
+
+<h2>Sayın @user.name @user.surname Admine Hoşgeldiniz</h2>
+<ul>
+    <li>
+        <a href="/Admin/Users">Üyeler Yönetimi</a>
+    </li>
+
+</ul>
+

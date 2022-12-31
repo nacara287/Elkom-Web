@@ -1,0 +1,222 @@
+﻿@using And.ElkomMuhasebe.Core.Model;
+@using And.ElkomMuhasebe.Core.Model.Entity.Admin;
+@using And.ElkomMuhasebe.Core.Model.Entity.FirmaDB;
+
+
+@model And.ElkomMuhasebe.Core.Model.Entity.FirmaDB.GIDER_BASLIK
+
+@{
+    ViewBag.Title = "Yeni Gider Oluştur";
+    Layout = "~/Views/Shared/yeni.cshtml";
+}
+
+
+
+@using (Html.BeginForm(null, null, new { @id = string.Empty }, FormMethod.Post,
+    new { @id = "postform" }))
+{
+    @Html.AntiForgeryToken()
+    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+    <div class="card">
+        <div class="card-body p-3">
+            <div class="form-row">
+                <div class="form-group col-md-4">
+                    <label>Gider Kodu :</label>
+                    <div class="input-group">
+                        @Html.EditorFor(model => model.GIDERKODU, new { htmlAttributes = new { @class = "form-control form-control-sm", @placeholder = "Gider Kodu", @aria_label = "Banka Kodu", @aria_describedby = "button-addon2" } })
+                        @Html.ValidationMessageFor(model => model.GIDERKODU, "", new { @class = "text-danger" })
+
+                        <div class="input-group-append">
+                            <button class="btn btn-sm btn-outline-secondary" title="Kod üret" type="button" id="button-addon2"><i class="fas fa-plus"></i></button>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group col-md-4">
+                    <label>Gider Adı</label>
+                    @Html.EditorFor(model => model.GIDERAD, new { htmlAttributes = new { @class = "form-control form-control-sm", @placeholder = "...", @required = "true" } })
+                    @Html.ValidationMessageFor(model => model.GIDERAD, "", new { @class = "text-danger" })
+                </div>
+                <div class="form-group col-md-4">
+                    <label>Kdv</label>
+                    <select name="KDVGRUP" id="KDVGRUP" class="form-control form-control-sm">
+                        <option value="0">%0 KDV</option>
+                        <option value="1">%1 KDV</option>
+                        <option value="8">%8 KDV</option>
+                        <option selected value="18">%18 KDV</option>
+                    </select>
+                </div>
+
+                <div class="form-group col-md-4">
+                    <label>Açıklama</label>
+                    @Html.EditorFor(model => model.ACIKLAMA, new { htmlAttributes = new { @class = "form-control form-control-sm", @placeholder = "...", @aria_label = "...", @aria_describedby = "button-addon2" } })
+                    @Html.ValidationMessageFor(model => model.ACIKLAMA, "", new { @class = "text-danger" })
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <div class="py-2">
+        <button type="button" class="btn btn-sm btn-primary btn-icon-split" onclick="datagonder()">
+
+
+            <span class="icon text-white-50">
+                <i class="fas fa-save"></i>
+            </span>
+            <span class="text">Kaydet</span>
+
+        </button>
+        <a href="/GIDER_BASLIK/CREATE" class="btn btn-sm btn-secondary btn-icon-split">
+            <span class="icon text-white-50">
+                <i class="fas fa-power-off"></i>
+            </span>
+            <span class="text">İptal</span>
+        </a>
+    </div>
+
+}
+
+
+@section script{
+
+    <script type="text/javascript" charset="utf-8">
+       
+        function datagonder() {
+            var form = $('#postform');
+
+            $.ajax({
+                type: "POST",
+                url: form.attr('action'),
+                data: form.serialize()
+                ,
+                success: function (result) {
+                    historysend("/GIDER_BASLIK/");
+
+                },
+                error: function (result) {
+                    toastr["error"]('Lütfen Bilgileri Eksik  Ya da Yanlış Girmeyiniz');
+                }
+            });
+
+        };
+        window.onload = function (e) {
+            if (!carikod.value) {
+                $.ajax({
+                    type: "POST",
+
+
+                    dataType: "json",
+                    contentType: "application/json; charset=utf-8",
+                    url: "/GIDER_BASLIK/kodgetir/",
+                    data: JSON.stringify({
+
+                        kod: ""
+
+
+
+
+
+                    }),
+                    success: function (result) {
+                        carikod.value = result;
+                    },
+                    error: function (result) {
+                        alert('error');
+                    }
+                });
+            }
+            else {
+
+                $.ajax({
+                    type: "POST",
+
+
+                    dataType: "json",
+                    contentType: "application/json; charset=utf-8",
+                    url: "/BANKAS/kodgetir/",
+                    data: JSON.stringify({
+
+                        kod: carikod.value
+
+
+
+
+
+                    }),
+                    success: function (result) {
+                        carikod.value = result;
+                    },
+                    error: function (result) {
+                        alert('error');
+                    }
+                });
+            }
+        };
+     
+
+        var carikodbutton = document.getElementById('button-addon2');
+        var carikod = document.getElementById('GIDERKODU').value;
+        carikodbutton.onclick = function () {
+            if (!carikod.value) {
+                $.ajax({
+                    type: "POST",
+
+
+                    dataType: "json",
+                    contentType: "application/json; charset=utf-8",
+                    url: "/GIDER_BASLIK/kodgetir/",
+                    data: JSON.stringify({
+
+                        kod: ""
+
+
+
+
+
+                    }),
+                    success: function (result) {
+                        document.getElementById("GIDERKODU").value = result;
+                    },
+                    error: function (result) {
+                        alert('error');
+                    }
+                });
+            }
+            else {
+
+                $.ajax({
+                    type: "POST",
+
+
+                    dataType: "json",
+                    contentType: "application/json; charset=utf-8",
+                    url: "/GIDER_BASLIK/kodgetir/",
+                    data: JSON.stringify({
+
+                        kod: carikod.value
+
+
+
+
+
+                    }),
+                    success: function (result) {
+                        carikod.value = result;
+                    },
+                    error: function (result) {
+                        alert('error');
+                    }
+                });
+            }
+        }
+    </script>
+}
+
+
+
+
+
+
+
+

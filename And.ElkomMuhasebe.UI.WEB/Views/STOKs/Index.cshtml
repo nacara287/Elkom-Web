@@ -1,0 +1,452 @@
+﻿@model  And.ElkomMuhasebe.UI.WEB.Controllers.STOKsController.modelimiz
+
+
+@{
+    ViewBag.Title = "Stok Listesi";
+    Layout = "~/Views/Shared/yeni.cshtml";
+}
+
+<!-- Butonlar -->
+<div class="card border-0 mb-2 bg-transparent shadow-none">
+    <div class="card-body p-0 ">
+        <a href="/STOKS/CREATE" class="btn btn-sm btn-secondary mr-1 ">
+            <span class="icon">
+                <i class="fas fa-plus-circle"></i>
+            </span>
+            <span class="text">Yeni</span>
+        </a>
+
+
+        <a id="genelhareket-tab" href="/STOK_HAREKET/INDEX/" class="btn btn-sm btn-secondary  mr-1">
+            <span class="ico">
+                <i class="fas fa-list"></i>
+            </span>
+            <span class="text">Stok Genel Hareketleri</span>
+        </a>
+
+        <a id="girisfis" href="/STOK_HAREKET/STOKFISKART?tip=1" class="btn btn-sm btn-secondary mr-1 ">
+            <span class="icon">
+                <i class="fas fa-plus-circle"></i>
+            </span>
+            <span class="text">Yeni Stok Giriş Fişi</span>
+        </a>
+        <a id="cıkısfis" href="/STOK_HAREKET/STOKFISKART?tip=2" class="btn btn-sm btn-secondary mr-1 ">
+            <span class="icon">
+                <i class="fas fa-plus-circle"></i>
+            </span>
+            <span class="text">Yeni Stok Çıkış Fişi</span>
+        </a>
+        <a class="btn btn-sm btn-outline-primary btn-icon-split float-right collapsed" data-toggle="collapse" href="#collapseFiltre" role="button" aria-expanded="false" aria-controls="collapseCariHareketFiltre">
+            <span class="icon ">
+                <i class="fas fa-filter"></i>
+            </span>
+            <span class="text">Filtre</span>
+        </a>
+    </div>
+</div>
+<!-- Filtreler -->
+<div class="row">
+    <div class="col">
+        <div class="collapse" id="collapseFiltre" style="">
+            
+            <div class="card card-body p-2  mb-3">
+                <div class="row mb-2">
+                    <div class="col-md-3">
+                        <div class="input-group input-group-sm">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text">Aktiflik Durumu</span>
+                            </div>
+                            <select id="aktifpasif" class="form-control form-control-sm">
+                                <option value="1">Sadece Aktifler</option>
+                                <option value="0">Sadece Pasifler</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="input-group input-group-sm">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text">Stok Durumu</span>
+                            </div>
+                            <select id="bakiyelistesi" class="form-control form-control-sm">
+                                <option value="0">Hepsi</option>
+                                <option value="1">Mevcut</option>
+                                <option value="2">Eksi</option>
+                                <option value="4">Bitmiş</option>
+                                <option value="5">Minumum</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="input-group input-group-sm">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text">Stok Miktarı:</span>
+                            </div>
+                            <input type="number" id="bbs" aria-label="First name" class="form-control" value="0">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text">den Büyük</span>
+                            </div>
+                            <input type="number" id="bks" aria-label="Last name" class="form-control" value="0">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text">den Küçük</span>
+                            </div>
+                        </div>
+                    </div>                    
+                </div>
+                <div class="row">
+                    <div class="col-md-3">
+                        <div class="form-input-group ">
+                            <label>Kategori-1</label>
+                            <select class="form-control form-control-sm" id="Stok_KOD1" name="Stok.KOD1">
+                                <option selected="selected">Seçiniz</option>
+                                @{
+
+                                    if (Model.STOK_KOD1s != null)
+                                    {
+                                        foreach (var item in Model.STOK_KOD1s)
+                                        {
+
+                                            <option>@item.KOD</option>
+
+                                        }
+                                    }}
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="form-input-group ">
+                            <label>Kategori-2</label>
+                            <select class="form-control  form-control-sm" id="Stok_KOD2" name="Stok.KOD2">
+                                <option selected="selected">Seçiniz</option>
+                                @{
+
+                                    if (Model.STOK_KOD2s != null)
+                                    {
+                                        foreach (var item in Model.STOK_KOD2s)
+                                        {
+
+                                            <option>@item.KOD</option>
+
+                                        }
+                                    }}
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="form-input-group ">
+                            <label>Depo</label>
+                            <select class="form-control  form-control-sm" id="Depo" name="Depo">
+                                <option selected="selected" value="0">Hepsi</option>
+                                @{
+
+                                    if (Model.DEPOs != null)
+                                    {
+                                        foreach (var item in Model.DEPOs)
+                                        {
+
+                                            <option value="@item.ID">@item.DEPOADI</option>
+
+                                        }
+                                    }}
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <button class="btn btn-sm btn-primary" onclick="tabloyenile()">Filtreyi Uygula</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Liste -->
+<div class="card">    
+    <div class="">
+        <div class="table-responsive">
+            <div class="col-sm-12">
+                <table id="bootstrap-table" class="table-bordered table-sm" data-show-search-clear-button="true"
+                       data-show-footer="true" data-footer-style="footerStyle" data-show-print="true"
+                       data-single-select="true" data-show-refresh="true" data-icon-size="sm"
+                       data-side-pagination="server"
+                       data-pagination="true"
+                       data-page-size="10"
+                       data-page-list="[10, 20, 50, 100, 200, 300]" data-show-export="true" data-reorderable-columns="true">
+                    <thead>
+                        <tr>
+                            <th data-field="state" class="no-print" data-print-ignore="true" data-checkbox="true"></th>
+                            <th data-field="ID" data-print-ignore="true" class="text-center" data-visible="false" data-sortable="true" data-footer-formatter="idFormatter">ID</th>
+                            <th data-field="actions" data-print-ignore="true" class="td-actions text-right no-print" data-events="operateEvents" data-formatter="operateFormatter">İşlemler</th>
+                            <th data-field="STOKODU" data-sortable="true" data-footer-formatter="nameFormatter">Stok Kodu</th>
+                            <th data-field="STOKAD" data-sortable="true">Stok İsmi<a class="no-print" style="color:transparent;">-----------------------------------------</a></th>
+                            <th data-field="MIKTAR" data-formatter="numberformatter" data-align="right" data-sortable="true">Miktar</th>
+                            <th data-field="BIRIM">Birim</th>
+                            <th data-field="HAMALISFIYAT" data-formatter="numberformatter" data-align="right">Liste Alış Fiyatı</th>
+                            <th data-field="HAMSATISFIYAT" data-formatter="numberformatter" data-align="right">Liste Satış Fiyatı</th>
+                            <th data-visible="false" data-field="ALISFIYATI" data-formatter="numberformatter" data-align="right">Kdvli Alış Fiyatı</th>
+                            <th data-visible="false" data-field="KDV_SIZ_ALISFIYATI" data-formatter="numberformatter" data-align="right">KDV'siz Alış Fiyatı</th>
+
+
+                            <th data-visible="false" data-field="SATISFIYATI" data-formatter="numberformatter" data-align="right" data-sortable="true">Kdvli Satış Fiyatı</th>
+                            <th data-visible="false" data-field="KDV_SIZ_SATISFIYATI1" data-formatter="numberformatter" data-align="right" data-sortable="true">KDV'siz'Satış Fiyatı</th>
+                            <th data-field="PARABIRIMI" data-sortable="true" data-align="right">Paraba Birimi</th>
+                            <th data-field="MALIYET" data-formatter="numberformatter" data-align="right" data-sortable="true">Maliyet</th>
+                            <th data-field="KDV" data-formatter="numberformatter" data-align="right" data-sortable="true">KDV</th>
+                            <th data-field="DEPO" data-sortable="true">Depo<a class="no-print" style="color:transparent;">---------------</a></th>
+
+                        </tr>
+                    </thead>
+                    <tbody>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+@section script{
+    <script type="text/javascript">
+        function pad(d) {
+            return (d < 10) ? '0' + d.toString() : d.toString();
+        }
+     
+
+        function numberformatter(value, row, index) {
+            if (!value)
+                return "0.00";
+            else {
+                return [
+
+                    numberWithCommas((Number(value.toString().replace(",", "."))).toFixed(2))
+                ].join('');
+            }
+        }
+        function numberWithCommas(x) {
+            return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+        }
+        function priceFormatter(data) {
+            var field = this.field
+
+            var toplam = data.map(function (row) {
+                if (row[field])
+                    return +Number(row[field].toString().replace(",", "."))
+                else {
+                    return +Number("0")
+                }
+            }).reduce(function (sum, i) {
+                return sum + i
+            }, 0);
+            return numberformatter(toplam) + " TL"
+        }
+
+        function get_query_params(p) {
+            var a = document.getElementById("bakiyelistesi");
+            var bakiye = a.options[a.selectedIndex].value;
+            var b = document.getElementById("aktifpasif");
+            var aktiflik = b.options[b.selectedIndex].value;
+            var kategselect1 = document.getElementById("Stok_KOD1");
+            var kategselect2 = document.getElementById("Stok_KOD2");
+            var kategori1 = kategselect1.options[kategselect1.selectedIndex].innerHTML;
+            var kategori2 = kategselect2.options[kategselect2.selectedIndex].innerHTML;
+            var depo = document.getElementById("Depo").options[document.getElementById("Depo").selectedIndex].value;
+            var arr = [{ verismi: "MIKTAR", deger: document.getElementById("bbs").value, deger2: document.getElementById("bks").value, filtretipi: 3 }]
+            arr.push({ verismi: "MIKTAR", deger: bakiye, deger2: "", filtretipi: 5 });
+            arr.push({ verismi: "AKTIF", deger: aktiflik, deger2: "", filtretipi: 2 });
+            if (kategori1 != "Seçiniz")
+                arr.push({ verismi: "OZELKOD1", deger: kategori1, deger2: "", filtretipi: 6 });
+            if (kategori2 != "Seçiniz")
+                arr.push({ verismi: "OZELKOD2", deger: kategori2, deger2: "", filtretipi: 6 });
+        
+            if (p.sort != null) {
+                return {
+
+                    extraParam: 'abc',
+                    search: p.search,
+                    sort: p.sort,
+                    order: p.order,
+                    limit: p.limit,
+                    offset: p.offset,
+
+                    sort: p.sort,
+                    depoid: depo,
+                    filterler: arr
+                }
+            } else {
+                return {
+                    extraParam: 'abc',
+                    search: p.search,
+                    sort: p.sort,
+                    order: p.order,
+                    limit: p.limit,
+                    offset: p.offset,
+                    depoid: depo,
+                    sort: "ID",
+
+                    filterler: arr
+                }
+
+            }
+        }
+
+
+
+        var $table = $('#bootstrap-table');
+        function operateFormatter(value, row, index) {
+            return [
+                '<div class="d-flex justify-content-start">',
+                '<a rel="tooltip" title="Stok Hareketleri" class="btn btn-link btn-sm table-action view" href="javascript:void(0)"><i class="fa fa-eye text-warning"></i></a>',
+                '<a rel="tooltip" title="Düzenle" class="btn btn-link btn-sm table-action edit" href="javascript:void(0)"><i class="fa fa-edit text-primary"></i></a>',
+                '</div>',
+            ].join('');
+        }
+
+        $().ready(function () {
+            window.operateEvents = {
+                'click .view': function (e, value, row, index) {
+                    info = JSON.stringify(row);
+                    historysend("/STOK_HAREKET/Index/" + row.ID);
+
+                    //    swal('You click view icon, row: ', info);
+                    
+                },
+                'click .edit': function (e, value, row, index) {
+                    info = JSON.stringify(row);
+                    historysend("/STOKs/Edit/" + row.ID);
+
+                    //   swal('You click edit icon, row: ', info);
+                    
+                },
+
+            };
+
+            $table.bootstrapTable({
+
+                type: "POST",
+                url: "/STOKs/GetData",
+                method: 'post',
+                contentType: 'application/x-www-form-urlencoded',
+                queryParams: get_query_params,
+           printPageBuilder: function (table) {
+        return `
+<html>
+  <head>
+  <style type="text/css" media="print">
+  page {
+    size: auto;
+    margin: 25px 0 25px 0;
+  }
+  </style>
+  <style type="text/css" media="all">
+    @@media print
+{
+    .no-print, .no-print *
+    {
+        display: none !important;
+    }
+}
+  table {
+    border-collapse: collapse;
+    font-size: 12px;
+  }
+  table, th, td {
+    border: 1px solid grey;
+  }
+  th, td {
+    text-align: center;
+    vertical-align: middle;
+  }
+  p {
+    font-weight: bold;
+    margin-left:20px;
+  }
+  table {
+    width:94%;
+    margin-left:3%;
+    margin-right:3%;
+  }
+  div.bs-table-print {
+    text-align:center;
+  }
+    h1.bs-table-print {
+    text-align:center;
+  }
+ </style>
+      <title>@Session["FirmaAdı"]</title>
+     </head>
+  <body>
+     <h1 class="bs-table-print">Stok Listesi</h1>
+
+  <div class="bs-table-print">  <table class="table-bordered table-sm"><thead>` + $table.children('thead').html() + '</thead><tbody>' + $table.children('tbody').html()+ "<tbody></table></div></body></html></div>"
+
+      },
+                clickToSelect: true,
+                showRefresh: true,
+
+                search: true,
+                showToggle: true,
+                showColumns: true,
+
+                searchAlign: 'left',
+
+                locale: 'tr-TR',
+                formatShowingRows: function (pageFrom, pageTo, totalRows) {
+                    return "Toplam " + totalRows+" Kayıt";
+                },
+                formatRecordsPerPage: function (pageNumber) {
+                    return pageNumber + " Adet Listeleniyor";
+                },
+
+            });
+
+            $table.on('click-row.bs.table', function (e, row, $element) {
+      
+              
+            });
+            $table.on('  dbl-click-row.bs.table', function (e, row, $element) {
+
+                historysend("/STOK_HAREKET/Index/" + row.ID);
+
+            });
+
+            //activate the tooltips after the data table is initialized
+            $('[rel="tooltip"]').tooltip();
+
+            $(window).resize(function () {
+                $table.bootstrapTable('resetView');
+            });
+
+
+        })
+
+        function idFormatter() {
+            return 'Toplam'
+        }
+
+        function nameFormatter(data) {
+            return data.length
+        }
+
+        function priceFormatter(data) {
+            var field = this.field
+            return data.map(function (row) {
+                if (row[field])
+                return +row[field]
+            }).reduce(function (sum, i) {
+                return sum + i
+            }, 0) + 'TL'
+        }
+
+        function footerStyle(column) {
+            return {
+                id: {
+                    classes: 'uppercase'
+                },
+                name: {
+                    css: { 'font-weight': 'normal' }
+                },
+                price: {
+                    css: { color: 'red' }
+                }
+            }[column.field]
+        }
+
+
+    </script>
+}

@@ -1,0 +1,2622 @@
+﻿@model And.ElkomMuhasebe.UI.WEB.Controllers.FATURAController.modelimiz
+
+@{
+    ViewBag.Title = "Yeni E-Fatura/E-Arşiv";
+    Layout = "~/Views/Shared/yeni.cshtml";
+
+}
+<nav>
+    <div class="nav nav-tabs" id="nav-tab" role="tablist">
+        <a class="nav-link active" id="nav-home-tab" data-toggle="tab" href="#nav-home" role="tab" aria-controls="nav-home" aria-selected="true">Fatura Bilgileri</a>
+        <a class="nav-link" id="nav-profile-tab" data-toggle="tab" href="#nav-profile" role="tab" aria-controls="nav-profile" aria-selected="false">Ek Bilgiler</a>
+
+    </div>
+</nav>
+<div class="tab-content" id="nav-tabContent">
+    <div class="tab-pane fade show active" id="nav-home" role="tabpanel" aria-labelledby="nav-home-tab">
+        <div class="card">
+            <div class="card-body p-3">
+                <div class="form-row">
+                    <div class="form-group col-md-4">
+                        <label>Cari Bilgileri</label>
+                        <select id="CariKodu" onchange="carikurgetir()" class="form-control  select2bs4" style="width: 100%;">
+                            @if (!string.IsNullOrEmpty(Model.carikod))
+                            {
+                                <option value="@Model.carikod">@Model.cariad</option>
+
+                            }
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Fatura Tipi</label>
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="flexRadioDefaulta" id="satis" checked="checked" onchange="fatnostyle()">
+                            <label class="form-check-label" for="satis">
+                                Satış Faturası
+                            </label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="flexRadioDefaulta" id="alis" onchange="fatnostyle()">
+                            <label class="form-check-label" for="alis">
+                                Alış Faturası(Elle Girilen)
+                            </label>
+                        </div>
+
+
+                    </div>
+                  
+
+                    <div class="form-group col-md-2">
+                        <label>Fatura Tarihi</label>
+                        <input id="Tarih" type="datetime-local" class="form-control form-control-sm" value="@DateTime.Now.Year.ToString("D" + 4)-@DateTime.Now.Month.ToString("D" + 2)-@DateTime.Now.Day.ToString("D" + 2)@Html.Raw("T")@DateTime.Now.Hour.ToString("D" + 2):@DateTime.Now.Minute.ToString("D" + 2)">
+                    </div>
+                    <div class="form-group col-md-2">
+                        <label>Ödeme Tarihi</label>
+                        <input id="ÖdemeTarihi" type="date" class="form-control form-control-sm" value="@DateTime.Now.Year.ToString("D" + 4)-@DateTime.Now.Month.ToString("D" + 2)-@DateTime.Now.Day.ToString("D" + 2)">
+                    </div>
+                    <div class="form-group col-md-2">
+                        <label>Gönderim Senaryo</label>
+                        <select id="gonderimsenaryo" class="form-control form-control-sm" onchange="kodgetira()">
+                            <option value="TICARIFATURA">Ticari</option>
+                            <option value="TEMELFATURA">Temel</option>
+
+                            <option value="IHRACAT">İhracat</option>
+                            <option value="TEMELFATURA">Kamu</option>
+                        </select>
+                    </div>
+                    <div class="form-group col-md-2">
+                        <label>Gönderim Türü</label>
+                        <select id="gonderimtipi" class="form-control form-control-sm" onchange="kodgetir()">
+                            <option value="SATIS">Satış</option>
+
+                            <option value="IADE">İade</option>
+                            <option value="TEVKIFAT">Tevkifat</option>
+                            <option value="ISTISNA">İstisna</option>
+                            <option value="OZELMATRAH">Özel Matrah</option>
+                            <option value="IHRACKAYITLI">İhraç Kayıtlı</option>
+                            <option value="SGK">SGK</option>
+
+                        </select>
+                    </div>
+
+
+
+                    <div class="form-group col-md-4">
+                        <label>Fatura Notu</label>
+                        <input id="Not" type="text" class="form-control form-control-sm" placeholder="Not">
+                    </div>
+
+                    <div class="form-group col-md-2">
+                        <label>Fatura Türü</label>
+                        <input id="faturaturu" class="form-control form-control-sm" value="EFATURA" readonly>
+
+
+
+                    </div>
+                    <div class="form-group col-md-2">
+                        <label>Sorumluluk Merkezi</label>
+                        <select id="Smerkezi" class="form-control form-control-sm">
+                            @{ if (Model.sORUMLULUK_MERKEZIs != null)
+                                {
+                                    foreach (var item in Model.sORUMLULUK_MERKEZIs)
+                                    {
+                                        <option>@item.ACIKLAMA</option>
+                                    }
+                                }
+                            }
+                        </select>
+                    </div>
+                    <div class="form-group col-md-2">
+                        <label>Para Birimleri</label>
+                        <select class="form-control form-control-sm" name="ParaBirimi" id="ParaBirimi" onchange="kurgetir()">
+                            <option value="1">TRY</option>
+                            @{ if (Model.KUR_BASLIKa != null)
+                                {
+                                    foreach (var item in Model.KUR_BASLIKa)
+                                    {
+                                        <option value="@item.KUR.ToString().Replace(",",".")">@item.KURKODU</option>
+                                    }
+                                }
+
+
+}
+                        </select>
+                    </div>
+                    <div class="form-group col-md-2">
+                        <label>Para Birimi Kur</label>
+                        <input type="text" name="ParaBirimiKuru" id="ParaBirimiKuru" class="form-control form-control-sm text-right" value="1.00" placeholder="Para Kuru" required="">
+                    </div>
+
+
+                    <div class="form-group col-md-3" id="efaturaseri" style="display:none">
+                        <label for="EFATSERINO">Seri No</label>
+                        <div class="input-group input-group-sm">
+                            <select class="custom-select" id="EFATURASERINO" name="EFATURASERINO" onchange="getfatno(this)">
+                                @if (Model.EFATURAIN.EFATURAID != 0)
+                                {
+                                    <option selected>@Model.EFATURASERINO</option>
+                                }
+
+                                @{
+
+                                    if (Model.EFATURASERINOLAR != null)
+                                    {
+                                        foreach (var item in Model.EFATURASERINOLAR)
+                                        {
+
+                                            <option>@item.SERI_NO</option>
+
+                                        }
+                                    }}
+                            </select>
+                            <div class="input-group-append">
+                                <button class="btn btn-sm btn-outline-secondary" type="button" data-toggle="modal" data-target="#ModalEFATSERINO"><i class="fas fa-plus"></i></button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group col-md-3" id="earsivserinoo" style="display:none">
+                        <label for="EFATSERINO">Seri No</label>
+                        <div class="input-group input-group-sm">
+                            <select class="custom-select" id="EARSIVSERINO" name="EARSIVSERINO" onchange="getfatno(this)">
+                                @if (Model.EFATURAIN.EFATURAID != 0)
+                                {
+                                    <option selected>@Model.EARSIVSERINO</option>
+                                }
+
+                                @{
+
+                                    if (Model.EARSIVSERINOLAR != null)
+                                    {
+                                        foreach (var item in Model.EARSIVSERINOLAR)
+                                        {
+
+                                            <option>@item.SERI_NO</option>
+
+                                        }
+                                    }}
+                            </select>
+                            <div class="input-group-append">
+                                <button class="btn btn-sm btn-outline-secondary" type="button" data-toggle="modal" data-target="#ModalEFATSERINO"><i class="fas fa-plus"></i></button>
+                            </div>
+                        </div>
+                    </div>
+                    @if ((int)Model.EFATURAIN.TIPI == 2)
+                    {
+                        <div class="form-group col-md-2">
+                            <label>Fatura Sıra No</label>
+                            <input id="FATNO" type="text" class="form-control form-control-sm" value="">
+                        </div>
+                    }
+
+                    <div class="form-group">
+                        <label>Stok Kdv Durumu</label>
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="flexRadioDefault" id="kdvdahil">
+                            <label class="form-check-label" for="kdvdahil">
+                                Stok Kdv Dahil
+                            </label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="flexRadioDefault" id="kdvdahildegil" checked>
+                            <label class="form-check-label" for="kdvdahildegil">
+                                Stok Kdv Dahil Değil
+                            </label>
+                        </div>
+
+                    </div>
+                    <div class="form-group col-md-3" id="özelmatrahkoduyazı" style="display:none">
+                        <label>Özel Matrah Kodu</label>
+                        <select id="özelmatrahkodu" class="form-control form-control-sm">
+                            @foreach (var item in Model.OZELMATRAHKODLARI)
+                            {
+                                <option value="@item.OZELMATRAHKODU">@(item.OZELMATRAHKODU + "-" + item.ACIKLAMA)</option>
+
+                            }
+                        </select>
+                    </div>
+                    <div class="form-group col-md-3 baslıkihracat" id="istisnakoduyazı" style="display:none">
+                        <label>İstisna Kodu</label>
+                        <select id="istisnakodu" class="form-control form-control-sm">
+                            @foreach (var item in Model.ISTISNAKODLARIs)
+                            {
+                                <option value="@item.ISTISNAKODU">@(item.ISTISNAKODU+"-" + item.ACIKLAMA)</option>
+                            }
+                        </select>
+                    </div>
+
+                    <div class="form-group col-md-2 ilavesgkform" style="display:none">
+                        <label>İlave Fatura Türü</label>
+                        <select id="ilavesgk" class="form-control form-control-sm">
+
+
+                            <option value="SAGLIK_ECZ">Eczane</option>
+                            <option value="SAGLIK_HAS">Hastane</option>
+                            <option value="SAGLIK_OPT">Optik</option>
+                            <option value="SAGLIK_MED">Medikal</option>
+                            <option value="ABONELIK">Abonelik</option>
+                            <option value="MAL_HIZMET">Mal Hizmet</option>
+                            <option value="DIGER">Diğer</option>
+                        </select>
+                    </div>
+                    <div class="form-group col-md-2 ilavesgkform" style="display:none">
+                        <label>Dönem</label>
+                        <select id="donemsgk" class="form-control form-control-sm">
+
+
+                            <option value="">@DateTime.Now.ToShortDateString()</option>
+                        </select>
+                    </div>
+                    <div class="form-group col-md-2 ilavesgkform" style="display:none">
+                        <label>Mükellef Kodu</label>
+                        <input id="mukellefkodsgk" class="form-control form-control-sm">
+
+
+                    </div>
+                    <div class="form-group col-md-2 ilavesgkform" style="display:none">
+                        <label>Mükellef Adı</label>
+                        <input id="mukellefadisgk" class="form-control form-control-sm">
+
+
+                    </div>
+                    <div class="form-group col-md-2 ilavesgkform" style="display:none">
+                        <label>Dosya No</label>
+                        <input id="dosyanosgk" class="form-control form-control-sm">
+
+
+                    </div>
+
+
+
+                </div>
+                <div class="form-row">
+                    <button type="button" class="btn btn-sm btn-success btn-icon-split mr-1 " data-toggle="modal" data-target="#ModalİrsaliyeSec">İrsaliyeden Aktar</button>
+                </div>
+                <div class="form-row">
+                    <button type="button" class="btn btn-sm btn-success btn-icon-split mr-1 " data-toggle="modal" data-target="#ModalSiparisSec">Siparişden Aktar</button>
+                </div>
+                <!-- Liste -->
+                <div class="table-responsive" id="yazdirilcak">
+                    <table id="bootstrap-table">
+                        <thead style="border-bottom: solid green; ">
+                            <tr>
+
+                                <th data-field="MALHIZMET" data-sortable="true">Mal/Hizmet</th>
+
+
+                                <th data-field="ACIKLAMA" data-sortable="true">Açıklama</th>
+
+                                <th data-field="MIKTAR" data-sortable="true">Miktar</th>
+                                <th data-field="BIRIM" data-sortable="true">Birim</th>
+                                <th data-field="FIYAT" data-sortable="true" data-footer-formatter="priceFormatter">Fiyat</th>
+                                <th data-field="ISKONTO" data-sortable="true">İsk. %</th>
+                                <th data-field="ISKONTOTUTAR" data-sortable="true">İsk. Tutar</th>
+                                <th data-field="KDVORANI" data-sortable="true" class="countable">KDV Oranı</th>
+                                <th data-field="KDVTUTAR" data-sortable="true" class="countable">KDV Tutar</th>
+                                <th data-visible="false" class="baslıktevkfı" data-field="TEVKIFAT" data-sortable="true">Tevkifat</th>
+                                <th data-visible="false" class="baslıktevkfı" data-field="TEVKIFATORAN" data-sortable="true">TevkifatOran</th>
+                                <th class="baslıktevkfı" data-field="TEVKIFATTUTAR" data-sortable="true">Tevkifat Tutar</th>
+                                <th class="baslıkihracat" data-field="TESLIMSARTI" data-sortable="true">TeslimŞartı</th>
+                                <th class="baslıkihracat" data-field="GTIPNO" data-sortable="true">GTİPNO</th>
+                                <th class="baslıkihracat" data-field="ESYANINGONDERIMSEKLI" data-sortable="true">EşyanınGönderimŞekli</th>
+                                <th class="baslıkihracat" data-field="ESYANINBULUNDUGUKABINCINSI" data-sortable="true">EşyanınBulunduğuKabınCinsi</th>
+                                <th class="baslıkihracat" data-field="KAPADET" data-sortable="true">KapAdet</th>
+                                <th data-field="TOPLAM" data-sortable="true">Toplam</th>
+                                <th data-field="REFERANS" data-sortable="true">Referans No</th>
+                                <th data-field="REFERANSID" style="display:none" data-visible="false" data-sortable="true">ID</th>
+                                <th></th>
+
+                            </tr>
+                            <tr id="clone">
+
+                                <td>
+                                    <input type="text" class="form-control form-control-sm Stok" readonly onclick="
+    (this.parentNode.parentNode)" data-toggle="modal" data-target="#ModalStokSec" name="Stok" id="Stok" placeholder="StokAdı" onchange="tutargetir(this.parentNode.parentNode)">
+                                </td>
+                                <td>
+                                    <input type="text" class="form-control form-control-sm text-right Aciklama" placeholder="Stok Açıklaması.." name="Aciklama" id="Aciklama" value="">
+                                </td>
+                                <td>
+                                    <input type="text" class="form-control form-control-sm text-right Mıktar masklancak" name="Mıktar" id="Mıktar" value="1" onchange="tutargetir(this.parentNode.parentNode)">
+                                </td>
+
+                                <td>
+                                    <input type="text" class="form-control form-control-sm Birim" name="Birim" id="" value="" readonly onchange="tutargetir(this.parentNode.parentNode)">
+
+                                </td>
+                                <td>
+                                    <input type="text" class="form-control form-control-sm text-right Tutar masklancak" value="1" name="Tutar" id="Tutar" onchange="tutargetir(this.parentNode.parentNode)" placeholder="Fiyat" required="">
+                                </td>
+                                <td>
+                                    <input type="text" class="form-control form-control-sm text-right iskonto " value="0" name="iskonto" id="iskonto" onchange="tutargetir(this.parentNode.parentNode)" placeholder="%.." required="">
+                                </td>
+
+                                <td>
+                                    <input type="text" class="form-control form-control-sm text-right iskontotutar masklancak" value="0" name="iskontotutar" id="" placeholder="İskonto Tutarı" required="" readonly>
+                                </td>
+
+                                <td>
+                                    <input type="text" class="form-control form-control-sm text-right KDVOranı" value="0" onchange="tutargetir(this.parentNode.parentNode)" name="KDVOranı" id="">
+                                </td>
+                                <td>
+                                    <input type="text" class="form-control form-control-sm text-right KDVTutar masklancak" value="0" name="KDVTutar" id="" readonly placeholder="KDV Tutar">
+                                </td>
+                                <td class="baslıktevkfı">
+                                    <select class="custom-select custom-select-sm tevfikatkodu" onchange="tevfikatorangetir(this.parentNode.parentNode)">
+                                        @foreach (var item in Model.TEVFIKATKODLARI)
+                                        {
+                                            <option value="@(item.TEVFIKATKODU + "-" + item.ACIKLAMA)">@(item.TEVFIKATKODU + "-" + item.ACIKLAMA)</option>
+
+
+                                        }
+
+                                    </select>
+                                </td>
+                                <td class="baslıktevkfı">
+                                    <input type="number" class="form-control form-control-sm tevfikatoran" value="">
+                                </td>
+                                <td class="baslıktevkfı">
+                                    <input onchange="tevfikattutargetir(this.parentNode.parentNode)" type="text" class="form-control form-control-sm tevfikattutar masklancak" readonly value="">
+                                </td>
+                                <td class="baslıkihracat">
+                                    <select class="custom-select custom-select-sm teslimsartıkodu">
+                                        @foreach (var item in Model.TESLIMSARTLARI)
+                                        {
+                                            <option value="@item.TESLIMSARTKODU">@(item.TESLIMSARTKODU + "-" + item.ACIKLAMA)</option>
+
+
+                                        }
+
+                                    </select>
+                                </td>
+                                <td class="baslıkihracat">
+                                    <div class="input-group">
+
+                                        <input type="text" class="form-control form-control-sm text-right" value="0" name="GTIPNO" id="GTIPNO" placeholder="">
+                                    </div>
+
+                                </td>
+                                <td class="baslıkihracat">
+                                    <select id="esyanıngonderimsekli" class="custom-select custom-select-sm esyaningonderimsekli">
+                                        @foreach (var item in Model.ESYANINGONDERIMSEKLI)
+                                        {
+                                            <option value="@item.KODU">@(item.KODU + "-" + item.ACIKLAMA)</option>
+
+
+                                        }
+
+                                    </select>
+                                </td>
+                                <td class="baslıkihracat">
+                                    <select id="esyanınbulundugukabıncinsi" class="custom-select custom-select-sm esyanınbulundugukabıncinsi">
+                                        @foreach (var item in Model.ESYANINBULUNDUGUKABINCINSI)
+                                        {
+                                            <option value="@item.KODU">@(item.KODU + "-" + item.ACIKLAMA)</option>
+
+
+                                        }
+
+                                    </select>
+                                </td>
+                                <td class="baslıkihracat">
+                                    <div class="input-group">
+
+                                        <input type="text" class="form-control form-control-sm text-right " value="0" name="kapadet" id="kapadet" placeholder="">
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="input-group">
+
+                                        <input type="text" class="form-control form-control-sm text-right c Toplam masklancak" value="0" name="Toplam" id="Toplam" readonly placeholder="Toplam">
+                                    </div>
+
+                                </td>
+
+
+                                <td>
+                                </td>
+                                <td style="display:none">
+                                </td>
+
+                                <td class="noclone">
+                                    <button type="button" id="addRowBtn" onclick="butonlistele()" class="btn btn-success btn-sm btn-rounded">
+                                        <span class="icon text-white-50">
+                                            <i class="fas fa-plus"></i>
+                                        </span>
+                                    </button>
+
+                                </td>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <!-- Alt toplamlar -->
+            <div class="card-footer ">
+                <div class="row">
+                    <div class="col-md-6">
+                        <p>Text: </p>
+                        <p>Text: </p>
+                    </div>
+                    <div class="col-md-6">
+
+
+                        <div class="form-group row mb-1 clearfix">
+                            <label for="toplam" class="col-sm-6 text-right col-form-label">Mal ve Hizmet Toplamı :</label>
+                            <div class="col-sm-6">
+                                <input type="text" id="toplam" class="form-control text-right form-control-sm" placeholder="0.00" readonly>
+                            </div>
+                        </div>
+                        <div class="form-group row mb-1 clearfix">
+                            <label for="iskontotoplam" class="col-sm-6  text-right col-form-label">İskonto Toplamı :</label>
+                            <div class="col-sm-6">
+                                <input type="text" id="iskontotoplam" class="form-control  text-right form-control-sm" placeholder="0.00" readonly>
+                            </div>
+                        </div>
+                        <div class="form-group row mb-1 clearfix" id="kdvtoplam18yazı" style="display:none">
+                            <label for="kdvtoplam18" class="col-sm-6  text-right col-form-label">KDV GERCEK(%18):</label>
+                            <div class="col-sm-6">
+                                <input id="kdvtoplam18" type="text" class="form-control  text-right form-control-sm" placeholder="0.00" readonly>
+                            </div>
+                        </div>
+                        <div class="form-group row mb-1 clearfix" id="kdvtoplam8yazı" style="display:none">
+                            <label for="kdvtoplam8" class="col-sm-6  text-right col-form-label">KDV GERCEK(%8):</label>
+                            <div class="col-sm-6">
+                                <input id="kdvtoplam8" type="text" class="form-control text-right form-control-sm" placeholder="0.00" readonly>
+                            </div>
+                        </div>
+                        <div class="form-group row mb-1" id="kdvtoplam1yazı" style="display:none">
+                            <label for="kdvtoplam1" class="col-sm-6  text-right col-form-label">KDV GERCEK(%1):</label>
+                            <div class="col-sm-6">
+                                <input id="kdvtoplam1" type="text" class="form-control text-right form-control-sm" placeholder="0.00" readonly>
+                            </div>
+                        </div>
+                        <div class="form-group row mb-1" id="tevkifatyazı3" style="display:none">
+                            <label for="tevfikat3" class="col-sm-6  text-right col-form-label">Tevkifat(3/10):</label>
+                            <div class="col-sm-6">
+                                <input id="tevfikat3" type="text" class="form-control text-right form-control-sm" placeholder="0.00" readonly>
+                            </div>
+                        </div>
+                        <div class="form-group row mb-1" id="tevkifatyazı5" style="display:none">
+                            <label for="tevfikat5" class="col-sm-6  text-right col-form-label">Tevkifat(5/10):</label>
+                            <div class="col-sm-6">
+                                <input id="tevfikat5" type="text" class="form-control text-right form-control-sm" placeholder="0.00" readonly>
+                            </div>
+                        </div>
+                        <div class="form-group row mb-1" id="tevkifatyazı7" style="display:none">
+                            <label for="tevfikat7" class="col-sm-6  text-right col-form-label">Tevkifat(7/10):</label>
+                            <div class="col-sm-6">
+                                <input id="tevfikat7" type="text" class="form-control text-right form-control-sm" placeholder="0.00" readonly>
+                            </div>
+                        </div>
+                        <div class="form-group row mb-1" id="tevkifatyazı9" style="display:none">
+                            <label for="tevfikat9" class="col-sm-6  text-right col-form-label">Tevkifat(9/10):</label>
+                            <div class="col-sm-6">
+                                <input id="tevfikat9" type="text" class="form-control text-right form-control-sm" placeholder="0.00" readonly>
+                            </div>
+                        </div>
+                        <div class="form-group row mb-1">
+                            <label for="ödenecek" class="col-sm-6  text-right col-form-label">Ödenecek Tutar:</label>
+                            <div class="col-sm-6">
+                                <input id="ödenecek" type="text" class="form-control text-right form-control-sm" placeholder="0.00" readonly>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="tab-pane fade" id="nav-profile" role="tabpanel" aria-labelledby="nav-profile-tab">
+        <div class="card">
+            <div class="card-body p-3">
+                <div class="form-row">
+
+                    <div class="form-group col-md-4">
+                        <label>Ödeme Şekli</label>
+                        <select id="odemesekli" class=" form-control">
+                            <option value="1">Ödeme Tipi Muhtelif</option>
+                            <option value="10">Nakit</option>
+                            <option value="20">Çek</option>
+                            <option value="23">Banka Çeki</option>
+                            <option value="42">Eft/Havale</option>
+                            <option value="48">Kredi Kartı/Banka Kartı</option>
+                            <option value="ZZZ">Diğer</option>
+
+                        </select>
+                    </div>
+                    <div class="form-group col-md-4">
+                        <label>Ödeme Kanalı</label>
+                        <select id="odemekanal" class=" form-control">
+                            <option value="1">Posta</option>
+                            <option value="2">Hava Yolu ile Posta</option>
+                            <option value="3">Telgraf</option>
+                            <option value="4">Teleks</option>
+                            <option value="5">SWIFT</option>
+                            <option value="6">Diğer İletişim Ağları</option>
+                            <option value="7">Tanımlı Olmayan Ağlar</option>
+                            <option value="8">Fedwire</option>
+                            <option value="9">Bankada Elle</option>
+                            <option value="10">Taahhütlü Hava Yolu ile Posta</option>
+                            <option value="11">Taahhütlü Posta</option>
+                            <option value="12">Kurye</option>
+                            <option value="13">Özel Kurye</option>
+                            <option value="14">Uluslararası Para Transferi</option>
+                            <option value="15">Ulusal Para Transferi</option>
+                            <option value="ZZZ">Karşılıklı Olarak Belirlenen Yol</option>
+
+                        </select>
+
+                    </div>
+                    <div class="form-group col-md-4">
+                        <label>Ödeme Hesap No</label>
+                        <input id="odemehesap" class=" form-control">
+
+                    </div>
+                </div>
+                <div class="form-row">
+
+                    <div class="form-group col-md-4">
+                        <label>İrsaliye Tarihi</label>
+                        <input id="irsaliyetarihi" type="date" class="form-control form-control-sm">
+                    </div>
+                    <div class="form-group col-md-4">
+                        <label>İrsaliye Numarası</label>
+                        <input id="irsaliyesno" class=" form-control">
+
+                    </div>
+
+                </div>
+                <div class="form-row">
+
+                    <div class="form-group col-md-4">
+                        <label>Sipariş Tarihi</label>
+                        <input id="siparistarihi" type="date" class="form-control form-control-sm">
+                    </div>
+                    <div class="form-group col-md-4">
+                        <label>Sipariş Numarası</label>
+                        <input id="siparisno" class=" form-control">
+
+                    </div>
+
+                </div>
+                <div>
+
+                    <div class="form-group col-md-4">
+                        <label>Vergi Numarası</label>
+                        <input id="ekvergino" type="text" class="form-control form-control-sm" placeholder="Not">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Fiş bilgileri -->
+
+
+<div class="py-2">
+    <button aria-label="" class="btn btn-primary " onclick="butongonder(this)">
+        <span class="icon text-white-50">
+            <i class="fas fa-save"></i>
+        </span>
+        <span class="text">Taslak Gönder</span>
+    </button>
+    <a aria-label="" class="btn btn-secondary " href="@Url.RequestContext.HttpContext.Request.Url.ToString()" type="reset">
+        <span class="icon text-white-50">
+            <i class="fas fa-power-off"></i>
+        </span>
+        <span class="text">İptal</span>
+    </a>
+</div>
+
+<div class="modal fade" id="ModalİrsaliyeSec" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="vertical-alignment-helper">
+        <div class="modal-dialog modal-xl  modal-lg vertical-align-center" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title" id="myModalLabel">İrsaliye Seç</h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+
+                </div>
+                <div class="modal-body">
+                    <div id="FaturaCariSecDataTablo_wrapper" class="dataTables_wrapper form-inline dt-bootstrap no-footer">
+
+                        <div class="col-sm-12">
+                            <div class="table-responsive">
+                                <table id="irsaliye-table" class="table-bordered table-sm" data-show-search-clear-button="true"
+                                       data-show-footer="true" data-footer-style="footerStyle"
+                                       data-single-select="true" data-show-refresh="true" data-icon-size="sm"
+                                       data-side-pagination="server"
+                                       data-pagination="true"
+                                       data-page-size="10"
+                                       data-page-list="[10, 20, 50, 100, 200, 300]" data-show-export="true" data-reorderable-columns="true">
+                                    <thead>
+                                        <tr>
+
+                                            <th data-field="state" class="no-print" data-print-ignore="true" data-checkbox="true"></th>
+                                            <th data-field="ID" data-print-ignore="true" data-visible="false" class="text-center" data-sortable="true" data-footer-formatter="idFormatter">ID</th>
+                                            <th data-field="TARIH" data-sortable="true">Tarih</th>
+                                            <th data-field="CARIKOD" data-sortable="true">Cari Kodu</th>
+                                            <th data-field="IRSNO" data-sortable="true">İrsaliye No</th>
+                                            <th data-field="TIP" data-sortable="true">Fatura Tipi</th>
+                                            <th data-field="GENELTOPLAM" data-sortable="true" data-align="right">Miktar</th>
+                                            <th data-field="GIRIS" data-align="right" data-footer-formatter="priceFormatter" data-sortable="true" data-formatter="numberformatter">Giriş</th>
+                                            <th data-field="CIKIS" data-align="right" data-footer-formatter="priceFormatter" data-sortable="true" data-formatter="numberformatter">Çıkış</th>
+
+                                        </tr>
+                                    </thead>
+
+                                    <tbody>
+                                    </tbody>
+
+                                </table><div id="FaturaCariSecDataTablo_processing" class="dataTables_processing panel panel-default" style="display: none;">İşleniyor...</div>
+                            </div>
+                        </div>
+
+                        <div class="col-sm-12">
+                            <div class="table-responsive">
+                                <table id="irsaliyehareket-table" class="table-bordered table-sm"
+                                       data-page-size="10"
+                                       data-page-list="[10, 20, 50, 100, 200, 300]" data-show-export="true" data-reorderable-columns="true">
+                                    <thead>
+                                        <tr>
+
+
+                                            <th data-field="ID" data-print-ignore="true" data-visible="false" class="text-center" data-sortable="true" data-footer-formatter="idFormatter">ID</th>
+
+                                            <th data-field="stokkod" data-sortable="true">Stoık Kodu</th>
+                                            <th data-field="miktar" data-sortable="true">Miktar</th>
+
+                                            <th data-field="birim" data-sortable="true">Birim</th>
+                                            <th data-field="fiyat" data-sortable="true">Fiyat</th>
+
+                                            <th data-field="iskonto" data-sortable="true">İskonto Oranı</th>
+
+                                            <th data-field="iskontotutar" data-align="right" data-sortable="true" data-formatter="numberformatter">İskonto Tutar</th>
+                                            <th data-field="kdvoranı" data-sortable="true" data-align="right">KDV Oranı</th>
+                                            <th data-field="kdvtutar" data-align="right" data-sortable="true" data-formatter="numberformatter">KDV Tutarı</th>
+
+                                            <th data-field="toplam" data-align="right" data-sortable="true" data-formatter="numberformatter">Toplam</th>
+
+
+                                        </tr>
+                                    </thead>
+
+                                    <tbody>
+                                    </tbody>
+
+                                </table><div id="FaturaCariSecDataTablo_processing" class="dataTables_processing panel panel-default" style="display: none;">İşleniyor...</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-primary" onclick="irsaliyeharekettabloyaekle()" data-dismiss="modal">Seç</button>
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Vazgeç</button>
+                    </div>
+
+
+
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="ModalSiparisSec" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="vertical-alignment-helper">
+        <div class="modal-dialog modal-xl  modal-lg vertical-align-center" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title" id="myModalLabel">Sipariş Seç</h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+
+                </div>
+                <div class="modal-body">
+                    <div id="FaturaCariSecDataTablo_wrapper" class="dataTables_wrapper form-inline dt-bootstrap no-footer">
+
+                        <div class="col-sm-12">
+                            <div class="table-responsive">
+                                <div class="col-sm-12">
+                                    <table id="siparistablo" class="table-bordered table-sm" data-show-search-clear-button="true"
+                                           data-show-footer="true" data-footer-style="footerStyle" data-show-print="true"
+                                           data-single-select="true" data-show-refresh="true" data-icon-size="sm"
+                                           data-side-pagination="server"
+                                           data-pagination="true"
+                                           data-page-size="10"
+                                           data-page-list="[10, 20, 50, 100, 200, 300]" data-show-export="true" data-reorderable-columns="true">
+                                        <thead>
+                                            <tr>
+
+                                                <th data-field="state" class="no-print" data-print-ignore="true" data-checkbox="true"></th>
+                                                <th data-field="ID" data-print-ignore="true" data-visible="false" class="text-center" data-sortable="true" data-footer-formatter="idFormatter">ID</th>
+                                             
+                                                <th data-field="TARIH" data-sortable="true">Tarih</th>
+                                                <th data-field="CARIKOD" data-sortable="true">Cari Kodu</th>
+                                                <th data-field="SIPARISNO" data-sortable="true">Sipariş No</th>
+                                                <th data-field="TIP" data-sortable="true">Sipariş Tipi</th>
+                                                <th data-field="GENELTOPLAM" data-align="right" data-sortable="true">Miktar</th>
+                                                <th data-field="DURUM" data-sortable="true">Durum</th>
+                                                <th data-field="DURUM" data-sortable="true">Durum</th>
+                                                <th data-field="GIRIS" data-align="right" data-footer-formatter="priceFormatter" data-sortable="true" data-formatter="numberformatter">Giriş</th>
+                                                <th data-field="CIKIS" data-align="right" data-footer-formatter="priceFormatter" data-sortable="true" data-formatter="numberformatter">Çıkış</th>
+
+                                            </tr>
+                                        </thead>
+
+                                        <tbody>
+                                        </tbody>
+
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-sm-12">
+                            <div class="table-responsive">
+                                <table id="siparisharekettablo" class="table-bordered table-sm"
+                                       data-page-size="10"
+                                       data-page-list="[10, 20, 50, 100, 200, 300]" data-show-export="true" data-reorderable-columns="true">
+                                    <thead>
+                                        <tr>
+
+
+                                            <th data-field="ID" data-print-ignore="true" data-visible="false" class="text-center" data-sortable="true" data-footer-formatter="idFormatter">ID</th>
+                                            <th data-field="STOKID" data-sortable="true">Stoık Kodu</th>
+                                            <th data-field="STOKKODU" data-sortable="true">Stoık Kodu</th>
+                                            <th data-field="ACIKLAMA" data-sortable="true">ACIKLAMA</th>
+                                            <th data-field="MIKTAR" data-sortable="true">Miktar</th>
+
+                                            <th data-field="BIRIM" data-sortable="true">Birim</th>
+                                            <th data-field="TOPLAMFIYAT" data-sortable="true">Fiyat</th>
+
+                                            <th data-field="ISK1" data-sortable="true">İskonto Oranı</th>
+
+                                            <th data-field="PARABIRIMI" data-align="right" data-sortable="true" data-formatter="numberformatter">İskonto Tutar</th>
+                                            <th data-field="PARAKUR" data-sortable="true" data-align="right">KDV Oranı</th>
+                                            <th data-field="NETFIYAT" data-align="right" data-sortable="true" data-formatter="numberformatter">KDV Tutarı</th>
+
+                                            <th data-field="KDVTUTARI" data-align="right" data-sortable="true" data-formatter="numberformatter">Toplam</th>
+
+
+                                        </tr>
+                                    </thead>
+
+                                    <tbody>
+                                    </tbody>
+
+                                </table><div id="FaturaCariSecDataTablo_processing" class="dataTables_processing panel panel-default" style="display: none;">İşleniyor...</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-primary" onclick="siparishareketekle()" data-dismiss="modal">Seç</button>
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Vazgeç</button>
+                    </div>
+
+
+
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="modal fade" id="ModalStokSec" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="vertical-alignment-helper">
+        <div class="modal-dialog modal-xl  modal-lg vertical-align-center" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title" id="myModalLabel">Stok/Hizmet Seç</h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+
+                </div>
+                <div class="modal-body">
+                    <nav>
+                        <div class="nav nav-tabs" id="nav-tab" role="tablist">
+                            <a class="nav-link active" id="nav-homea-tab" data-toggle="tab" href="#nav-homea" role="tab" aria-controls="nav-homea" aria-selected="true">Stoklar</a>
+                            <a class="nav-link" id="nav-profilea-tab" data-toggle="tab" href="#nav-profilea" role="tab" aria-controls="nav-profilea" aria-selected="false">Hizmetler</a>
+
+                        </div>
+                    </nav>
+                    <div class="tab-content" id="nav-tabContent">
+                        <div class="tab-pane fade show active" id="nav-homea" role="tabpanel" aria-labelledby="nav-homea-tab">
+                            <div id="FaturaCariSecDataTablo_wrapper" class="dataTables_wrapper form-inline dt-bootstrap no-footer">
+
+                                <div class="col-sm-12">
+                                    <div class="table-responsive">
+                                        <table id="kasatablo" class="table-bordered table-sm" data-show-search-clear-button="true"
+                                               data-show-footer="true" data-footer-style="footerStyle" data-show-print="true"
+                                               data-single-select="true" data-show-refresh="true" data-icon-size="sm"
+                                               data-side-pagination="server"
+                                               data-pagination="true"
+                                               data-page-size="10"
+                                               data-page-list="[10, 20, 50, 100, 200, 300]" data-show-export="true" data-reorderable-columns="true">
+                                            <thead>
+                                                <tr>
+                                                    <th data-field="state" class="no-print" data-print-ignore="true" data-checkbox="true"></th>
+                                                    <th data-field="ID" data-print-ignore="true" class="text-center" data-visible="false" data-sortable="true" data-footer-formatter="idFormatter">ID</th>
+
+                                                    <th data-field="STOKODU" data-sortable="true" data-footer-formatter="nameFormatter">Stok Kodu</th>
+                                                    <th data-field="STOKAD" data-sortable="true">Stok İsmi</th>
+                                                    <th data-field="MIKTAR" data-formatter="numberformatter" data-align="right" data-sortable="true">Miktar</th>
+                                                    <th data-field="BIRIM">Birim</th>
+
+
+                                                    <th data-field="TUTAR" data-formatter="numberformatter" data-align="right">Fiyatı</th>
+                                                    <th data-field="PARABIRIMI" data-sortable="true" data-align="right">Paraba Birimi</th>
+                                                    <th data-field="ISKONTO" data-formatter="numberformatter" data-align="right" data-sortable="true">İskonto</th>
+                                                    <th data-field="RENK">Renk</th>
+                                                    <th data-field="EN">En</th>
+                                                    <th data-field="BOY">Boy</th>
+                                                    <th data-field="YUKSEKLIK">Yükseklik</th>
+                                                    <th data-field="KDV" data-formatter="numberformatter" data-align="right" data-sortable="true">KDV</th>
+                                                    <th data-field="DEPO" data-sortable="true">Depo</th>
+
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                            </tbody>
+                                        </table><div id="FaturaCariSecDataTablo_processing" class="dataTables_processing panel panel-default" style="display: none;">İşleniyor...</div>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                        <div class="tab-pane fade" id="nav-profilea" role="tabpanel" aria-labelledby="nav-profilea-tab">
+                            <table id="gelirtablo" class="table-bordered table-sm" data-show-search-clear-button="true"
+                                   data-show-footer="true" data-footer-style="footerStyle" data-show-print="true"
+                                   data-single-select="true" data-show-refresh="true" data-icon-size="sm"
+                                   data-side-pagination="server"
+                                   data-pagination="true"
+                                   data-page-size="10"
+                                   data-page-list="[10, 20, 50, 100, 200, 300]" data-show-export="true" data-reorderable-columns="true">
+                                <thead>
+                                    <tr>
+                                        <th data-field="state" class="no-print" data-print-ignore="true" data-checkbox="true"></th>
+                                        <th data-field="ID" data-print-ignore="true" data-visible="false" class="text-center" data-sortable="true" data-footer-formatter="idFormatter">ID</th>
+
+                                        <th data-field="GELIRKODU" data-sortable="true">Gelir Kodu</th>
+                                        <th data-field="GELIRAD" data-sortable="true">Gelir Adı</th>
+                                        <th data-field="KDVGRUP" data-sortable="true">KDV</th>
+                                        <th data-field="TOPLAMTUTAR" class="td-actions text-right" data-align="right" data-sortable="true" data-formatter="numberformatter">Genel Durum</th>
+
+
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                </tbody>
+
+                            </table>
+                        </div>
+                    </div>
+
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-primary" onclick="butonkasagetir()" data-dismiss="modal">Seç</button>
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Vazgeç</button>
+                    </div>
+
+
+
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section script{
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.13.4/jquery.mask.min.js"></script>
+
+    <script type="text/javascript">
+
+
+        var checkedRows = [];
+        var checkedRowssiparis = [];
+        var irsaliyeidler = [];
+        var siparisidler = [];
+        var bakiyefiltre = null;
+        var carid=0;
+        var caridg;
+        var carikodu;
+        var kasaid;
+        var kasadg;
+        var kasakodu;
+        var birim;
+        var matrah;
+        var toplamkdv;
+         var kdv;
+        var gecicicarpan;
+                var stokinput;
+        var $table = $('#bootstrap-table');
+        var $caritable = $('#caritablo');
+        var $kasatable = $('#kasatablo');
+                var $irsaliyetable = $('#irsaliye-table');
+                var $gelirtable = $('#gelirtablo');
+        var $siparistable = $('#siparistablo');
+        var $siparisharekettable = $('#siparisharekettablo');
+        var $irsaliyeharekettable = $('#irsaliyehareket-table');
+        var parakuru;
+        var toplamtevkifat;
+
+        var urlfatgonder = "/FATURA/efaturagonder";
+
+        function fatnostyle() {
+            if (document.getElementById("alis").checked) {
+                document.getElementById("fatnostyle").style.display = "block";
+                urlfatgonder = "/FATURA/efaturagonderalis";
+            }
+            else {
+                document.getElementById("fatnostyle").style.display = "none";
+                urlfatgonder = "/FATURA/efaturagonder";
+            }
+        }
+        function kurgetir() {
+
+            var e = document.getElementById("ParaBirimi");
+            document.getElementById("ParaBirimiKuru").value = e.options[e.selectedIndex].value;
+        };
+        function removeOptions(selectElement) {
+            var i, L = selectElement.options.length - 1;
+            for (i = L; i >= 0; i--) {
+                selectElement.remove(i);
+            }
+        }
+        $(document).ready(function () {
+            if (document.getElementById("CariKodu").options[document.getElementById("CariKodu").selectedIndex].value != null)
+            carikurgetir();
+
+
+        });
+
+
+        function pad(d) {
+            return (d < 10) ? '0' + d.toString() : d.toString();
+        }
+        Date.prototype.formatMM = function () {
+            return (pad(this.getDate()) + "/" + pad(this.getMonth() + 1) +
+
+                "/" + this.getFullYear());
+        }      
+                function get_query_paramsstok(p) {
+
+            var date = new Date("2000-01-01");
+            var dateson = new Date("2080-01-01");
+
+
+            var arr = [{ verismi: "TARIH", deger: date.formatMMDDYYYY(), deger2: dateson.formatMMDDYYYY(), filtretipi: 4 }];
+
+
+            if (p.sort != null) {
+                return {
+
+                    extraParam: 'abc',
+
+                    sort: p.sort,
+                    order: p.order,
+                    limit: p.limit,
+                    offset: p.offset,
+                    search: "",
+                    sort: p.sort,
+
+                    carid: carid,
+
+                    TIPI: 1,
+
+
+
+                    filterler: null
+                }
+            } else {
+                return {
+                    extraParam: 'abc',
+                    search:"",
+                    sort: p.sort,
+                    order: p.order,
+                    limit: p.limit,
+                    offset: p.offset,
+
+                    sort: "ID",
+
+                    carid: carid,
+
+                     TIPI:  1,
+
+
+
+                    filterler: arr
+                }
+
+            }
+                }
+                function get_query_paramsirsaliye(p) {
+
+                    var date = new Date("2000-01-01");
+                    var dateson = new Date("2080-01-01");
+
+                    var arr = [{ verismi: "TARIH", deger: date.formatMMDDYYYY(), deger2: dateson.formatMMDDYYYY(), filtretipi: 4 }];
+                    arr.push({ verismi: "hareket.DURUM", deger: 0, deger2:"", filtretipi: 2 });
+
+
+                    if (p.sort != null) {
+                        return {
+
+                            extraParam: 'abc',
+                            search: p.search,
+                            sort: p.sort,
+                            order: p.order,
+                            limit: p.limit,
+                            offset: p.offset,
+
+                            sort: p.sort,
+
+                            filterler: arr
+                        }
+                    } else {
+                        return {
+                            extraParam: 'abc',
+                            search: p.search,
+                            sort: p.sort,
+                            order: p.order,
+                            limit: p.limit,
+                            offset: p.offset,
+
+                            sort: "ID",
+
+                            filterler: arr
+                        }
+
+                    }
+                }
+        function get_query_params(p) {
+
+            var date = new Date("2000-01-01");
+            var dateson = new Date("2080-01-01");
+
+            var arr = [{ verismi: "TARIH", deger: date.formatMMDDYYYY(), deger2: dateson.formatMMDDYYYY(), filtretipi: 4 }];
+
+
+
+            if (p.sort != null) {
+                return {
+
+                    extraParam: 'abc',
+                    search: p.search,
+                    sort: p.sort,
+                    order: p.order,
+                    limit: p.limit,
+                    offset: p.offset,
+
+                    sort: p.sort,
+
+                    filterler: arr
+                }
+            } else {
+                return {
+                    extraParam: 'abc',
+                    search: p.search,
+                    sort: p.sort,
+                    order: p.order,
+                    limit: p.limit,
+                    offset: p.offset,
+
+                    sort: "ID",
+
+                    filterler: arr
+                }
+
+            }
+                }
+                function get_query_paramsgelir(p) {
+
+
+                    var arr = [{ verismi: "TOPLAMTUTAR", deger: "0", deger2: "0", filtretipi: 3 }]
+
+                    if (p.sort != null) {
+                        return {
+
+                            extraParam: 'abc',
+                            search: p.search,
+                            sort: p.sort,
+                            order: p.order,
+                            limit: p.limit,
+                            offset: p.offset,
+
+                            sort: p.sort,
+
+                            filterler: arr
+                        }
+                    } else {
+                        return {
+                            extraParam: 'abc',
+                            search: "",
+                            sort: p.sort,
+                            order: p.order,
+                            limit: p.limit,
+                            offset: p.offset,
+
+                            sort: "ID",
+
+                            filterler: arr
+                        }
+
+                    }
+                }
+        $('.select2').select2()
+
+
+
+        //Initialize Select2 Elements
+        $('.select2bs4').select2({
+            theme: 'bootstrap4',
+            placeholder: "Cari adı veya kodu ile ara",
+            ajax: {
+                url: '/CARI_BASLIK/getcarid',
+                processResults: function (data) {
+                    // Transforms the top-level key of the response object from 'items' to 'results'
+                    return {
+                        results: data
+
+                    };
+                }
+                // Additional AJAX parameters go here; see the end of this chapter for the full code of this example
+            }
+        })
+        function irsaliyehareketgetir(id) {
+
+
+            $.ajax({
+                type: "POST",
+
+
+                dataType: "json",
+                contentType: "application/json; charset=utf-8",
+                url: "/IRSALIYE/irsaliyehareketigetirefatura/",
+                data: JSON.stringify({
+
+                    id: id,
+
+
+
+
+
+
+                }),
+                success: function (result) {
+                    $irsaliyeharekettable.bootstrapTable('load', result);
+                },
+                error: function (result) {
+                    toastr["error"]('error');
+                }
+            });
+
+
+        }
+        function siparishareketgetir(id) {
+
+
+            $.ajax({
+                type: "POST",
+
+
+                dataType: "json",
+                contentType: "application/json; charset=utf-8",
+                url: "/SIPARIS_FIS/siparishareketigetir/",
+                data: JSON.stringify({
+
+                    id: id,
+
+
+
+
+
+
+                }),
+                success: function (result) {
+                    $siparisharekettable.bootstrapTable('load', result);
+                },
+                error: function (result) {
+                    toastr["error"]('error');
+                }
+            });
+
+
+        }
+        function siparishareketekle() {
+            $.each(checkedRowssiparis, function (index, value) {
+                $.ajax({
+                    type: "POST",
+
+
+                    dataType: "json",
+                    contentType: "application/json; charset=utf-8",
+                    url: "/SIPARIS_FIS/siparishareketigetir/",
+                    data: JSON.stringify({
+
+                        id: value.id,
+
+
+
+
+
+                    }),
+                    success: function (result) {
+                        var $btn = $(clone);
+                        //use .closest() to navigate from the buttno to the closest row and clone it
+                        result.forEach((siparishareket) => {
+                            var $clonedRow = $btn.clone();
+                            $clonedRow.attr("id", "");
+                            $clonedRow.children().last().empty();
+                            $clonedRow.children().last().append('<button  type="button" id="deleteRowBtn" onclick="deleteRow(this)" class="btn btn-danger btn-sm btn-rounded">  <span class="icon text-white-50">    <i class="fas fa-trash-alt"></i> </span></button>');
+                            $clonedRow.children()[0].firstElementChild.dataset.hiddenvalue = siparishareket.STOKID;
+                            $clonedRow.children()[0].firstElementChild.dataset.gelirstok = "0";
+                            $clonedRow.children()[0].firstElementChild.value = siparishareket.STOKKODU;
+                            $clonedRow.children()[1].firstElementChild.value = siparishareket.ACIKLAMA;
+                            $clonedRow.children()[2].firstElementChild.value = siparishareket.MIKTAR;
+                            $clonedRow.children()[3].firstElementChild.value = siparishareket.BIRIM;
+                            $clonedRow.children()[4].firstElementChild.value = siparishareket.TOPLAMFIYAT;
+                            $clonedRow.children()[5].firstElementChild.value = siparishareket.ISK1;
+                            $clonedRow.children()[6].firstElementChild.value = 0;
+                            $clonedRow.children()[7].firstElementChild.value = siparishareket.KDV;
+                            $clonedRow.children()[8].firstElementChild.value = 0;
+
+                            $clonedRow.children()[17].firstElementChild.firstElementChild.value = 0;
+                            $clonedRow.children()[18].innerHTML = siparishareket.SIPARISNO;
+                            $clonedRow.children()[19].innerHTML = siparishareket.ID;
+                            //append the cloned row to end of the table
+
+                           
+
+                            //finally append new row to end of table
+                            $table.append($clonedRow);
+                            tutargetir($clonedRow.get(0));
+
+                        });
+
+
+                        yenile();
+                    },
+                    error: function (result) {
+                        toastr["error"]('error');
+                    }
+                });
+            });
+
+
+
+        }
+        function irsaliyeharekettabloyaekle() {
+            $.each(checkedRows, function (index, value) {
+                $.ajax({
+                    type: "POST",
+
+
+                    dataType: "json",
+                    contentType: "application/json; charset=utf-8",
+                    url: "/IRSALIYE/irsaliyehareketigetirefatura/",
+                    data: JSON.stringify({
+
+                        id: value.id,
+
+
+
+
+
+
+                    }),
+                    success: function (result) {
+                        var $btn = $(clone);
+                        //use .closest() to navigate from the buttno to the closest row and clone it
+                        result.forEach((irshareket) => {
+                            var $clonedRow = $btn.clone();
+                            $clonedRow.attr("id", "");
+                            $clonedRow.children().last().empty();
+                            $clonedRow.children().last().append('<button  type="button" id="deleteRowBtn" onclick="deleteRow(this)" class="btn btn-danger btn-sm btn-rounded">  <span class="icon text-white-50">    <i class="fas fa-trash-alt"></i> </span></button>');
+                            $clonedRow.children()[0].firstElementChild.dataset.hiddenvalue = irshareket.id;
+                            $clonedRow.children()[0].firstElementChild.dataset.gelirstok = "0";
+                            $clonedRow.children()[0].firstElementChild.value = irshareket.stokkod + "/" + irshareket.stokad;
+                            $clonedRow.children()[2].firstElementChild.value = irshareket.miktar;
+                            $clonedRow.children()[3].firstElementChild.value = irshareket.birim;
+                            $clonedRow.children()[4].firstElementChild.value = irshareket.fiyat;
+                            $clonedRow.children()[5].firstElementChild.value = irshareket.iskonto;
+                            $clonedRow.children()[6].firstElementChild.value = irshareket.iskontotutar;
+                            $clonedRow.children()[7].firstElementChild.value = irshareket.kdvoranı;
+                            $clonedRow.children()[8].firstElementChild.value = irshareket.kdvtutar;
+
+                            $clonedRow.children()[17].firstElementChild.firstElementChild.value = irshareket.toplam;
+                            $clonedRow.children()[18].innerHTML = irshareket.irsno;
+                            $clonedRow.children()[19].innerHTML = irshareket.irsid;
+                        //append the cloned row to end of the table
+
+
+
+                        //finally append new row to end of table
+                        $table.append($clonedRow);
+
+
+                    });
+
+
+                        yenile();
+                    },
+                    error: function (result) {
+                        toastr["error"]('error');
+                    }
+                });
+            });
+
+
+
+                }
+                function getfatno(seri) {
+
+                    $.ajax({
+                        type: "POST",
+
+                        dataType: "json",
+                        contentType: "application/json; charset=utf-8",
+                        url: "/FATURA/fatnogetir/",
+                        data: JSON.stringify({
+                            seri: seri.options[seri.selectedIndex].value
+                        }),
+                        success: function (result) {
+                            if (result == "")
+                                document.getElementById("FATNO").value = 1;
+                            else
+                            document.getElementById("FATNO").value = result;
+                        }
+                        ,
+                        error: function (result) {
+                            toastr["error"]('error');
+                        }
+                    });
+
+                }
+
+        function carikurgetir() {
+
+            $.ajax({
+                type: "POST",
+
+                dataType: "json",
+                contentType: "application/json; charset=utf-8",
+                url: "/CARI_BASLIK/getparabirimi/",
+                data: JSON.stringify({
+                    kod: document.getElementById("CariKodu").options[document.getElementById("CariKodu").selectedIndex].value
+                }),
+                success: function (result) {
+                    if (result != "TRY") {
+                        var sel = document.getElementById("ParaBirimi");
+
+                        var opts = sel.options;
+                        for (var opt, j = 0; opt = opts[j]; j++) {
+                            if (opt.text == result.parabirimi) {
+                                sel.selectedIndex = j;
+
+                            } else {
+
+                            }
+                            kurgetir();
+                        }
+                    } else {
+                        var sel = document.getElementById("ParaBirimi");
+
+                        var opts = sel.options;
+                        for (var opt, j = 0; opt = opts[j]; j++) {
+                            if (opt.text == "TRY") {
+                                sel.selectedIndex = j;
+
+                            }
+                            opt.disabled = false;
+
+
+                        }
+                        kurgetir();
+                    }
+
+                }
+                ,
+                error: function (result) {
+                    toastr["error"]('error');
+                }
+            });
+            $.ajax({
+                type: "POST",
+
+                dataType: "json",
+                contentType: "application/json; charset=utf-8",
+                url: "/CARI_BASLIK/getcaritipi/",
+                data: JSON.stringify({
+                    kod: document.getElementById("CariKodu").options[document.getElementById("CariKodu").selectedIndex].value
+                }),
+                success: function (result) {
+                    var gonderimsenaryo = document.getElementById("gonderimsenaryo");
+                    if (result == "EFATURA MÜKELLEFİ DEĞİL" || result == null) {
+                        removeOptions(document.getElementById("gonderimsenaryo"));
+                        document.getElementById("gonderimsenaryo").options[document.getElementById("gonderimsenaryo").options.length] = new Option('E-Arşiv', 'E-Arşiv');
+                        getfatno(document.getElementById("EARSIVSERINO"));
+                        document.getElementById("faturaturu").value = "E-Arşiv";
+                        document.getElementById("earsivserinoo").style.display = "block";
+                        document.getElementById("efaturaseri").style.display = "none";
+                    }else
+                    if (result == "İHRACAT") {
+                        removeOptions(gonderimsenaryo);
+
+                        gonderimsenaryo.options[gonderimsenaryo.options.length] = new Option('İhracat', 'IHRACAT');
+
+                        getfatno(document.getElementById("EFATURASERINO"));
+                        document.getElementById("earsivserinoo").style.display = "none";
+                        document.getElementById("efaturaseri").style.display = "block";
+                        document.getElementById("faturaturu").value = "E-Fatura";
+
+                    }
+                    else {
+                        removeOptions(gonderimsenaryo);
+                        gonderimsenaryo.options[gonderimsenaryo.options.length] = new Option('Temel', 'TEMELFATURA');
+                        gonderimsenaryo.options[gonderimsenaryo.options.length] = new Option('Ticari', 'TICARIFATURA');
+                        gonderimsenaryo.options[gonderimsenaryo.options.length] = new Option('İhracat', 'IHRACAT');
+                        gonderimsenaryo.options[gonderimsenaryo.options.length] = new Option('Kamu', 'TEMELFATURA');
+                        getfatno(document.getElementById("EFATURASERINO"));
+                        document.getElementById("earsivserinoo").style.display = "none";
+                        document.getElementById("efaturaseri").style.display = "block";
+                        document.getElementById("faturaturu").value = "E-Fatura";
+                        }
+                    kodgetira();
+
+                }
+                ,
+                error: function (result) {
+                    toastr["error"]('error');
+                }
+            });
+        }
+
+        function tevfikattutargetir(row) {
+
+
+            row.getElementsByClassName("tevfikattutar")[0].value = parseFloat(parseFloat(row.getElementsByClassName("KDVTutar")[0].value * parseFloat(row.getElementsByClassName("tevfikatoran")[0].value)) / 100);
+        }
+        function tevfikatorangetir(row) {
+
+            var oran = row.getElementsByClassName("tevfikatkodu")[0].options[row.getElementsByClassName("tevfikatkodu")[0].selectedIndex].innerHTML.substring(5, 6);
+            row.getElementsByClassName("tevfikatoran")[0].value = parseFloat(oran) * 10;
+            tevfikattutargetir(row);
+        }
+        function kodgetir() {
+            var gonderimtipi = document.getElementById("gonderimtipi");
+            var senaryo = document.getElementById("gonderimsenaryo").options[document.getElementById("gonderimsenaryo").selectedIndex].value;
+            var tip = null;
+            if (tip != gonderimtipi.options[gonderimtipi.selectedIndex]) {
+                tip = gonderimtipi.options[gonderimtipi.selectedIndex].value;
+            }
+
+
+
+            if (tip == "IADE" || tip == "ISTISNA") {
+                document.getElementById("istisnakoduyazı").style.display = "block";
+            } else {
+                document.getElementById("istisnakoduyazı").style.display = "none";
+            }
+            if (tip == "TEVKIFAT") {
+
+                document.getElementsByClassName("tevfikatkodu").forEach(element => element.style.display = "block")
+                document.getElementsByClassName("tevfikatoran").forEach(element => element.style.display = "block")
+                document.getElementsByClassName("tevfikattutar").forEach(element => element.style.display = "block")
+                $('.baslıktevkfı').show();
+
+
+            } else {
+                $('.baslıktevkfı').hide();
+
+                document.getElementsByClassName("tevfikatkodu").forEach(element => element.style.display = "none");
+                document.getElementsByClassName("tevfikatoran").forEach(element => element.style.display = "none");
+                document.getElementsByClassName("tevfikattutar").forEach(element => element.style.display = "none");
+            }
+            if (senaryo == "IHRACAT") {
+                $('.baslıkihracat').show();
+            } else {
+                $('.baslıkihracat').hide();
+            }
+
+            if (tip == "SGK") {
+
+                document.getElementsByClassName("ilavesgkform").forEach(element => element.style.display = "block");
+
+            } else {
+                document.getElementsByClassName("ilavesgkform").forEach(element => element.style.display = "none");
+            }
+        if (tip == "OZELMATRAH") {
+            document.getElementById("özelmatrahkoduyazı").style.display = "block";
+        } else {
+            document.getElementById("özelmatrahkoduyazı").style.display = "none";
+        }
+        }
+        function kodgetira() {
+            var gonderimtipi = document.getElementById("gonderimtipi");
+            var senaryo = document.getElementById("gonderimsenaryo").options[document.getElementById("gonderimsenaryo").selectedIndex].value;
+            var senaryoa = document.getElementById("gonderimsenaryo").options[document.getElementById("gonderimsenaryo").selectedIndex].innerHTML;
+            var tip = null;
+            if (tip != gonderimtipi.options[gonderimtipi.selectedIndex]) {
+                tip = gonderimtipi.options[gonderimtipi.selectedIndex].value;
+            }
+
+            if (senaryo == "TEMELFATURA") {
+                removeOptions(gonderimtipi);
+                gonderimtipi.options[gonderimtipi.options.length] = new Option('Satış', 'SATIS');
+
+                gonderimtipi.options[gonderimtipi.options.length] = new Option('İade', 'IADE');
+                gonderimtipi.options[gonderimtipi.options.length] = new Option('Tevkifat', 'TEVKIFAT');
+                gonderimtipi.options[gonderimtipi.options.length] = new Option('İstisna', 'ISTISNA');
+                gonderimtipi.options[gonderimtipi.options.length] = new Option('Özel Matrah', 'OZELMATRAH');
+                gonderimtipi.options[gonderimtipi.options.length] = new Option('İhraç Kayıtlı', 'IHRACKAYITLI');
+                gonderimtipi.options[gonderimtipi.options.length] = new Option('SGK', 'SGK');
+
+            }
+            if (senaryo == "TICARIFATURA") {
+                removeOptions(gonderimtipi);
+                gonderimtipi.options[gonderimtipi.options.length] = new Option('Satış', 'SATIS');
+
+                gonderimtipi.options[gonderimtipi.options.length] = new Option('İade', 'IADE');
+                gonderimtipi.options[gonderimtipi.options.length] = new Option('Tevkifat', 'TEVKIFAT');
+                gonderimtipi.options[gonderimtipi.options.length] = new Option('İstisna', 'ISTISNA');
+                gonderimtipi.options[gonderimtipi.options.length] = new Option('Özel Matrah', 'OZELMATRAH');
+                gonderimtipi.options[gonderimtipi.options.length] = new Option('İhraç Kayıtlı', 'IHRACKAYITLI');
+
+            }
+            if (senaryo == "IHRACAT") {
+                removeOptions(gonderimtipi);
+                gonderimtipi.options[gonderimtipi.options.length] = new Option('İstisna', 'ISTISNA');
+                $('.baslıkihracat').show();
+            }
+         else {
+                $('.baslıkihracat').hide();
+            }
+
+
+        }
+        function iskontotutargetir(row) {
+
+            var tutar = parseFloat(row.getElementsByClassName("Mıktar")[0].value.replaceAll(",", "")) * parseFloat(row.getElementsByClassName("Tutar")[0].value.replaceAll(",", ""));
+
+            if (parseFloat(row.getElementsByClassName('iskonto')[0].value)>0)
+                row.getElementsByClassName("iskontotutar")[0].value = (parseFloat(tutar) * parseFloat(row.getElementsByClassName('iskonto')[0].value) / 100);
+            else
+            row.getElementsByClassName("iskontotutar")[0].value = "0.00";
+        }
+
+        function tutargetir(row) {
+            kdvgetir(row);
+            iskontotutargetir(row);
+            tevfikattutargetir(row);
+            var tutar = parseFloat(row.getElementsByClassName("Mıktar")[0].value.replaceAll(",", "")) * parseFloat(row.getElementsByClassName("Tutar")[0].value.replaceAll(",",""));
+            var iskontolututar = tutar - (parseFloat(tutar) * parseFloat(row.getElementsByClassName('iskonto')[0].value) / 100);
+            row.getElementsByClassName("Toplam")[0].value = iskontolututar;
+            yenile();
+        }
+         function kdvgetir(row) {
+
+             var tutar = parseFloat(row.getElementsByClassName("Mıktar")[0].value.replaceAll(",", "")) * parseFloat(row.getElementsByClassName("Tutar")[0].value.replaceAll(",", ""));
+             var iskontolututar = tutar - (parseFloat(tutar) * parseFloat(row.getElementsByClassName('iskonto')[0].value.replaceAll(",", "")) / 100);
+
+             row.getElementsByClassName("KDVTutar")[0].value = (parseFloat(iskontolututar) * parseFloat(row.getElementsByClassName('KDVOranı')[0].value) / 100);
+        }
+        function stoklistele(row) {
+
+            if (document.getElementById("CariKodu").options[document.getElementById("CariKodu").selectedIndex].value != null)
+                carid = document.getElementById("CariKodu").options[document.getElementById("CariKodu").selectedIndex].value;
+            else
+                carid = 0
+            stokinput = row;
+
+
+        }
+        function butoncarigetir() {
+
+            carid = caridg;
+            document.getElementById("CariKodu").value = carikodu;
+            document.getElementById("ModalCariSec").style.display = "none";
+            var sel = document.getElementById("ParaBirimi");
+              var opts = sel.options;
+            for (var opt, j = 0; opt = opts[j]; j++) {
+                if (opt.text == parakuru) {
+      sel.selectedIndex = j;
+      break;
+                }
+
+            }
+                kurgetir();
+
+        }
+        function butonkasagetir() {
+
+            kasaid = kasadg;
+
+
+
+        }
+
+        $().ready(function () {
+
+            $('.baslıkihracat').hide();
+            $('.baslıktevkfı').hide();
+            $gelirtable.bootstrapTable({
+                type: "POST",
+                url: "/GELIR_BASLIK/GetData",
+                method: 'post',
+                contentType: 'application/x-www-form-urlencoded',
+                queryParams: get_query_paramsgelir,
+
+                clickToSelect: true,
+                showRefresh: true,
+
+                search: true,
+                showToggle: true,
+                showColumns: true,
+
+                searchAlign: 'left',
+
+                locale: 'tr-TR',
+                formatShowingRows: function (pageFrom, pageTo, totalRows) {
+                    return "Toplam " + totalRows+" Kayıt";
+                },
+                formatRecordsPerPage: function (pageNumber) {
+                    return pageNumber + " Adet Listeleniyor";
+                },
+
+
+            });
+            $gelirtable.on('check.bs.table', function (e, row) {
+
+                document.getElementsByClassName("Stok")[0].dataset.hiddenvalue = row.ID;
+                document.getElementsByClassName("Stok")[0].dataset.gelirstok = 1;
+                document.getElementsByClassName("Birim")[0].value = "ADET";
+                document.getElementsByClassName("Stok")[0].value = row.GELIRKODU + "/" + row.GELIRAD;
+                if (row.KDVFIYATADAHIL == "Hayır")
+                    kdv = row.KDV;
+                else {
+                    kdv = 0;
+                }
+            });
+            $gelirtable.on('click-row.bs.table', function (e, row, $element) {
+
+                document.getElementsByClassName("Stok")[0].dataset.hiddenvalue = row.ID;
+                document.getElementsByClassName("Stok")[0].dataset.gelirstok = 1;
+                document.getElementsByClassName("Birim")[0].value = "ADET(UNIT)";
+                document.getElementsByClassName("Stok")[0].value = row.GELIRKODU + "/" + row.GELIRAD;
+                if (row.KDVFIYATADAHIL == "Hayır")
+                    kdv = row.KDV;
+                else {
+                    kdv = 0;
+                }
+            });
+            $gelirtable.on('dbl-click-row.bs.table', function (e, row, $element) {
+
+                document.getElementsByClassName("Stok")[0].dataset.hiddenvalue = row.ID;
+                document.getElementsByClassName("Stok")[0].dataset.gelirstok = 1;
+                document.getElementsByClassName("Birim")[0].value = "ADET(UNIT)";
+                document.getElementsByClassName("Stok")[0].value = row.GELIRKODU + "/" + row.GELIRAD;
+                if (row.KDVFIYATADAHIL == "Hayır")
+                    kdv = row.KDV;
+                else {
+                    kdv = 0;
+                }
+                $('#ModalStokSec').modal('hide');
+
+
+
+            });
+            $irsaliyetable.bootstrapTable({
+
+
+                type: "POST",
+                url: "/IRSALIYE/FisData",
+                method: 'post',
+                contentType: 'application/x-www-form-urlencoded',
+                queryParams: get_query_paramsirsaliye,
+                printPageBuilder: function (table) {
+        return `
+<html>
+  <head>
+  <style type="text/css" media="print">
+  page {
+    size: auto;
+    margin: 25px 0 25px 0;
+  }
+  </style>
+  <style type="text/css" media="all">
+  table {
+    border-collapse: collapse;
+    font-size: 12px;
+  }
+  table, th, td {
+    border: 1px solid grey;
+  }
+  th, td {
+    text-align: center;
+    vertical-align: middle;
+  }
+  p {
+    font-weight: bold;
+    margin-left:20px;
+  }
+  table {
+    width:94%;
+    margin-left:3%;
+    margin-right:3%;
+  }
+  div.bs-table-print {
+    text-align:center;
+  }
+    h1.bs-table-print {
+    text-align:center;
+  }
+  </style>
+    <title>@Session["FirmaAdı"]</title>
+     </head>
+  <body>
+
+     <h1 class="bs-table-print">İrsaliye Listesi</h1>
+
+  <div class="bs-table-print">${table}</div>
+  </body>
+</html>`
+      },
+                clickToSelect: true,
+                showRefresh: true,
+
+                search: true,
+                showToggle: true,
+                showColumns: true,
+
+                searchAlign: 'left',
+
+                locale: 'tr-TR',
+                formatShowingRows: function (pageFrom, pageTo, totalRows) {
+                    return "Toplam " + totalRows+" Kayıt";
+                },
+                formatRecordsPerPage: function (pageNumber) {
+                    return pageNumber + " Adet Listeleniyor";
+                },
+
+            });
+            $irsaliyetable.on('click-row.bs.table', function (e, row, $element) {
+
+                irsaliyehareketgetir(row.ID);
+            });
+            $irsaliyeharekettable.bootstrapTable({
+
+
+
+
+                clickToSelect: true,
+                showRefresh: true,
+
+               
+                showToggle: true,
+                showColumns: true,
+
+                searchAlign: 'left',
+
+                locale: 'tr-TR',
+                formatShowingRows: function (pageFrom, pageTo, totalRows) {
+                    return "Toplam " + totalRows+" Kayıt";
+                },
+                formatRecordsPerPage: function (pageNumber) {
+                    return pageNumber + " Adet Listeleniyor";
+                },
+
+            });
+            $siparisharekettable.bootstrapTable({
+
+
+
+
+                clickToSelect: true,
+                showRefresh: true,
+
+             
+                showToggle: true,
+                showColumns: true,
+
+                searchAlign: 'left',
+
+                locale: 'tr-TR',
+                formatShowingRows: function (pageFrom, pageTo, totalRows) {
+                    return "Toplam " + totalRows + " Kayıt";
+                },
+                formatRecordsPerPage: function (pageNumber) {
+                    return pageNumber + " Adet Listeleniyor";
+                },
+
+            });
+            $siparistable.on('click-row.bs.table', function (e, row, $element) {
+
+                siparishareketgetir(row.ID);
+            });
+          
+            $irsaliyetable.on('check.bs.table', function (e, row) {
+                checkedRows.push({ id: row.ID });
+
+
+            });
+
+            $irsaliyetable.on('uncheck.bs.table', function (e, row) {
+                $.each(checkedRows, function (index, value) {
+                    if (value.id === row.ID) {
+                        checkedRows.splice(index, 1);
+                    }
+                });
+
+            });
+            $siparistable.bootstrapTable({
+
+
+                type: "POST",
+                url: "/SIPARIS_FIS/FisData",
+                method: 'post',
+                contentType: 'application/x-www-form-urlencoded',
+                queryParams: get_query_paramsstok,
+
+                clickToSelect: true,
+                showRefresh: true,
+
+                search: true,
+                showToggle: true,
+                showColumns: true,
+
+                searchAlign: 'left',
+
+                locale: 'tr-TR',
+                formatShowingRows: function (pageFrom, pageTo, totalRows) {
+                    return "Toplam " + totalRows + " Kayıt";
+                },
+                formatRecordsPerPage: function (pageNumber) {
+                    return pageNumber + " Adet Listeleniyor";
+                },
+
+            });
+            $siparistable.on('click-row.bs.table', function (e, row, $element) {
+
+                siparishareketgetir(row.ID);
+            });
+            $siparistable.on('check.bs.table', function (e, row) {
+                checkedRowssiparis.push({ id: row.ID });
+
+
+            });
+
+            $siparistable.on('uncheck.bs.table', function (e, row) {
+                $.each(checkedRowssiparis, function (index, value) {
+                    if (value.id === row.ID) {
+                        checkedRowssiparis.splice(index, 1);
+                    }
+                });
+
+            });
+            $caritable.bootstrapTable({
+
+                toolbar: ".toolbar",
+                clickToSelect: true,
+
+
+                search: true,
+
+
+                pagination: true,
+                searchAlign: 'left',
+                pageSize: 8,
+
+                pageList: [8, 10, 25, 50, 100],
+                locale: 'tr-TR',
+                formatShowingRows: function (pageFrom, pageTo, totalRows) {
+                    return "Toplam " + totalRows+" Kayıt";
+                },
+                formatRecordsPerPage: function (pageNumber) {
+                    return pageNumber + " Adet Listeleniyor";
+                },
+
+            });
+
+            $caritable.on('click-row.bs.table', function (e, row, $element) {
+                caridg = row.ID;
+                 carid = row.ID;
+                carikodu = row.CARIKOD;
+                parakuru = row.PARABIRIMI;
+
+            });
+            $caritable.on('  dbl-click-row.bs.table', function (e, row, $element) {
+
+                carid = row.ID;
+                parakuru = row.PARABIRIMI;
+                document.getElementById("CariKodu").value = row.CARIKOD;
+                     $('#ModalCariSec').modal('hide');
+                       var sel = document.getElementById("ParaBirimi");
+              var opts = sel.options;
+                for (var opt, j = 0; opt = opts[j]; j++) {
+                    if (opt.text == parakuru) {
+                        sel.selectedIndex = j;
+                        break;
+                    }
+                }
+                   kurgetir();
+
+            });
+    
+
+            //activate the tooltips after the data table is initialized
+            $('[rel="tooltip"]').tooltip();
+
+            $(window).resize(function () {
+                $caritable.bootstrapTable('resetView');
+            });
+
+
+        $kasatable.bootstrapTable({
+
+                type: "POST",
+                url: "/STOK_Hareket/stokgetir",
+                method: 'post',
+                contentType: 'application/x-www-form-urlencoded',
+                queryParams: get_query_paramsstok,
+                       printPageBuilder: function (table) {
+        return `
+<html>
+  <head>
+  <style type="text/css" media="print">
+  page {
+    size: auto;
+    margin: 25px 0 25px 0;
+  }
+  </style>
+  <style type="text/css" media="all">
+  table {
+    border-collapse: collapse;
+    font-size: 12px;
+  }
+  table, th, td {
+    border: 1px solid grey;
+  }
+  th, td {
+    text-align: center;
+    vertical-align: middle;
+  }
+  p {
+    font-weight: bold;
+    margin-left:20px;
+  }
+  table {
+    width:94%;
+    margin-left:3%;
+    margin-right:3%;
+  }
+  div.bs-table-print {
+    text-align:center;
+  }
+    h1.bs-table-print {
+    text-align:center;
+  }
+  </style>
+    <title>@Session["FirmaAdı"]</title>
+     </head>
+  <body>
+
+     <h1 class="bs-table-print">Stok Listesi</h1>
+
+  <div class="bs-table-print">${table}</div>
+  </body>
+</html>`
+      },
+                clickToSelect: true,
+                showRefresh: true,
+
+                search: true,
+                showToggle: true,
+                showColumns: true,
+
+                searchAlign: 'left',
+
+                locale: 'tr-TR',
+                formatShowingRows: function (pageFrom, pageTo, totalRows) {
+                    return "Toplam " + totalRows+" Kayıt";
+                },
+                formatRecordsPerPage: function (pageNumber) {
+                    return pageNumber + " Adet Listeleniyor";
+                },
+
+            });
+
+            $kasatable.on('click-row.bs.table', function (e, row, $element) {
+                kasaidg = row.ID;
+                kasakodu = row.ID;
+                kasaadı = row.STOKODU + "/" + row.STOKAD;
+                if (row.ISKONTO != null && row.ISKONTO != "")
+                    document.getElementsByClassName("iskonto")[0].value = row.ISKONTO;
+                else
+                    document.getElementsByClassName("iskonto")[0].value = 0;
+
+                if (row.TUTAR != null && row.TUTAR != "") {
+                    if (document.getElementById("kdvdahildegil").checked == true)
+                        document.getElementsByClassName("Tutar")[0].value = row.TUTAR;
+                    if (document.getElementById("kdvdahil").checked == true) {
+                        var fiyat = parseFloat(row.TUTAR);
+                        var kdv = parseFloat(row.KDV);
+                        document.getElementsByClassName("Tutar")[0].value = parseFloat((fiyat * 100) / (100 + kdv));
+                    }
+                }
+                else
+                    document.getElementsByClassName("Tutar")[0].value = 0;
+                document.getElementsByClassName("Birim")[0].value = row.BIRIM;
+                document.getElementsByClassName("Stok")[0].dataset.gelirstok = 0;
+
+                document.getElementsByClassName("Stok")[0].dataset.hiddenvalue = row.ID;
+                document.getElementsByClassName("Aciklama")[0].value = row.RENK + " " + row.EN + " " + row.BOY + "" + row.YUKSEKLIK;
+                document.getElementsByClassName("Aciklama")[0].value = document.getElementsByClassName("Aciklama")[0].value.replaceAll("null", "");
+                document.getElementsByClassName("KDVOranı")[0].value = row.KDV;
+                document.getElementsByClassName("Stok")[0].value = row.STOKODU + "/" + row.STOKAD;
+                document.getElementsByClassName("Tutar")[0].value = row.TUTAR;
+                tutargetir(document.getElementsByClassName("iskonto")[0].parentNode.parentNode);
+                if (row.KDVFIYATADAHIL == "Hayır")
+                    kdv = row.KDV;
+                else {
+                    kdv = 0;
+                }
+            });
+            $kasatable.on('dbl-click-row.bs.table', function (e, row, $element) {
+                kasaidg = row.ID;
+
+                if (row.ISKONTO != null && row.ISKONTO != "")
+                    document.getElementsByClassName("iskonto")[0].value = row.ISKONTO;
+                else
+                    document.getElementsByClassName("iskonto")[0].value = 0;
+
+                if (row.TUTAR != null && row.TUTAR != "") {
+                    if (document.getElementById("kdvdahildegil").checked==true)
+                        document.getElementsByClassName("Tutar")[0].value = row.TUTAR;
+                    if (document.getElementById("kdvdahil").checked == true){
+                        var fiyat = parseFloat(row.TUTAR);
+                        var kdv = parseFloat(row.KDV);
+                        document.getElementsByClassName("Tutar")[0].value = parseFloat((fiyat*100)/(100+kdv));
+                    }
+                }
+
+                else
+                    document.getElementsByClassName("Tutar")[0].value = 0;
+                document.getElementsByClassName("Birim")[0].value = row.BIRIM;
+                document.getElementsByClassName("Stok")[0].dataset.gelirstok = 0;
+                document.getElementsByClassName("Stok")[0].dataset.hiddenvalue = row.ID;
+                document.getElementsByClassName("KDVOranı")[0].value = row.KDV;
+                document.getElementsByClassName("Stok")[0].value = row.STOKODU + "/" + row.STOKAD;
+
+                document.getElementsByClassName("Aciklama")[0].value = document.getElementsByClassName("Aciklama")[0].value.replaceAll("null", "");
+                if (row.KDVFIYATADAHIL == "Hayır")
+                    kdv = row.KDV;
+                else {
+                    kdv = 0;
+                }
+                tutargetir(document.getElementsByClassName("iskonto")[0].parentNode.parentNode);
+
+                $('#ModalStokSec').modal('hide');
+
+            });
+            $kasatable.on('check.bs.table', function (e, row) {
+                kasaidg = row.ID;
+                kasakodu = row.ID;
+                kasaadı = row.STOKODU + "/" + row.STOKAD;
+                if (row.ISKONTO != null && row.ISKONTO != "")
+                    document.getElementsByClassName("iskonto")[0].value = row.ISKONTO;
+                else
+                    document.getElementsByClassName("iskonto")[0].value = 0;
+
+                if (row.TUTAR != null && row.TUTAR != "") {
+                    if (document.getElementById("kdvdahildegil").checked == true)
+                        document.getElementsByClassName("Tutar")[0].value = row.TUTAR;
+                    if (document.getElementById("kdvdahil").checked == true) {
+                        var fiyat = parseFloat(row.TUTAR);
+                        var kdv = parseFloat(row.KDV);
+                        document.getElementsByClassName("Tutar")[0].value = parseFloat((fiyat * 100) / (100 + kdv));
+                    }
+                }
+                else
+                    document.getElementsByClassName("Tutar")[0].value = 0;
+                document.getElementsByClassName("Birim")[0].value = row.BIRIM;
+                document.getElementsByClassName("Stok")[0].dataset.gelirstok = 0;
+                document.getElementsByClassName("Stok")[0].dataset.hiddenvalue = row.ID;
+                document.getElementsByClassName("KDVOranı")[0].value = row.KDV;
+                document.getElementsByClassName("Stok")[0].value = row.STOKODU + "/" + row.STOKAD;
+                document.getElementsByClassName("Tutar")[0].value = row.TUTAR;
+                document.getElementsByClassName("Aciklama")[0].value = document.getElementsByClassName("Aciklama")[0].value.replaceAll("null", "");
+                tutargetir(document.getElementsByClassName("iskonto")[0].parentNode.parentNode);
+                if (row.KDVFIYATADAHIL == "Hayır")
+                    kdv = row.KDV;
+                else {
+                    kdv = 0;
+                }
+            });
+            //activate the tooltips after the data table is initialized
+            $('[rel="tooltip"]').tooltip();
+
+            $(window).resize(function () {
+                $kasatable.bootstrapTable('resetView');
+            });
+
+
+        })
+                function butonlistele(row) {
+
+                    if (document.getElementById('Stok').value == "" || document.getElementById('Stok').value == null)
+                        toastr["error"]("Lütfen Mal/Hizmet Giriniz!");
+                    else
+                        if (parseFloat(document.getElementById('Toplam').value.replaceAll(",", "")) == 0) {
+                        toastr["error"]("Lütfen Tutar Giriniz!");
+                    } else {
+
+                        var $btn = $(clone);
+                        //use .closest() to navigate from the buttno to the closest row and clone it
+                        var $clonedRow = $btn.clone();
+                        $clonedRow.attr("id", "");
+                        $clonedRow.children().last().empty();
+                            $clonedRow.children().last().append('<button  type="button" id="deleteRowBtn" onclick="deleteRow(this)" class="btn btn-danger btn-sm btn-rounded">  <span class="icon text-white-50">    <i class="fas fa-trash-alt"></i> </span></button>');
+                            var elmnt = $clonedRow.get(0).getElementsByClassName("tevfikatkodu")[0];
+                            //append the cloned row to end of the table
+
+
+                            elmnt.selectedIndex = document.getElementsByClassName("tevfikatkodu")[0].selectedIndex;
+
+                            var elmnta = $clonedRow.get(0).getElementsByClassName("teslimsartıkodu")[0];
+                            //append the cloned row to end of the table
+
+
+                            elmnta.selectedIndex = document.getElementsByClassName("teslimsartıkodu")[0].selectedIndex;
+
+
+                            var elmntb = $clonedRow.get(0).getElementsByClassName("esyaningonderimsekli")[0];
+                            //append the cloned row to end of the table
+
+                            elmntb.selectedIndex = document.getElementsByClassName("esyaningonderimsekli")[0].selectedIndex;
+                            var elmntc = $clonedRow.get(0).getElementsByClassName("esyanınbulundugukabıncinsi")[0];
+                            //append the cloned row to end of the table
+
+                            elmntc.selectedIndex = document.getElementsByClassName("esyanınbulundugukabıncinsi")[0].selectedIndex;
+                        //finally append new row to end of table
+                        $table.append($clonedRow);
+
+                        var tip = gonderimtipi.options[gonderimtipi.selectedIndex].value;
+                        var senaryo = document.getElementById("gonderimsenaryo").options[document.getElementById("gonderimsenaryo").selectedIndex].value;
+                        /*  if (senaryo != "IHRACAT") {
+                              if (tip != "TEVKIFAT")
+                                  $table.append('<tr data-index="0"><td data-gelirstok="' + document.getElementById("Stok").dataset.gelirstok + '" data-hidden="' + document.getElementById('Stok').dataset.hiddenvalue + '"><input class="form-control" value="' + document.getElementById('Stok').value + '" readonly></td><td><input class="form-control" value="' + document.getElementById('Mıktar').value + '"></td><td><input class="form-control" value="' + document.getElementById('Birim').value + '" readonly></td><td><input class="form-control" value="' + document.getElementById('Tutar').value + '"></td><td><input class="form-control" value="' + document.getElementById('iskonto').value + '"></td><td class="countableiskonto"><input class="form-control" value="' + document.getElementById('iskontotutar').value + '"></td><td class="countablekdvoran"><input class="form-control" value="' + document.getElementById('KDVOranı').value + '" readonly></td><td class="countablekdv"><input class="form-control" value="' + document.getElementById('KDVTutar').value + '"></td></td><td class="countable"><input class="form-control" value="' + document.getElementById('Toplam').value + '"></td><td> <button  type="button" id="deleteRowBtn" onclick="deleteRow(this)" class="btn btn-danger btn-sm btn-rounded">  <span class="icon text-white-50">    <i class="fas fa-trash-alt"></i> </span></button></td></tr>');
+                              if (tip == "TEVKIFAT")
+                                  $table.append('<tr data-index="0"><td data-gelirstok="' + document.getElementById("Stok").dataset.gelirstok + '" data-hidden="' + document.getElementById('Stok').dataset.hiddenvalue + '">' + document.getElementById('Stok').value + '</td><td>' + document.getElementById('Mıktar').value + '</td><td>' + document.getElementById('Birim').value + '</td><td>' + document.getElementById('Tutar').value + '</td><td>' + document.getElementById('iskonto').value + '</td><td class="countableiskonto">' + document.getElementById('iskontotutar').value + '</td><td class="countablekdvoran">' + document.getElementById('KDVOranı').value + '</td><td class="countablekdv">' + document.getElementById('KDVTutar').value + '</td><td >' + document.getElementById('tevfikatkodu').options[document.getElementById('tevfikatkodu').selectedIndex].innerHTML + '</td><td class="countabletevfikatoran">' + document.getElementById('tevfikatoran').value + '</td><td class="countabletevfikat">' + document.getElementById('tevfikattutar').value + '</td><td class="countable">' + document.getElementById('Toplam').value + '</td><td> <button  type="button" id="deleteRowBtn" onclick="deleteRow(this)" class="btn btn-danger btn-sm btn-rounded">  <span class="icon text-white-50">    <i class="fas fa-trash-alt"></i> </span></button></td></tr>');
+                          } else {
+                              $table.append('<tr data-index="0"><td data-gelirstok="' + document.getElementById("Stok").dataset.gelirstok + '" data-hidden="' + document.getElementById('Stok').dataset.hiddenvalue + '"><input class="form-control" value="' + document.getElementById('Stok').value + '" readonly></td><td>' + document.getElementById('Mıktar').value + '</td><td>' + document.getElementById('Birim').value + '</td><td>' + document.getElementById('Tutar').value + '</td><td>' + document.getElementById('iskonto').value + '</td><td class="countableiskonto">' + document.getElementById('iskontotutar').value + '</td><td class="countablekdvoran">' + document.getElementById('KDVOranı').value + '</td><td class="countablekdv">' + document.getElementById('KDVTutar').value + '</td><td >' + document.getElementById('teslimsartıkodu').options[document.getElementById('teslimsartıkodu').selectedIndex].innerHTML + '</td><td >' + document.getElementById('GTIPNO').value + '</td><td>' + document.getElementById('esyanıngonderimsekli').options[document.getElementById('esyanıngonderimsekli').selectedIndex].innerHTML + '</td><td>' + document.getElementById('esyanınbulundugukabıncinsi').options[document.getElementById('esyanınbulundugukabıncinsi').selectedIndex].innerHTML + '</td><td>' + document.getElementById('kapadet').value + '</td><td class="countable">' + document.getElementById('Toplam').value + '</td><td> <button  type="button" id="deleteRowBtn" onclick="deleteRow(this)" class="btn btn-danger btn-sm btn-rounded">  <span class="icon text-white-50">    <i class="fas fa-trash-alt"></i> </span></button></td></tr>');
+                          }*/
+                        $('#ModalStokSec').modal('show');
+                        yenile();
+
+                    }
+
+
+
+
+        }
+        function yenile() {maskla();
+
+
+
+
+
+
+            var sum = 0;
+            var sumkdv1 = 0;
+            var sumkdv8 = 0;
+            var sumkdv18 = 0;
+            var sumkdv = 0;
+            var sumiskonto = 0;
+            var sumtevfikat = 0;
+            var sumtevfikat3 = 0;
+            var sumtevfikat5 = 0;
+            var sumtevfikat7 = 0;
+            var sumtevfikat9 = 0;
+            var table = document.getElementById("bootstrap-table");
+
+                    var tds = table.getElementsByClassName('Toplam');
+                    var tdskdv = table.getElementsByClassName('KDVTutar');
+                    var tdstevkfikat = table.getElementsByClassName('tevfikattutar');
+                    var tdstevkfikatoran = table.getElementsByClassName('tevfikatoran');
+
+                    var tdskdvoran = table.getElementsByClassName('KDVOranı');
+            var tevfikat = 0;
+                    var tdsiskonto = table.getElementsByClassName('iskontotutar');
+            for (var i = 1; i < tds.length; i++) {
+                sum += isNaN(tds[i].value.replaceAll(",", "")) ? 0 : parseFloat(tds[i].value.replaceAll(",", ""));
+            }
+
+
+
+
+                    for (var i = 1; i < tdskdv.length; i++) {
+
+                if (tdskdvoran[i].value=="1")
+                    sumkdv1 += isNaN(tdskdv[i].value.replaceAll(",", "")) ? 0 : parseFloat(tdskdv[i].value.replaceAll(",", ""));
+                        if (tdskdvoran[i].value == "8")
+                            sumkdv8 += isNaN(tdskdv[i].value.replaceAll(",", "")) ? 0 : parseFloat(tdskdv[i].value.replaceAll(",", ""));
+                        if (tdskdvoran[i].value == "18")
+                            sumkdv18 += isNaN(tdskdv[i].value.replaceAll(",", "")) ? 0 : parseFloat(tdskdv[i].value.replaceAll(",", ""));
+            }
+            for (var i = 1; i < tdstevkfikat.length; i++) {
+                if (tdstevkfikatoran[i].value == "30")
+                    sumtevfikat3 += parseFloat(tdstevkfikat[i].value.replaceAll(",", ""));
+                if (tdstevkfikatoran[i].value == "50")
+                    sumtevfikat5 += parseFloat(tdstevkfikat[i].value.replaceAll(",", ""));
+                if (tdstevkfikatoran[i].value == "70")
+                    sumtevfikat7 += parseFloat(tdstevkfikat[i].value.replaceAll(",", ""));
+                if (tdstevkfikatoran[i].value == "90")
+                    sumtevfikat9 += parseFloat(tdstevkfikat[i].value.replaceAll(",", ""));
+            }
+
+            for (var i = 1; i < tdsiskonto.length; i++) {
+                sumiskonto += isNaN(tdsiskonto[i].value.replaceAll(",", "")) ? 0 : parseFloat(tdsiskonto[i].value.replaceAll(",", ""));
+            }
+            sumkdv = sumkdv1 + sumkdv8 + sumkdv18;
+            if (sumkdv1 == 0) {
+                document.getElementById("kdvtoplam1yazı").style.display = "none";
+            } else {
+                document.getElementById("kdvtoplam1yazı").style.display = "block";
+            }
+            if (sumkdv8 == 0) {
+                document.getElementById("kdvtoplam8yazı").style.display = "none";
+            } else {
+                document.getElementById("kdvtoplam8yazı").style.display = "block";
+            }
+            if (sumkdv18 == 0) {
+                document.getElementById("kdvtoplam18yazı").style.display = "none";
+            } else {
+                document.getElementById("kdvtoplam18yazı").style.display = "block";
+            }
+
+
+            if (sumtevfikat3 == 0) {
+                document.getElementById("tevkifatyazı3").style.display = "none";
+            } else {
+                document.getElementById("tevkifatyazı3").style.display = "block";
+            }
+            if (sumtevfikat5 == 0) {
+                document.getElementById("tevkifatyazı5").style.display = "none";
+            } else {
+                document.getElementById("tevkifatyazı5").style.display = "block";
+            }
+            if (sumtevfikat7 == 0) {
+                document.getElementById("tevkifatyazı7").style.display = "none";
+            } else {
+                document.getElementById("tevkifatyazı7").style.display = "block";
+            }
+            if (sumtevfikat9 == 0) {
+                document.getElementById("tevkifatyazı9").style.display = "none";
+            } else {
+                document.getElementById("tevkifatyazı9").style.display = "block";
+            }
+
+            document.getElementById("toplam").value = numberformatter(sum + sumiskonto);
+            document.getElementById("kdvtoplam18").value = numberformatter(sumkdv18);
+            document.getElementById("kdvtoplam8").value = numberformatter(sumkdv8);
+            document.getElementById("kdvtoplam1").value = numberformatter(sumkdv1);
+            document.getElementById("tevfikat3").value = numberformatter(sumtevfikat3);
+            document.getElementById("tevfikat5").value = numberformatter(sumtevfikat5);
+            document.getElementById("tevfikat7").value = numberformatter(sumtevfikat7);
+            document.getElementById("tevfikat9").value = numberformatter(sumtevfikat9);
+            document.getElementById("iskontotoplam").value = numberformatter(sumiskonto);
+            sumtevfikat = sumtevfikat3 + sumtevfikat5 + sumtevfikat7 + sumtevfikat9;
+            document.getElementById("ödenecek").value = numberformatter(sum + sumkdv - sumtevfikat);
+            matrah = numberformatter(sum);
+            toplamkdv = numberformatter(sumkdv);
+
+
+
+
+        }
+        function deleteRow(btn) {
+  var row = btn.parentNode.parentNode;
+            row.parentNode.removeChild(row);
+                yenile();
+}
+        function butongonder(buton) {
+            $.ajax({
+                type: "POST",
+
+                dataType: "json",
+                contentType: "application/json; charset=utf-8",
+                url: "/FIRMAs/efaturacheck/",
+                data: JSON.stringify({
+
+
+                    carid: parseFloat(document.getElementById("CariKodu").options[document.getElementById("CariKodu").selectedIndex].value)}),
+                success: function (result) {
+                    if (result == "Başarılı") {
+                              var serino = "";
+
+                    if (document.getElementById("faturaturu").value == "E-Arşiv")
+                        serino = document.getElementById("EARSIVSERINO").options[document.getElementById("EARSIVSERINO").selectedIndex].value;
+                    else {
+                        serino = document.getElementById("EFATURASERINO").options[document.getElementById("EFATURASERINO").selectedIndex].value;
+                    }
+
+
+            var kod = "";
+            var senaryo = document.getElementById("gonderimsenaryo").options[document.getElementById("gonderimsenaryo").selectedIndex].value;
+            var senaryoa = document.getElementById("gonderimsenaryo").options[document.getElementById("gonderimsenaryo").selectedIndex].innerHTML;
+            var gonderimtipi = document.getElementById("gonderimtipi");
+            var tip = gonderimtipi.options[gonderimtipi.selectedIndex].value;
+            if (tip == "IADE" || tip == "ISTISNA") {
+                kod=document.getElementById("istisnakodu").options[document.getElementById("istisnakodu").selectedIndex].value;
+            } else {
+                    if (tip == "OZELMATRAH") {
+                        kod = document.getElementById("özelmatrahkodu").options[document.getElementById("özelmatrahkodu").selectedIndex].value;
+
+                    }
+
+                }
+
+
+
+
+            var arr = [];
+
+
+            var oTable = document.getElementById('bootstrap-table');
+
+            //gets rows of table
+            var rowLength = oTable.rows.length;
+
+            //loops through rows
+            for (i = 2; i < rowLength; i++) {
+
+                //gets cells of current row
+                var oCells = oTable.rows.item(i).cells;
+
+                //gets amount of cells of current row
+                var cellLength = oCells.length;
+
+                var Malhizmet;
+                var stokb;
+                var Miktar;
+                var Aciklama;
+                var Birim;
+
+
+                var Fiyat;
+                var İskonto;
+                var İskontotutar;
+                var Kdv = "0.00";
+                var Kdvtutar = "0.00";
+                var Tevfikat = "0.00";
+                var TevfikatOran = "0.00";
+                var TevfikatTutar = "0.00";
+                var Teslimsartı = "";
+                var Gtipno = "";
+                var Esyanıngonderimsekli = "";
+                var Esyanınbulundugukabınsekli = "";
+                var Kapadet = "";
+                var Digervergi = "0.00";
+                var Toplam="";
+                var Referans;
+
+                var id = "";
+                //loops through each cell in current row
+                for (var j = 0; j < cellLength; j++) {
+
+                    // get your cell info here
+
+                    var cellVal = oCells.item(j).innerHTML;
+                    var cellVal = oCells.item(j).innerHTML;
+
+                        if (j == 0) {
+                            Malhizmet = oCells.item(j).firstElementChild.dataset.hiddenvalue;
+                            stokb = oCells.item(j).firstElementChild.dataset.gelirstok;
+                    }
+                    if (j == 1)
+                        Aciklama = oCells.item(j).firstElementChild.value;
+                        if (j == 2)
+                            Miktar = oCells.item(j).firstElementChild.value;
+                        if (j == 3)
+                            Birim = oCells.item(j).firstElementChild.value;
+                        if (j == 4)
+                            Fiyat = oCells.item(j).firstElementChild.value;
+                        if (j == 5)
+                            İskonto = oCells.item(j).firstElementChild.value;
+                        if (j == 6)
+                            İskontotutar = oCells.item(j).firstElementChild.value;
+                        if (j == 7)
+                            Kdv = oCells.item(j).firstElementChild.value;
+                        if (j == 8)
+                            Kdvtutar = oCells.item(j).firstElementChild.value;
+                        if (j == 9)
+                            Tevfikat = oCells.item(j).firstElementChild.options[oCells.item(j).firstElementChild.selectedIndex].value;
+                        if (j == 10)
+                            TevfikatOran = oCells.item(j).firstElementChild.value;
+                        if (j == 11)
+                            TevfikatTutar = oCells.item(j).firstElementChild.value;
+                        if (j == 12)
+                            Teslimsartı = oCells.item(j).firstElementChild.options[oCells.item(j).firstElementChild.selectedIndex].value;
+                        if (j == 13)
+                            Gtipno = oCells.item(j).firstElementChild.firstElementChild.value;
+                        if (j == 14)
+                            Esyanıngonderimsekli = oCells.item(j).firstElementChild.options[oCells.item(j).firstElementChild.selectedIndex].value;
+                        if (j == 15)
+                            Esyanınbulundugukabınsekli = oCells.item(j).firstElementChild.options[oCells.item(j).firstElementChild.selectedIndex].value;
+                        if (j == 16)
+                            Kapadet = oCells.item(j).firstElementChild.firstElementChild.value;
+                        if (j == 17)
+                            Toplam = oCells.item(j).firstElementChild.firstElementChild.value;
+                    if (j == 18)
+                        Referans = oCells.item(j).innerHTML
+                    if (j == 19)
+                        id = oCells.item(j).innerHTML;
+
+
+
+                }
+                arr.push({ GELIRGIDER: parseFloat(stokb), MALHIZMET: Malhizmet, ACIKLAMA: Aciklama, MIKTAR: Miktar, BIRIM: Birim, FIYAT: Fiyat, ISKONTO: İskonto, ISKONTOTUTAR: İskontotutar, KDVORANI: Kdv, KDVTUTAR: Kdvtutar, TEVFIKAT: Tevfikat, TEVFIKATORAN: TevfikatOran, TEVFIKATTUTAR: TevfikatTutar, TESLIMSARTI: Teslimsartı, GTIP: Gtipno, ESYANINGONDERIMSEKLI: Esyanıngonderimsekli, ESYANINBULUNDUGUKAP: Esyanınbulundugukabınsekli, KAPADET: Kapadet, TOPLAM: Toplam, REFERANSNO: Referans, REFERANSID: parseFloat(id), CreateUserID: 0, CreateDate:"2021-11-11 23:32:09.037788"});
+
+            }
+
+            if (document.getElementById("CariKodu").options[document.getElementById("CariKodu").selectedIndex] == null) {
+                toastr["error"]('Lütfen Cari Seçiniz!');
+            } else if (arr.length == 0) {
+                toastr["error"]('Lütfen Kalem Ekleyiniz!');
+            } else if ((senaryoa == "Kamu" || tip=="SGK") && (document.getElementById("ekvergino").value == "" || document.getElementById("odemehesap").value == "")) {
+
+                toastr["error"]('Lütfen Vergi Numarası ve Ödeme Bilgilerini Giriniz!');
+            } else {
+                buton.disabled = true;
+                $.each(checkedRows, function (index, value) {
+                    irsaliyeidler.push(value.id);
+                });
+                $.each(checkedRowssiparis, function (index, value) {
+                    siparisidler.push(value.id);
+                });
+                $.ajax({
+                    type: "POST",
+
+
+                    dataType: "json",
+                    contentType: "application/json; charset=utf-8",
+                    url: urlfatgonder,
+                    data: JSON.stringify({
+
+
+                        GONDERIMTIPI: document.getElementById("gonderimtipi").options[document.getElementById("gonderimtipi").selectedIndex].value,
+                        GONDERIMSEKLI: "",
+                        GONDERIMSENARYO: document.getElementById("gonderimsenaryo").options[document.getElementById("gonderimsenaryo").selectedIndex].value,
+                        KOD: kod,
+                        UUID: null,
+                        MUKELLEFKODU: document.getElementById("mukellefkodsgk").value,
+                        MUKELEFADI: document.getElementById("mukellefadisgk").value,
+                        DOSYANO: document.getElementById("dosyanosgk").value,
+                        ILAVEFATURATIPI: document.getElementById("ilavesgk").options[document.getElementById("ilavesgk").selectedIndex].value,
+                        SERINO: serino,
+                        TEVFIKAT3: document.getElementById("tevfikat3").value,
+                        TEVFIKAT5: document.getElementById("tevfikat5").value,
+                        TEVFIKAT7: document.getElementById("tevfikat7").value,
+                        TEVFIKAT9: document.getElementById("tevfikat9").value,
+                        ISTISNA: document.getElementById("istisnakodu").options[document.getElementById("istisnakodu").selectedIndex].innerHTML,
+                        KDV1: document.getElementById("kdvtoplam1").value,
+                        KDV8: document.getElementById("kdvtoplam8").value,
+                        KDV18: document.getElementById("kdvtoplam18").value,
+                        ODEMESEKLI: document.getElementById("odemesekli").options[document.getElementById("odemesekli").selectedIndex].value,
+                        ODEMEKANALI: document.getElementById("odemekanal").options[document.getElementById("odemekanal").selectedIndex].value,
+                        ODEMEHESAPNO: document.getElementById("odemehesap").value,
+                        EKVERGINO: document.getElementById("ekvergino").value,
+                        SIPARISNO: document.getElementById("siparisno").value,
+                        SIPARISTARIH: document.getElementById("siparistarihi").value,
+                        IRSALIYELER: irsaliyeidler,
+                        SIPARISLER: siparisidler,
+                        TOPLAMKDV: toplamkdv,
+                        MATRAH: matrah,
+                        ISKONTOTOPLAM: document.getElementById("iskontotoplam").value,
+                        MALHIZMET: document.getElementById("toplam").value,
+                        ODENCEKTUTAR: document.getElementById("ödenecek").value,
+                        CARIID: parseFloat( document.getElementById("CariKodu").options[document.getElementById("CariKodu").selectedIndex].value),
+                        PARABIRIMI: document.getElementById("ParaBirimi").options[document.getElementById("ParaBirimi").selectedIndex].innerHTML,
+                        PARABIRIMIKUR: document.getElementById("ParaBirimiKuru").value,
+                        FISNO: document.getElementById("FATNO").value,
+                        TARIH: (document.getElementById("Tarih").value),
+                        ODEMETARIHI: (document.getElementById("ÖdemeTarihi").value),
+                        NOT: document.getElementById("Not").value,
+                        SORUMLULUK_MERKEZI: document.getElementById("Smerkezi").value,
+                        Hareketler: arr,
+                        TIPI:  @if (Url.RequestContext.HttpContext.Request.Url.ToString().Contains("GirişFiş")) { @:"Giriş"
+                }else
+                    {@:"Çıkış"
+
+                    }
+
+                       })
+                    ,
+                    success: function (result) {
+
+                        if (result == "Başarılı!") {
+                            toastr["success"](result);
+                            historysend("/FATURA/EFATURATASLAKLISTESI");
+                        }
+                        else
+                            toastr["error"](result);
+                        buton.disabled = false;
+                    },
+                    error: function (result) {
+                        toastr["error"]('error');
+
+                        buton.disabled = false;
+                    }
+                });
+            }
+                    } else {
+                        toastr['error'](result);
+
+
+                    }
+
+                }
+                ,
+                error: function (result) {
+                    toastr["error"]('error');
+                }
+            });
+
+        }
+
+        function idFormatter() {
+            return 'Toplam'
+        }
+
+        function nameFormatter(data) {
+            return data.length
+        }
+
+
+        function numberformatter(value, row, index) {
+            if (!value)
+                return "0.00";
+            else {
+                return [
+
+                    numberWithCommas((Number(value.toString().replace(",", "."))).toFixed(2))
+                ].join('');
+            }
+        }
+        function numberWithCommas(x) {
+            return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+        }
+        function priceFormatter(data) {
+            var field = this.field
+
+            var toplam = data.map(function (row) {
+                if (row[field])
+                    return +Number(row[field].toString().replace(",", "."))
+                else {
+                    return +Number("0")
+                }
+            }).reduce(function (sum, i) {
+                return sum + i
+            }, 0);
+            return numberWithCommas(toplam) + " TL"
+        }
+
+        function footerStyle(column) {
+            return {
+                id: {
+                    classes: 'uppercase'
+                },
+                name: {
+                    css: { 'font-weight': 'normal' }
+                },
+                price: {
+                    css: { color: 'red' }
+                }
+            }[column.field]
+        }
+
+
+    </script>
+}

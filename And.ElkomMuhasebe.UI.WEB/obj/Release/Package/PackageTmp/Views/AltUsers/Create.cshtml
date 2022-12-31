@@ -1,0 +1,365 @@
+﻿@model And.ElkomMuhasebe.Core.Model.Entity.Admin.AltUser
+
+@{
+    ViewBag.Title = "Yeni Alt Kullanıcı Oluştur";
+    Layout = "~/Views/Shared/yeni.cshtml";
+}
+
+    <div class="row">
+        @Html.AntiForgeryToken()
+
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+        <div class="col-xl-6 col-lg-6">
+            <!-- START card -->
+            <div class="card">
+                <div class="card-header ">
+                    <div class="card-title">
+                        Alt Kullanıcı Bilgileri
+                    </div>
+                </div>
+                <div class="card-body">
+
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                <label>Kullanıcı Adı</label>
+                                @Html.EditorFor(model => model.username, new { htmlAttributes = new { @class = "form-control" } })
+                                @Html.ValidationMessageFor(model => model.username, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                 <label>Kullanıcı Şifre</label>
+                                    @Html.EditorFor(model => model.password, new { htmlAttributes = new { @class = "form-control" } })
+                                    @Html.ValidationMessageFor(model => model.password, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                <label>İsim</label>
+                                @Html.EditorFor(model => model.name, new { htmlAttributes = new { @class = "form-control" } })
+                                @Html.ValidationMessageFor(model => model.name, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                <label>Soyisim</label>
+                                @Html.EditorFor(model => model.surname, new { htmlAttributes = new { @class = "form-control" } })
+                                @Html.ValidationMessageFor(model => model.surname, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                <label>E-Posta</label>
+                                @Html.EditorFor(model => model.mail, new { htmlAttributes = new { @class = "form-control", @placeholder = "...", @aria_label = "...", @aria_describedby = "button-addon2" } })
+                                @Html.ValidationMessageFor(model => model.mail, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                <label>Telefon</label>
+                                @Html.EditorFor(model => model.telephone, new { htmlAttributes = new { @class = "form-control" } })
+                                @Html.ValidationMessageFor(model => model.telephone, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <input type="checkbox" value="1" id="Actıve" name="Actıve" checked>
+                            <label for="Actıve">Aktif</label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- END card -->
+        </div>
+        <div class="col-xl-6 col-lg-6">
+            <!-- START card -->
+            <div class="card">
+                <div class="card-header ">
+                    <div class="card-title">
+                        Rol Tanımları
+                    </div>
+                </div>
+                <div class="card-body">
+                    <table id="haktablo" class="table">
+                        <thead>
+                            <tr>
+                                <th>Haklar</th>
+                                <th>Görme</th>
+                                <th>Ekleme</th>
+                                <th>Silme</th>
+                                <th>Değiştirme</th>
+                            </tr>
+                            <tr>
+                                <th>Hepsini Seç/Bırak</th>
+                                <th><input id="hepsinisecgorme" onClick="toggle(this,'name1')" type="checkbox" />  </th>
+                                <th><input id="hepsinisecekle" onClick="toggle(this,'name2')" type="checkbox" />  </th>
+                                <th><input id="hepsinisecsilme" onClick="toggle(this,'name3')" type="checkbox" />  </th>
+                                <th><input id="hepsinisecdegistirme" onClick="toggle(this,'name4')" type="checkbox" />  </th>
+
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Firmalar</td>
+                                <td><input type="checkbox" name="name1" />  </td>
+                                <td><input type="checkbox" name="name2" />  </td>
+                                <td><input type="checkbox" name="name3" />  </td>
+                                <td><input type="checkbox" name="name4" />  </td>
+
+                            </tr>
+                            <tr>
+                                <td>Cariler</td>
+                                <td><input type="checkbox" name="name1" />  </td>
+                                <td><input type="checkbox" name="name2" />  </td>
+                                <td><input type="checkbox" name="name3" />  </td>
+                                <td><input type="checkbox" name="name4" />  </td>
+
+                            </tr>
+                            <tr>
+                                <td>Cari Hareketleri Ve Fişleri</td>
+                                <td><input type="checkbox" name="name1" />  </td>
+                                <td><input type="checkbox" name="name2" />  </td>
+                                <td><input type="checkbox" name="name3" />  </td>
+                                <td><input type="checkbox" name="name4" />  </td>
+
+                            </tr>
+                            <tr>
+                                <td>Stoklar</td>
+                                <td><input type="checkbox" name="name1" />  </td>
+                                <td><input type="checkbox" name="name2" />  </td>
+                                <td><input type="checkbox" name="name3" />  </td>
+                                <td><input type="checkbox" name="name4" />  </td>
+
+                            </tr>
+                            <tr>
+                                <td>Stok Hareketleri Ve Fişleri</td>
+                                <td><input type="checkbox" name="name1" />  </td>
+                                <td><input type="checkbox" name="name2" />  </td>
+                                <td><input type="checkbox" name="name3" />  </td>
+                                <td><input type="checkbox" name="name4" />  </td>
+
+                            </tr>
+                            <tr>
+                                <td>Kasalar</td>
+                                <td><input type="checkbox" name="name1" />  </td>
+                                <td><input type="checkbox" name="name2" />  </td>
+                                <td><input type="checkbox" name="name3" />  </td>
+                                <td><input type="checkbox" name="name4" />  </td>
+
+                            </tr>
+                            <tr>
+                                <td>Kasa Hareketleri Ve Fişleri</td>
+                                <td><input type="checkbox" name="name1" />  </td>
+                                <td><input type="checkbox" name="name2" />  </td>
+                                <td><input type="checkbox" name="name3" />  </td>
+                                <td><input type="checkbox" name="name4" />  </td>
+
+                            </tr>
+                            <tr>
+                                <td>İrsaliyeler</td>
+                                <td><input type="checkbox" name="name1" />  </td>
+                                <td><input type="checkbox" name="name2" />  </td>
+                                <td><input type="checkbox" name="name3" />  </td>
+                                <td><input type="checkbox" name="name4" />  </td>
+
+                            </tr>
+                            <tr>
+                                <td>Faturalar</td>
+                                <td><input type="checkbox" name="name1" />  </td>
+                                <td><input type="checkbox" name="name2" />  </td>
+                                <td><input type="checkbox" name="name3" />  </td>
+                                <td><input type="checkbox" name="name4" />  </td>
+
+                            </tr>
+                            <tr>
+                                <td>E-Faturalar</td>
+                                <td><input type="checkbox" name="name1" />  </td>
+                                <td><input type="checkbox" name="name2" />  </td>
+                                <td><input type="checkbox" name="name3" />  </td>
+                                <td><input type="checkbox" name="name4" />  </td>
+
+                            </tr>
+                            <tr>
+                                <td>Sipariş</td>
+                                <td><input type="checkbox" name="name1" />  </td>
+                                <td><input type="checkbox" name="name2" />  </td>
+                                <td><input type="checkbox" name="name3" />  </td>
+                                <td><input type="checkbox" name="name4" />  </td>
+
+                            </tr>
+                            <tr>
+                                <td>Üretim</td>
+                                <td><input type="checkbox" name="name1" />  </td>
+                                <td><input type="checkbox" name="name2" />  </td>
+                                <td><input type="checkbox" name="name3" />  </td>
+                                <td><input type="checkbox" name="name4" />  </td>
+
+                            </tr>
+                            <tr>
+                                <td>Çekler</td>
+                                <td><input type="checkbox" name="name1" />  </td>
+                                <td><input type="checkbox" name="name2" />  </td>
+                                <td><input type="checkbox" name="name3" />  </td>
+                                <td><input type="checkbox" name="name4" />  </td>
+
+                            </tr>
+                            <tr>
+                                <td>Senetler</td>
+                                <td><input type="checkbox" name="name1" />  </td>
+                                <td><input type="checkbox" name="name2" />  </td>
+                                <td><input type="checkbox" name="name3" />  </td>
+                                <td><input type="checkbox" name="name4" />  </td>
+
+                            </tr>
+                            <tr>
+                                <td>Bankalar</td>
+                                <td><input type="checkbox" name="name1" />  </td>
+                                <td><input type="checkbox" name="name2" />  </td>
+                                <td><input type="checkbox" name="name3" />  </td>
+                                <td><input type="checkbox" name="name4" />  </td>
+
+                            </tr>
+                            <tr>
+                                <td>Banka Hareketleri Ve Fişleri</td>
+                                <td><input type="checkbox" name="name1" />  </td>
+                                <td><input type="checkbox" name="name2" />  </td>
+                                <td><input type="checkbox" name="name3" />  </td>
+                                <td><input type="checkbox" name="name4" />  </td>
+
+                            </tr>
+                            <tr>
+                                <td>Personeller</td>
+                                <td><input type="checkbox" name="name1" />  </td>
+                                <td><input type="checkbox" name="name2" />  </td>
+                                <td><input type="checkbox" name="name3" />  </td>
+                                <td><input type="checkbox" name="name4" />  </td>
+
+                            </tr>
+                            <tr>
+                                <td>Personel Hareketleri Ve Fişleri</td>
+                                <td><input type="checkbox" name="name1" />  </td>
+                                <td><input type="checkbox" name="name2" />  </td>
+                                <td><input type="checkbox" name="name3" />  </td>
+                                <td><input type="checkbox" name="name4" />  </td>
+
+                            </tr>
+                        </tbody>
+                    </table>
+
+
+
+                </div>
+            </div>
+        </div>
+        <div id="butonlar" class="fixed-bottom py-1 text-center">
+            <button type="submit" onclick="arayaekle()" class="btn btn-sm btn-primary btn-icon-split">
+                <span class="icon text-white-50">
+                    <i class="fas fa-save"></i>
+                </span>
+                <span class="text">Kaydet</span>
+
+            </button>
+            <a href="/AltUsers/CREATE" class="btn btn-sm btn-secondary btn-icon-split">
+                <span class="icon text-white-50">
+                    <i class="fas fa-power-off"></i>
+                </span>
+                <span class="text">İptal</span>
+            </a>
+
+
+        </div>
+    </div>
+
+
+                @section script{
+                    <script type="text/javascript">
+                        var ekleme = [];
+                        var silme = [];
+                        var görme = [];
+                        var degistirme = [];
+
+                        function toggle(source, name) {
+                            checkboxes = document.getElementsByName(name);
+                            for (var i = 0, n = checkboxes.length; i < n; i++) {
+                                checkboxes[i].checked = source.checked;
+                            }
+                        }
+                        function arayaekle() {
+                            var user = { username: document.getElementById("username").value, password: document.getElementById("password").value, name: document.getElementById("name").value, surname: document.getElementById("surname").value, mail: document.getElementById("mail").value, telephone: document.getElementById("telephone").value, Actıve: document.getElementById("Actıve").value }
+                            var oTable = document.getElementById('haktablo');
+
+                            //gets rows of table
+                            var rowLength = oTable.rows.length;
+
+                            //loops through rows
+                            for (i = 2; i < rowLength; i++) {
+                                var oCells = oTable.rows.item(i).cells;
+                                var cellLength = oCells.length;
+
+                                for (var j = 0; j < cellLength; j++) {
+
+                                    // get your cell info here
+                                    if (j == 1) {
+                                        var cellVal = oCells.item(j).firstChild;
+                                        if (cellVal.checked == 1)
+                                            görme.push(oCells.item(0).innerHTML);
+                                    }
+                                    if (j == 2) {
+                                        var cellVal = oCells.item(j).firstChild;
+                                        if (cellVal.checked == 1)
+                                            ekleme.push(oCells.item(0).innerHTML);
+                                    }
+                                    if (j == 3) {
+                                        var cellVal = oCells.item(j).firstChild;
+                                        if (cellVal.checked == 1)
+                                            silme.push(oCells.item(0).innerHTML);
+                                    }
+                                    if (j == 4) {
+                                        var cellVal = oCells.item(j).firstChild;
+                                        if (cellVal.checked == 1)
+                                            degistirme.push(oCells.item(0).innerHTML);
+                                    }
+
+                                }
+                            }
+
+                            $.ajax({
+                                type: "POST",
+
+                                dataType: "json",
+                                contentType: "application/json; charset=utf-8",
+                                url: "/AltUsers/Create/",
+                                data: JSON.stringify({
+                                    altUser: user,
+                                    Ekleme: ekleme,
+                                    Gorme: görme,
+                                    Silme: silme,
+                                    Degistirme: degistirme
+                                }),
+                                success: function (result) {
+                                    historysend("/Altusers/");
+
+                                },
+                                error: function (result) {
+                                    alert('Hata!');
+                                }
+                            });
+                        }
+
+
+
+
+
+
+                    </script>
+
+
+                }
+
+

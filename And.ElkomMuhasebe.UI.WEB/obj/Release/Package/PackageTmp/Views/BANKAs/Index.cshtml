@@ -1,0 +1,379 @@
+﻿@model IEnumerable<And.ElkomMuhasebe.Core.Model.Entity.FirmaDB.BANKA>
+
+@{
+    ViewBag.Title = "Banka Listesi";
+    Layout = "~/Views/Shared/yeni.cshtml";
+}
+
+<!-- Butonlar -->
+<div class="card border-0 mb-2 bg-transparent shadow-none">
+    <div class="card-body p-0 ">
+        <a href="/BANKAS/CREATE" class="btn btn-sm btn-secondary mr-1 ">
+            <span class="icon">
+                <i class="fas fa-plus-circle"></i>
+            </span>
+            <span class="text">Yeni</span>
+        </a>
+      
+        <a id="genelhareket-tab" href="/BANKA_HAREKET/INDEX/" class="btn btn-sm btn-secondary  mr-1">
+            <span class="icon">
+                <i class="fas fa-list"></i>
+            </span>
+            <span class="text">Banka Genel Hareketleri</span>
+        </a>
+        <a href="/BANKA_HAREKET/BANKAFISKART?tip=1" id="girisfis" class="btn btn-sm btn-secondary mr-1 ">
+            <span class="icon">
+                <i class="fas fa-plus-circle"></i>
+            </span>
+            <span class="text">Yeni Giriş Fişi</span>
+        </a>
+        <a href="/BANKA_HAREKET/BANKAFISKART?tip=2"id="cıkısfis" class="btn btn-sm btn-secondary mr-1 ">
+            <span class="icon">
+                <i class="fas fa-plus-circle"></i>
+            </span>
+            <span class="text">Yeni Çıkış Fişi</span>
+        </a>
+        <a class="btn btn-sm btn-primary btn-icon-split float-right collapsed" data-toggle="collapse" href="#collapseFiltre" role="button" aria-expanded="false" aria-controls="collapseCariHareketFiltre">
+            <span class="icon">
+                <i class="fas fa-filter"></i>
+            </span>
+            <span class="text">Filtre</span>
+        </a>
+    </div>
+</div>
+
+<!-- Filtreler -->
+<div class="row">
+    <div class="col">
+        <div class="collapse" id="collapseFiltre" style="">
+            <div class="card mb-3">
+                <div class="row p-2">
+                    <div class="col">
+                        <div class="input-group input-group-sm">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text">Bakiye Durumu</span>
+                            </div>
+                            <select id="bakiyelistesi" class="form-control form-control-sm">
+                                <option value="0">Hepsi</option>
+                                <option value="1">Borçlu</option>
+                                <option value="2">Alacaklı</option>
+                                <option value="3">Bakiyeli</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col">
+                        <div class="input-group input-group-sm">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text">Bakiyesi:</span>
+                            </div>
+                            <input type="number" id="bbs" aria-label="First name" class="form-control" value="0">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text">den Büyük</span>
+                            </div>
+                            <input type="number" id="bks" aria-label="Last name" class="form-control" value="0">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text">den Küçük</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                </div>
+                <button class="btn btn-sm btn-primary" onclick="tabloyenile()">Filtreyi Uygula</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Liste -->
+<div class="card">
+    
+    <div class="table-responsive">
+        <div class="col-sm-12">
+            <table id="bootstrap-table" class="table-bordered table-sm" data-show-search-clear-button="true"
+                    data-show-footer="true" data-footer-style="footerStyle" data-show-print="true"
+                    data-single-select="true" data-show-refresh="true" data-icon-size="sm"
+                    data-side-pagination="server"
+                    data-pagination="true"
+                    data-page-size="10"
+                    data-page-list="[10, 20, 50, 100, 200, 300]" data-show-export="true" data-reorderable-columns="true">
+                <thead>
+                    <tr>
+                        <th data-field="state" class="no-print" data-print-ignore="true" data-checkbox="true"></th>
+                        <th data-field="ID" data-print-ignore="true" data-visible="false" class="text-center" data-sortable="true" data-footer-formatter="idFormatter">ID</th>
+                        <th data-field="actions" data-print-ignore="true" class="td-actions no-print" data-events="operateEvents" data-formatter="operateFormatter">İşlemler</th>
+                      
+                        <th data-field="BANKAKODU" data-sortable="true">Banka Kodu</th>
+                        <th data-field="BANKAADI" data-sortable="true">Banka Adı<a class="no-print" style="color:transparent;">-----------------------------------------</a></th>
+                        <th data-field="SUBEADI">Şube Adı</th>
+                        <th data-field="HESAPNO" data-align="right">Hesap No<a class="no-print" style="color:transparent;">-----------------------------------------</a></th>
+                        <th data-field="MUSTERIVISA">Müşteri Visa</th>
+                        <th data-field="FIRMACEK" data-align="right">Firma Çek</th>
+                        <th data-field="SENET_TOPLAM" class="td-actions text-right no-print" data-align="right" data-sortable="true" data-formatter="numberformatter" data-footer-formatter="priceFormatter">Senet Toplam</th>
+                        <th data-field="ÇEK_TOPLAM" class="td-actions text-right no-print" data-align="right" data-sortable="true" data-formatter="numberformatter" data-footer-formatter="priceFormatter">Çek Toplam</th>
+                        <th data-field="NAKIT_TOPLAM" class="td-actions text-right no-print" data-align="right" data-sortable="true" data-formatter="numberformatter" data-footer-formatter="priceFormatter">Nakit Toplam</th>
+                        <th data-field="BAKIYE" class="td-actions text-right" data-align="right" data-sortable="true" data-formatter="numberformatter">Genel Durum</th>
+
+
+                    </tr>
+                </thead>
+                <tbody>
+                </tbody>
+
+            </table>
+        </div>
+    </div>
+    
+</div>
+
+@section script{
+    <script type="text/javascript">
+            function pad(d) {
+                return (d < 10) ? '0' + d.toString() : d.toString();
+            }
+            Date.prototype.formatMM = function () {
+                return (pad(this.getDate()) + "/" + pad(this.getMonth() + 1) +
+
+                    "/" + this.getFullYear());
+            }
+
+            function get_query_params(p) {
+
+                var a = document.getElementById("bakiyelistesi");
+                var bakiye = a.options[a.selectedIndex].value;
+                var arr = [{ verismi: "BAKIYE", deger: document.getElementById("bbs").value, deger2: document.getElementById("bks").value, filtretipi: 3 }]
+                arr.push({ verismi: "BAKIYE", deger: bakiye, deger2: "", filtretipi: 5 });
+                if (p.sort != null) {
+                    return {
+
+                        extraParam: 'abc',
+                        search: p.search,
+                        sort: p.sort,
+                        order: p.order,
+                        limit: p.limit,
+                        offset: p.offset,
+
+                        sort: p.sort,
+
+                        filterler: arr
+                    }
+                } else {
+                    return {
+                        extraParam: 'abc',
+                        search: p.search,
+                        sort: p.sort,
+                        order: p.order,
+                        limit: p.limit,
+                        offset: p.offset,
+
+                        sort: "ID",
+
+                        filterler: arr
+                    }
+
+                }
+            }
+
+
+
+
+
+            var $table = $('#bootstrap-table');
+
+            function numberformatter(value, row, index) {
+                if (!value)
+                    return "0.00";
+                else {
+                    return [
+
+                        numberWithCommas((Number(value.toString().replace(",", "."))).toFixed(2))
+                    ].join('');
+                }
+            }
+            function numberWithCommas(x) {
+                return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+            }
+            function priceFormatter(data) {
+                var field = this.field
+
+                var toplam = data.map(function (row) {
+                    if (row[field])
+                        return +Number(row[field].toString().replace(",", "."))
+                    else {
+                        return +Number("0")
+                    }
+                }).reduce(function (sum, i) {
+                    return sum + i
+                }, 0);
+                return numberformatter(toplam) + " TL"
+            }
+            function operateFormatter(value, row, index) {
+                return [
+                    '<div class="d-flex justify-content-start">',
+                    '<a rel="tooltip" title="Hareketleri" class="btn btn-link btn-sm table-action view" href="javascript:void(0)"><i class="fa fa-eye text-warning"></i></a>',
+                    '<a rel="tooltip" title="Düzenle"     class="btn btn-link btn-sm table-action edit" href="javascript:void(0)"><i class="fa fa-edit text-primary"></i></a>',
+                    '</div>',
+                ].join('');
+            }
+
+            $().ready(function () {
+                window.operateEvents = {
+                    'click .view': function (e, value, row, index) {
+                        info = JSON.stringify(row);
+                        historysend("/BANKA_HAREKET/Index/" + row.ID);
+
+                        //    swal('You click view icon, row: ', info);
+                        
+                    },
+                    'click .edit': function (e, value, row, index) {
+                        info = JSON.stringify(row);
+                        historysend("/BANKAS/Edit/" + row.ID);
+
+                        //   swal('You click edit icon, row: ', info);
+                        
+                    },
+                    'click .remove': function (e, value, row, index) {
+                        console.log(row);
+                        window.location = "/BANKAS/Delete/" + row.ID;
+                        $table.bootstrapTable('remove', {
+                            field: 'ID',
+                            values: [row.ID]
+                        });
+                    }
+                };
+
+                $table.bootstrapTable({
+                    type: "POST",
+                    url: "/BANKAS/GetData",
+                    method: 'post',
+                    contentType: 'application/x-www-form-urlencoded',
+                    queryParams: get_query_params,
+                    printPageBuilder: function (table) {
+        return `
+<html>
+  <head>
+  <style type="text/css" media="print">
+  page {
+    size: auto;
+    margin: 25px 0 25px 0;
+  }
+  </style>
+  <style type="text/css" media="all">
+    @@media print
+{
+    .no-print, .no-print *
+    {
+        display: none !important;
+    }
+}
+  table {
+    border-collapse: collapse;
+    font-size: 12px;
+  }
+  table, th, td {
+    border: 1px solid grey;
+  }
+  th, td {
+    text-align: center;
+    vertical-align: middle;
+  }
+  p {
+    font-weight: bold;
+    margin-left:20px;
+  }
+  table {
+    width:94%;
+    margin-left:3%;
+    margin-right:3%;
+  }
+  div.bs-table-print {
+    text-align:center;
+  }
+    h1.bs-table-print {
+    text-align:center;
+  }
+ </style>
+      <title>@Session["FirmaAdı"]</title>
+     </head>
+  <body>
+     <h1 class="bs-table-print">Banka Listesi</h1>
+
+  <div class="bs-table-print">  <table class="table-bordered table-sm"><thead>` + $table.children('thead').html() + '</thead><tbody>' + $table.children('tbody').html()+ "<tbody></table></div></body></html></div>"
+
+      },
+                    clickToSelect: true,
+                    showRefresh: true,
+
+                    search: true,
+                    showToggle: true,
+                    showColumns: true,
+
+                    searchAlign: 'left',
+
+                    locale: 'tr-TR',
+                    formatShowingRows: function (pageFrom, pageTo, totalRows) {
+                        return "Toplam " + totalRows+" Kayıt";
+                    },
+                    formatRecordsPerPage: function (pageNumber) {
+                        return pageNumber + " Adet Listeleniyor";
+                    },
+
+
+                });
+                $table.on('check.bs.table', function (e, row) {
+
+                    document.getElementById("girisfis").href = "/BANKA_HAREKET/BANKAFISKART/tip=1?carid=" + row.ID;
+                    document.getElementById("cıkısfis").href = "/BANKA_HAREKET/BANKAFISKART/tip=2?carid=" + row.ID;
+
+                
+                });
+                $table.on('click-row.bs.table', function (e, row, $element) {
+
+                    document.getElementById("girisfis").href = "/BANKA_HAREKET/BANKAFISKART/tip=1?carid=" + row.ID;
+                    document.getElementById("cıkısfis").href = "/BANKA_HAREKET/BANKAFISKART/tip=2?carid=" + row.ID;
+
+                });
+                $table.on('  dbl-click-row.bs.table', function (e, row, $element) {
+
+                    historysend("/BANKA_HAREKET/Index/" + row.ID);
+
+
+                });
+                //activate the tooltips after the data table is initialized
+                $('[rel="tooltip"]').tooltip();
+
+                $(window).resize(function () {
+                    $table.bootstrapTable('resetView');
+                });
+
+
+            })
+
+            function idFormatter() {
+                return 'Toplam'
+            }
+
+            function nameFormatter(data) {
+                return data.length
+            }
+
+
+
+            function footerStyle(column) {
+                return {
+                    id: {
+                        classes: 'uppercase'
+                    },
+                    name: {
+                        css: { 'font-weight': 'normal' }
+                    },
+                    price: {
+                        css: { color: 'red' }
+                    }
+                }[column.field]
+            }
+
+
+    </script>
+}
+
+<!-- Facebook Pixel Code Don't Delete -->

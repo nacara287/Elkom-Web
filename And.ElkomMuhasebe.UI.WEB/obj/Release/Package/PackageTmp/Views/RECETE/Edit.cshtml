@@ -1,0 +1,1199 @@
+﻿@using And.ElkomMuhasebe.Core.Model;
+@using And.ElkomMuhasebe.Core.Model.Entity.Admin;
+@using And.ElkomMuhasebe.Core.Model.Entity.FirmaDB;
+@model And.ElkomMuhasebe.UI.WEB.Controllers.RECETEController.model
+
+@{
+    ViewBag.Title = "Reçete Düzenle";
+}
+
+<div class="card">
+    <div class="card-body p-3">
+        <div class="form-row">
+            <div class="form-group col-md-3">
+
+
+                <label>Reçete Kodu</label>
+                <div class="input-group">
+
+                    @Html.EditorFor(model => model.RECETE.RECETEKODU, new { htmlAttributes = new { @class = "form-control form-control-sm", @placeholder = "...", @aria_label = "...", @aria_describedby = "button-addon2" } })
+                    @Html.ValidationMessageFor(model => model.RECETE.RECETEKODU, "", new { @class = "text-danger" })
+                    <div class="input-group-append">
+                        <button class="btn btn-sm btn-outline-secondary" title="Kod üret" type="button" id="button-addon2"><i class="fas fa-plus"></i></button>
+                    </div>
+                </div>
+
+            </div>
+            <div class="form-group col-md-3">
+                <label>Reçete Adı</label>
+                @Html.EditorFor(model => model.RECETE.RECETEADI, new { htmlAttributes = new { @class = "form-control form-control-sm", @placeholder = "..." } })
+                @Html.ValidationMessageFor(model => model.RECETE.RECETEADI, "", new { @class = "text-danger" })
+            </div>
+
+
+            <div class="form-group col-md-2">
+                <label>Reçete Tarihi</label>
+                <input id="Tarih" type="datetime-local" class="form-control form-control-sm" value="@Model.RECETE.TARIH.Value.Year.ToString("D" + 4)-@Model.RECETE.TARIH.Value.Month.ToString("D" + 2)-@Model.RECETE.TARIH.Value.Day.ToString("D" + 2)@Html.Raw("T")@Model.RECETE.TARIH.Value.Hour.ToString("D" + 2):@Model.RECETE.TARIH.Value.Minute.ToString("D" + 2)">
+            </div>
+            <div class="form-group col-md-3">
+                <label>Reçete Açıklama</label>
+
+                @Html.EditorFor(model => model.RECETE.ACIKLAMA, new { htmlAttributes = new { @class = "form-control form-control-sm", @placeholder = "...", @aria_label = "..." } })
+                @Html.ValidationMessageFor(model => model.RECETE.ACIKLAMA, "", new { @class = "text-danger" })
+
+
+            </div>
+            <div class="form-group col-md-3">
+                <label>Kategori</label>
+                <div class="input-group">
+
+                    <select class="form-control js-example-basic-single" id="RECETE_OZELKOD" name="RECETE.RECETEKODU">
+
+                        <option selected>@Model.RECETE.OZELKOD</option>
+
+                        @{
+
+                            if (Model.kods != null)
+                            {
+                                foreach (var item in Model.kods)
+                                {
+
+                                    <option>@item.OZELKOD</option>
+
+                                }
+                            }}
+                    </select>
+                    <div class="input-group-append">
+                        <button class="btn btn-sm btn-outline-secondary" title="Kod üret" data-toggle="modal" data-target="#ModalOZELKOD1" type="button" id="button-addon2"><i class="fas fa-plus"></i></button>
+                    </div>
+                </div>
+
+            </div>
+            <div class="form-group col-md-3">
+                <label>Maliyet Türü</label>
+
+                <div class="form-check complete">
+                    <input type="radio" name="texture" id="ortmaliyetradio" value="1">
+                    <label for="ortmaliyetradio">
+                        -Ortalama Maliyeti
+                    </label>
+                </div>
+                <div class="form-check complete">
+                    <input type="radio" name="texture" id="sonmaliyetradio" value="1" checked="">
+                    <label for="sonmaliyetradio">
+                        -Son Alış Maliyeti
+                    </label>
+                </div>
+
+
+            </div>
+            <!-- Liste -->
+
+
+
+        </div>
+        <div class="nav nav-tabs nav-fill" id="nav-tab" role="tablist">
+            <a class="nav-item nav-link active" id="nav-home-tab" data-toggle="tab" href="#nav-home" role="tab" aria-controls="nav-home" aria-selected="true">Kullanılcak Stoklar</a>
+            <a class="nav-item nav-link" id="nav-profile-tab" data-toggle="tab" href="#nav-profile" role="tab" aria-controls="nav-profile" aria-selected="false">Üretim Masrafları</a>
+            <a class="nav-item nav-link" id="nav-contact-tab" data-toggle="tab" href="#nav-contact" role="tab" aria-controls="nav-contact" aria-selected="false">Üretilcek Ürünler</a>
+        </div>
+        <div class="tab-content" id="nav-tabContent">
+            <div class="tab-pane fade show active" id="nav-home" role="tabpanel" aria-labelledby="nav-contact-tab">
+                <div class="table-responsive">
+                    <table id="bootstrap-table" class="table">
+                        <thead>
+                            <tr>
+
+                                <th data-field="STOKKODU" data-sortable="true">Stok Kodu</th>
+
+
+
+                                <th data-field="MIKTAR" data-sortable="true">Miktar</th>
+
+                                <th data-field="FIYAT" data-sortable="true">Fiyat</th>
+                                <th data-field="TUTAR" data-sortable="true">Tutar</th>
+
+                                <th width="8%&qucot;"></th>
+                            </tr>
+                            <tr>
+
+                                <td>
+                                    <input type="text" class="form-control form-control-sm" readonly onclick="stoklistele()" data-toggle="modal" data-target="#ModalStokSec" name="Stok" id="Stok" placeholder="StokKodu">
+
+                                </td>
+
+                                <td>
+                                    <input type="text" class="form-control form-control-sm" name="Mıktar" onchange="tutargetir()" id="Mıktar" value="0">
+                                </td>
+                                <td>
+                                    <input type="text" class="form-control form-control-sm" name="FIYAT" onchange="tutargetir()" id="FIYAT" value="0">
+                                </td>
+                                <td>
+                                    <input type="text" class="form-control form-control-sm" name="TUTAR" readonly id="TUTAR" value="0">
+                                </td>
+
+                                <td w="">
+                                    <button type="button" id="addRowBtn" onclick="butonlistele()"  class="btn btn-success btn-sm btn-rounded">
+                                        <span class="icon text-white-50">
+                                            <i class="fas fa-plus"></i>
+                                        </span>
+                                    </button>
+
+                                </td>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in Model.sTOK_URETIM_RECETESI_STOKs)
+                            {
+                                <tr>
+                                    <td>@item.STOKKODU</td>
+                                    <td>@item.MIKTAR</td>
+                                    <td>@item.FIYAT</td>
+                                    <td class="countable">@item.TUTAR</td>
+                                    <td> <button type="button" id="deleteRowBtn" onclick="deleteRow(this)" class="btn btn-danger btn-sm btn-rounded">  <span class="icon text-white-50">    <i class="fas fa-trash-alt"></i> </span></button></td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="tab-pane fade" id="nav-profile" role="tabpanel" aria-labelledby="nav-profile-tab">
+                <div class="table-responsive">
+                    <table id="bootstrap-masraf" class="table">
+                        <thead>
+                            <tr>
+
+                                <th data-field="MASRAF" data-sortable="true">Masraf Ve Gider Kalemleri</th>
+
+
+
+                                <th data-field="TUTAR" data-sortable="true">Tutar</th>
+
+                                <th width="8%&qucot;"></th>
+                            </tr>
+                            <tr>
+
+                                <td>
+                                    <select class="custom-select custom-select-sm" name="Masraf" id="Masraf">
+                                        <option>Seçin</option>
+                                        @foreach (var item in Model.GIDERLER)
+                                        {
+                                            <option>@item.GIDERAD</option>
+                                        }
+                                    </select>
+                                </td>
+                                <td>
+                                    <input type="text" class="form-control form-control-sm text-right" value="0.00" name="MasrafTutar" id="MasrafTutar" placeholder="Tutar" required="">
+                                </td>
+
+
+
+
+                                <td w="">
+                                    <button type="button" id="addRowBtn" onclick="butonlistelemasraf()" class="btn btn-success btn-sm btn-rounded">
+                                        <span class="icon text-white-50">
+                                            <i class="fas fa-plus"></i>
+                                        </span>
+                                    </button>
+
+                                </td>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in Model.sTOK_URETIM_RECETESI_GIDERs)
+                            {
+                                <tr>
+                                    <td>@item.GIDERKODU</td>
+
+                                    <td class="countable">@item.TUTAR</td>
+                                    <td> <button type="button" id="deleteRowBtn" onclick="deleteRow(this)" class="btn btn-danger btn-sm btn-rounded">  <span class="icon text-white-50">    <i class="fas fa-trash-alt"></i> </span></button></td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="tab-pane fade" id="nav-contact" role="tabpanel" aria-labelledby="nav-contact-tab">
+                <div class="table-responsive">
+                    <table id="bootstrap-üretilen" class="table">
+                        <thead>
+                            <tr>
+
+                                <th data-field="STOKKODU" data-sortable="true">Stok Kodu</th>
+
+                                <th data-field="MIKTAR" data-sortable="true">Miktar</th>
+
+                                <th width="8%&qucot;"></th>
+                            </tr>
+                            <tr>
+
+                                <td>
+                                    <input type="text" class="form-control form-control-sm" readonly onclick="stoklistele()" data-toggle="modal" data-target="#ModalStokSecÜretilen" name="ÜretilenStok" id="ÜretilenStok" placeholder="StokKodu">
+
+                                </td>
+
+
+                                <td>
+                                    <input type="text" class="form-control form-control-sm" name="ÜretilenMıktar" id="ÜretilenMıktar" value="0">
+                                </td>
+
+
+                                <td w="">
+                                    <button type="button" id="addRowBtn" onclick="butonlisteleüretilen()" class="btn btn-success btn-sm btn-rounded">
+                                        <span class="icon text-white-50">
+                                            <i class="fas fa-plus"></i>
+                                        </span>
+                                    </button>
+
+                                </td>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in Model.sTOK_URETIM_RECETESI_URUNs)
+                            {
+                                <tr>
+                                    <td>@item.STOKKODU</td>
+                                    <td>@item.MIKTAR</td>
+
+                                    <td> <button type="button" id="deleteRowBtn" onclick="deleteRow(this)" class="btn btn-danger btn-sm btn-rounded">  <span class="icon text-white-50">    <i class="fas fa-trash-alt"></i> </span></button></td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <!-- Alt toplamlar -->
+
+    </div>
+    <div class="card-footer ">
+        <div class="row">
+            <div class="col-md-6">
+                <p> </p>
+                <p></p>
+                <p> </p>
+            </div>
+            <div class="col-md-6">
+                <div class="form-group row mb-1">
+
+
+                    <label for="toplamkalem" class="col-sm-6 text-right col-form-label">Toplam Kalem</label>
+                    <div class="col-sm-6">
+                        <input type="text" id="toplamkalem" class="form-control text-right form-control-sm" placeholder="0.00" readonly>
+                    </div>
+                    <label for="toplammasraf" class="col-sm-6 text-right col-form-label">Toplam Masraf</label>
+                    <div class="col-sm-6">
+                        <input type="text" id="toplammasraf" class="form-control text-right form-control-sm" placeholder="0.00" readonly>
+                    </div>
+                </div>
+
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- butonlar -->
+<div class="py-2">
+    <button aria-label="" class="btn btn-primary " onclick="butongonder()">
+        <span class="icon text-white-50">
+            <i class="fas fa-save"></i>
+        </span>
+        <span class="text">Kaydet</span>
+    </button>
+    <button aria-label="" class="btn btn-secondary " herf="@Url.RequestContext.HttpContext.Request.Url.ToString()" type="reset">
+        <span class="icon text-white-50">
+            <i class="fas fa-power-off"></i>
+        </span>
+        <span class="text">İptal</span>
+    </button>
+</div>
+
+
+
+
+
+<div class="modal fade" id="ModalOZELKOD1" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="vertical-alignment-helper">
+        <div class="modal-dialog modal-xl  modal-lg vertical-align-center" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title" id="myModalLabel">Yeni Özel Kod-1 Oluştur</h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+
+                </div>
+                <div class="modal-body">
+                    <div class="form-group-attached">
+
+
+
+                        <div class="row clearfix">
+                            <div class="col-md-6">
+                                <div class="form-group form-group-default required">
+                                    <label>
+                                        Özel Kod-1
+                                    </label>
+
+                                    <input id="özelkod1" name="özelkod1" class="form-control col-form-label-sm" type="text" value="0">
+
+
+
+                                </div>
+
+                            </div>
+
+
+                        </div>
+
+
+
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-primary" onclick="özelkodolustur1()" data-dismiss="modal">Oluştur</button>
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Vazgeç</button>
+                    </div>
+
+
+
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="modal fade" id="ModalStokSec" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="vertical-alignment-helper">
+        <div class="modal-dialog modal-xl  modal-lg vertical-align-center" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title" id="myModalLabel">Stok Seç</h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+
+                </div>
+                <div class="modal-body">
+                    <div id="FaturaCariSecDataTablo_wrapper" class="dataTables_wrapper form-inline dt-bootstrap no-footer">
+
+                        <div class="col-sm-12">
+                            <div class="table-responsive">
+                                <table id="kasatablo" class="table-bordered table-sm" data-show-search-clear-button="true"
+                                       data-show-footer="true" data-footer-style="footerStyle" data-show-print="true"
+                                       data-single-select="true" data-show-refresh="true" data-icon-size="sm"
+                                       data-side-pagination="server"
+                                       data-pagination="true"
+                                       data-page-size="5"
+                                       data-page-list="[10, 20, 50, 100, 200, 300]" data-show-export="true" data-reorderable-columns="true">
+                                    <thead>
+                                        <tr>
+                                            <th data-field="state" class="no-print" data-print-ignore="true" data-checkbox="true"></th>
+                                            <th data-field="ID" data-print-ignore="true" class="text-center" data-visible="false" data-sortable="true" data-footer-formatter="idFormatter">ID</th>
+
+                                            <th data-field="STOKODU" data-sortable="true" data-footer-formatter="nameFormatter">Stok Kodu</th>
+                                            <th data-field="STOKAD" data-sortable="true">Stok İsmi</th>
+                                            <th data-field="MIKTAR" data-formatter="numberformatter" data-align="right" data-sortable="true">Miktar</th>
+                                            <th data-field="BIRIM">Birim</th>
+                                            <th data-field="TUTAR" data-formatter="numberformatter" data-align="right">Fiyatı</th>
+                                            <th data-field="PARABIRIMI" data-sortable="true" data-align="right">Paraba Birimi</th>
+                                            <th data-field="ISKONTO" data-formatter="numberformatter" data-align="right" data-sortable="true">İskonto</th>
+
+                                            <th data-field="KDV" data-formatter="numberformatter" data-align="right" data-sortable="true">KDV</th>
+                                            <th data-field="DEPO" data-sortable="true">Depo</th>
+
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                    </tbody>
+                                </table><div id="FaturaCariSecDataTablo_processing" class="dataTables_processing panel panel-default" style="display: none;">İşleniyor...</div>
+                            </div>
+                        </div>
+
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-primary" onclick="butonkasagetir()" data-dismiss="modal">Seç</button>
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Vazgeç</button>
+                    </div>
+
+
+
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="modal fade" id="ModalStokSecÜretilen" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="vertical-alignment-helper">
+        <div class="modal-dialog modal-xl  modal-lg vertical-align-center" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title" id="myModalLabel">Stok Seç</h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+
+                </div>
+                <div class="modal-body">
+                    <div id="FaturaCariSecDataTablo_wrapper" class="dataTables_wrapper form-inline dt-bootstrap no-footer">
+
+                        <div class="col-sm-12">
+                            <div class="table-responsive">
+                                <table id="kasatabloüretilen" class="table-bordered table-sm" data-show-search-clear-button="true"
+                                       data-show-footer="true" data-footer-style="footerStyle" data-show-print="true"
+                                       data-single-select="true" data-show-refresh="true" data-icon-size="sm"
+                                       data-side-pagination="server"
+                                       data-pagination="true"
+                                       data-page-size="5"
+                                       data-page-list="[10, 20, 50, 100, 200, 300]" data-show-export="true" data-reorderable-columns="true">
+                                    <thead>
+                                        <tr>
+                                            <th data-field="state" class="no-print" data-print-ignore="true" data-checkbox="true"></th>
+                                            <th data-field="ID" data-print-ignore="true" class="text-center" data-visible="false" data-sortable="true" data-footer-formatter="idFormatter">ID</th>
+
+                                            <th data-field="STOKODU" data-sortable="true" data-footer-formatter="nameFormatter">Stok Kodu</th>
+                                            <th data-field="STOKAD" data-sortable="true">Stok İsmi</th>
+                                            <th data-field="MIKTAR" data-formatter="numberformatter" data-align="right" data-sortable="true">Miktar</th>
+                                            <th data-field="BIRIM">Birim</th>
+                                            <th data-field="TUTAR" data-formatter="numberformatter" data-align="right">Fiyatı</th>
+                                            <th data-field="PARABIRIMI" data-sortable="true" data-align="right">Paraba Birimi</th>
+                                            <th data-field="ISKONTO" data-formatter="numberformatter" data-align="right" data-sortable="true">İskonto</th>
+
+                                            <th data-field="KDV" data-formatter="numberformatter" data-align="right" data-sortable="true">KDV</th>
+                                            <th data-field="DEPO" data-sortable="true">Depo</th>
+
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                    </tbody>
+                                </table><div id="FaturaCariSecDataTablo_processing" class="dataTables_processing panel panel-default" style="display: none;">İşleniyor...</div>
+                            </div>
+                        </div>
+
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-primary" onclick="butonkasagetirüretilen()" data-dismiss="modal">Seç</button>
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Vazgeç</button>
+                    </div>
+
+
+
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@section script{
+
+    <script type="text/javascript">
+         var $kasatable = $('#kasatablo');
+        var $üretilenkasatable = $('#kasatabloüretilen');
+        $(document).ready(function () {
+            yenile();
+        });
+
+          function pad(d) {
+                return (d < 10) ? '0' + d.toString() : d.toString();
+            }
+            Date.prototype.formatMMDDYYYY = function () {
+                return (pad(this.getDate()) + "/" + pad(this.getMonth() + 1) +
+
+                    "/" + this.getFullYear());
+            }
+           function stoklistele() {
+
+               carid = "";
+
+
+        }    function get_query_paramsstok(p) {
+
+            var date = new Date("2000-01-01");
+            var dateson = new Date("2080-01-01");
+
+
+            var arr = [{ verismi: "TARIH", deger: date.formatMMDDYYYY(), deger2: dateson.formatMMDDYYYY(), filtretipi: 4 }];
+
+
+            if (p.sort != null) {
+                return {
+
+                    extraParam: 'abc',
+
+                    sort: p.sort,
+                    order: p.order,
+                    limit: p.limit,
+                    offset: p.offset,
+                    search: "",
+                    sort: p.sort,
+
+                    carid: 0,
+
+                     TIPI:  0
+
+    ,
+
+                    filterler: null
+                }
+            } else {
+                return {
+                    extraParam: 'abc',
+                    search: p.search,
+                    sort: p.sort,
+                    order: p.order,
+                    limit: p.limit,
+                    offset: p.offset,
+
+                    sort: "ID",
+
+                    carid: 0,
+
+                     TIPI:  0,
+
+
+
+                    filterler: arr
+                }
+
+            }
+        }
+
+           $(document).ready(function () {
+                $('.js-example-basic-single').select2();
+            });
+            var carikod = document.getElementById('RECETE_RECETEKODU');
+                    var carikodbutton = document.getElementById('button-addon2');
+              carikodbutton.onclick = function () {
+                if (!carikod.value) {
+                    $.ajax({
+                        type: "POST",
+
+
+                        dataType: "json",
+                        contentType: "application/json; charset=utf-8",
+                        url: "/RECETE/kodgetir/",
+                        data: JSON.stringify({
+
+                            kod: ""
+
+
+
+
+
+                        }),
+                        success: function (result) {
+                            carikod.value = result;
+                        },
+                        error: function (result) {
+                            alert('error');
+                        }
+                    });
+                }
+                else {
+
+                    $.ajax({
+                        type: "POST",
+
+
+                        dataType: "json",
+                        contentType: "application/json; charset=utf-8",
+                        url: "/CARI_BASLIK/kodgetir/",
+                        data: JSON.stringify({
+
+                            kod: carikod.value
+
+
+
+
+
+                        }),
+                        success: function (result) {
+                            carikod.value = result;
+                        },
+                        error: function (result) {
+                            alert('error');
+                        }
+                    });
+                }
+            }
+         function özelkodolustur1() {
+            $.ajax({
+                type: "POST",
+
+                dataType: "json",
+                contentType: "application/json; charset=utf-8",
+                url: "/RECETE/özelkodolustur/",
+                data: JSON.stringify({
+                    kod: document.getElementById("özelkod1").value,
+                    kodtürü: 1
+                }),
+                success: function (result) {
+                    alert("Özel Kod Oluşturuldu!")
+                    var opt = document.createElement('option');
+
+
+                    opt.appendChild(document.createTextNode(document.getElementById("özelkod1").value));
+
+
+                    opt.selected = true;
+                    var sel = document.getElementById('RECETE_OZELKOD');
+
+                    sel.appendChild(opt);
+                }
+                ,
+                error: function (result) {
+                    alert('Başarısız');
+                }
+            });
+        }
+
+
+
+        var carid;
+        var caridg;
+        var carikodu;
+        var kasaid;
+        var kasadg;
+        var kasakodu;
+        var kasaadı;
+        var fiyat;
+
+
+        var $table = $('#bootstrap-table');
+         var $masraftable = $('#bootstrap-masraf');
+          var $üretilentable = $('#bootstrap-üretilen');
+
+        var parakuru;
+
+         function tutargetir() {
+
+
+            document.getElementById("TUTAR").value= parseFloat(document.getElementById("Mıktar").value) * parseFloat(document.getElementById("FIYAT").value);
+        }
+        function butonkasagetir() {
+
+            kasaid = kasadg;
+            document.getElementById("Stok").value = kasakodu;
+
+            document.getElementById("ModalStokSec").style.display = "none";
+
+
+        }
+
+          function butonkasagetirüretilen() {
+
+            kasaid = kasadg;
+            document.getElementById("ÜretilenStok").value = kasakodu;
+
+
+
+            document.getElementById("ModalStokSecÜretilen").style.display = "none";
+
+
+        }
+
+  $().ready(function () {
+
+
+
+                     $kasatable.bootstrapTable({
+
+                type: "POST",
+                url: "/STOK_Hareket/stokgetir",
+                method: 'post',
+                contentType: 'application/x-www-form-urlencoded',
+                queryParams: get_query_paramsstok,
+                       printPageBuilder: function (table) {
+        return `
+<html>
+  <head>
+  <style type="text/css" media="print">
+  page {
+    size: auto;
+    margin: 25px 0 25px 0;
+  }
+  </style>
+  <style type="text/css" media="all">
+  table {
+    border-collapse: collapse;
+    font-size: 12px;
+  }
+  table, th, td {
+    border: 1px solid grey;
+  }
+  th, td {
+    text-align: center;
+    vertical-align: middle;
+  }
+  p {
+    font-weight: bold;
+    margin-left:20px;
+  }
+  table {
+    width:94%;
+    margin-left:3%;
+    margin-right:3%;
+  }
+  div.bs-table-print {
+    text-align:center;
+  }
+    h1.bs-table-print {
+    text-align:center;
+  }
+  </style>
+    <title>@Session["FirmaAdı"]</title>
+     </head>
+  <body>
+
+     <h1 class="bs-table-print">Stok Listesi</h1>
+
+  <div class="bs-table-print">${table}</div>
+  </body>
+</html>`
+      },
+                clickToSelect: true,
+                showRefresh: true,
+
+                search: true,
+                showToggle: true,
+                showColumns: true,
+
+                searchAlign: 'left',
+
+                locale: 'tr-TR',
+                formatShowingRows: function (pageFrom, pageTo, totalRows) {
+                    return "Toplam " + totalRows+" Kayıt";
+                },
+                formatRecordsPerPage: function (pageNumber) {
+                    return pageNumber + " Adet Listeleniyor";
+                },
+
+            });
+
+            $kasatable.on('click-row.bs.table', function (e, row, $element) {
+                kasaidg = row.ID;
+                kasakodu = row.STOKODU;
+                kasaadı = row.STOKODU;
+
+                document.getElementById("Stok").dataset.hiddenvalue = row.ID;
+                document.getElementById("Stok").value = row.STOKODU;
+                document.getElementById("FIYAT").value = row.TUTAR;
+                if (row.KDVFIYATADAHIL == "Hayır")
+                    kdv = row.KDV;
+                else {
+                    kdv = 0;
+                }
+            });
+            $kasatable.on('dbl-click-row.bs.table', function (e, row, $element) {
+                kasaidg = row.ID;
+
+
+
+                document.getElementById("Stok").dataset.hiddenvalue = row.ID;
+                document.getElementById("Stok").value = row.STOKODU;
+                document.getElementById("FIYAT").value = row.TUTAR;
+                if (row.KDVFIYATADAHIL == "Hayır")
+                    kdv = row.KDV;
+                else {
+                    kdv = 0;
+                }
+
+                $('#ModalStokSec').modal('hide');
+                setTimeout(function () { $('#Mıktar').focus() }, 800);
+            });
+
+            $üretilenkasatable.bootstrapTable({
+
+                type: "POST",
+                url: "/STOK_Hareket/stokgetir",
+                method: 'post',
+                contentType: 'application/x-www-form-urlencoded',
+                queryParams: get_query_paramsstok,
+                       printPageBuilder: function (table) {
+        return `
+<html>
+  <head>
+  <style type="text/css" media="print">
+  page {
+    size: auto;
+    margin: 25px 0 25px 0;
+  }
+  </style>
+  <style type="text/css" media="all">
+  table {
+    border-collapse: collapse;
+    font-size: 12px;
+  }
+  table, th, td {
+    border: 1px solid grey;
+  }
+  th, td {
+    text-align: center;
+    vertical-align: middle;
+  }
+  p {
+    font-weight: bold;
+    margin-left:20px;
+  }
+  table {
+    width:94%;
+    margin-left:3%;
+    margin-right:3%;
+  }
+  div.bs-table-print {
+    text-align:center;
+  }
+    h1.bs-table-print {
+    text-align:center;
+  }
+  </style>
+    <title>@Session["FirmaAdı"]</title>
+     </head>
+  <body>
+
+     <h1 class="bs-table-print">Stok Listesi</h1>
+
+  <div class="bs-table-print">${table}</div>
+  </body>
+</html>`
+      },
+                clickToSelect: true,
+                showRefresh: true,
+
+                search: true,
+                showToggle: true,
+                showColumns: true,
+
+                searchAlign: 'left',
+
+                locale: 'tr-TR',
+                formatShowingRows: function (pageFrom, pageTo, totalRows) {
+                    return "Toplam " + totalRows+" Kayıt";
+                },
+                formatRecordsPerPage: function (pageNumber) {
+                    return pageNumber + " Adet Listeleniyor";
+                },
+
+            });
+            $üretilenkasatable.on('click-row.bs.table', function (e, row, $element) {
+                kasaidg = row.ID;
+                kasakodu = row.STOKODU;
+                document.getElementById("ÜretilenStok").value = row.STOKODU;
+
+            });
+            $üretilenkasatable.on('  dbl-click-row.bs.table', function (e, row, $element) {
+                kasaidg = row.ID;
+                kasakodu = row.STOKODU;
+              document.getElementById("ÜretilenStok").value = row.STOKODU;
+
+
+
+
+                $('#ModalStokSecÜretilen').modal('hide');
+
+
+            });
+
+
+
+            $(window).resize(function () {
+                $kasatable.bootstrapTable('resetView');
+            });
+
+
+        })
+
+           function butonlisteleüretilen() {
+               $('#ModalStokSec').modal('show');
+
+            $üretilentable.append('<tr data-index="0"><td>' + document.getElementById('ÜretilenStok').value + '</td><td>' + document.getElementById('ÜretilenMıktar').value + '</td><td> <button  type="button" id="deleteRowBtn" onclick="deleteRow(this)" class="btn btn-danger btn-sm btn-rounded">  <span class="icon text-white-50">    <i class="fas fa-trash-alt"></i> </span></button></td></tr>');
+
+
+            yenile();
+
+
+
+
+
+
+        }
+        function butonlistele() {
+
+
+
+            $('#ModalStokSec').modal('show');
+            $table.append('<tr data-index="0"><td>' + document.getElementById('Stok').value + '</td><td>' + document.getElementById('Mıktar').value + '</td><td>' + document.getElementById('FIYAT').value + '</td><td class="countable">' + numberformatter(document.getElementById('TUTAR').value) + '</td><td> <button  type="button" id="deleteRowBtn" onclick="deleteRow(this)" class="btn btn-danger btn-sm btn-rounded">  <span class="icon text-white-50">    <i class="fas fa-trash-alt"></i> </span></button></td></tr>');
+            document.getElementById("Stok").value = "";
+
+            document.getElementById("Mıktar").value = 0;
+
+          document.getElementById("FIYAT").value = 0;
+            document.getElementById("TUTAR").value = "";
+            yenile();
+
+
+
+
+        }
+         function butonlistelemasraf() {
+
+
+            $masraftable.append('<tr data-index="0"><td>' + document.getElementById('Masraf').options[document.getElementById('Masraf').selectedIndex].innerHTML + '</td><td class="countable">' + numberformatter(document.getElementById('MasrafTutar').value) + '</td><td> <button  type="button" id="deleteRowBtn" onclick="deleteRow(this)" class="btn btn-danger btn-sm btn-rounded">  <span class="icon text-white-50">    <i class="fas fa-trash-alt"></i> </span></button></td></tr>');
+
+            document.getElementById("MasrafTutar").value = "";
+            yenile();
+
+
+
+
+
+
+        }
+
+        function deleteRow(btn) {
+            var row = btn.parentNode.parentNode;
+            row.parentNode.removeChild(row);
+            yenile();
+        }
+          function yenile() {maskla();
+            var sum = 0;
+        var summasraf=0;
+            var table = document.getElementById("bootstrap-table");
+             var tablemasraf = document.getElementById("bootstrap-masraf");
+            var ths = table.getElementsByTagName('td');
+            var tds = table.getElementsByClassName('countable');
+              var tdsa= tablemasraf.getElementsByClassName('countable');
+
+            for (var i = 0; i < tds.length; i++) {
+            var text=tds[i].innerText.toString().replaceAll(/,/g, '')
+                    sum += isNaN(text) ? 0 : parseFloat(text);
+            }
+        for (var i = 0; i < tdsa.length; i++) {
+          var text=tdsa[i].innerText.toString().replaceAll(/,/g, '')
+                    sum += isNaN(text) ? 0 : parseFloat(text);
+            }
+         document.getElementById("toplamkalem").value=tds.length;
+            document.getElementById("toplammasraf").value = numberformatter(sum+summasraf);
+
+
+        }
+        function butongonder() {
+
+            var kullanilanstok = [];
+
+            var masraflar = [];
+            var üretilenstok = [];
+            var oTable = document.getElementById('bootstrap-table');
+        var oTablemasraf = document.getElementById('bootstrap-table');
+                var oTableüretilen = document.getElementById('bootstrap-üretilen');
+          var oTablemasraf = document.getElementById('bootstrap-masraf');
+            //gets rows of table
+            var rowLength = oTable.rows.length;
+
+         var rowLengthm = oTablemasraf.rows.length;
+                 var rowLengthü = oTableüretilen.rows.length;
+            //loops through rows
+            for (i = 2; i < rowLength; i++) {
+
+                //gets cells of current row
+                var oCells = oTable.rows.item(i).cells;
+
+                //gets amount of cells of current row
+                var cellLength = oCells.length;
+
+                //loops through each cell in current row
+                for (var j = 0; j < cellLength; j++) {
+
+                    // get your cell info here
+
+                    var cellVal = oCells.item(j).innerHTML;
+                    var cellVal = oCells.item(j).innerHTML;
+
+
+                    var STOKKOD;
+         var STOKAD;
+                var MIKTAR;
+                    var FIYAT;
+                    var TUTAR;
+
+
+                    if (j == 0)
+                        STOKKOD = oCells.item(j).innerHTML;
+
+                    if (j == 1)
+                        MIKTAR = oCells.item(j).innerHTML;
+                    if (j == 2)
+                    FIYAT= oCells.item(j).innerHTML;
+                   if (j == 3)
+                    TUTAR= oCells.item(j).innerHTML;
+
+
+
+                }
+                kullanilanstok.push({ STOKKOD: STOKKOD, MIKTAR: MIKTAR,FIYAT:FIYAT,TUTAR:TUTAR });
+            }
+            for (i = 2; i < rowLengthm; i++) {
+
+                //gets cells of current row
+                var oCells = oTablemasraf.rows.item(i).cells;
+
+                //gets amount of cells of current row
+                var cellLength = oCells.length;
+
+                //loops through each cell in current row
+                for (var j = 0; j < cellLength; j++) {
+
+                    // get your cell info here
+
+                    var cellVal = oCells.item(j).innerHTML;
+                    var cellVal = oCells.item(j).innerHTML;
+
+
+                    var GIDER;
+
+                    var TUTAR;
+
+
+                    if (j == 0)
+                        GIDER = oCells.item(j).innerHTML;
+                    if (j == 1)
+                        TUTAR = oCells.item(j).innerHTML;
+
+
+
+                }
+                masraflar.push({ STOKKOD: GIDER, TUTAR: TUTAR});
+            }
+            for (i = 2; i < rowLengthü; i++) {
+
+                //gets cells of current row
+                var oCells = oTableüretilen.rows.item(i).cells;
+
+                //gets amount of cells of current row
+                var cellLength = oCells.length;
+
+                //loops through each cell in current row
+                for (var j = 0; j < cellLength; j++) {
+
+                    // get your cell info here
+
+                    var cellVal = oCells.item(j).innerHTML;
+
+
+
+                    var STOKKOD;
+
+                    var MIKTAR;
+                    var FIYAT;
+                    var TUTAR;
+
+
+                    if (j == 0)
+                        STOKKOD = oCells.item(j).innerHTML;
+
+                    if (j == 1)
+                        MIKTAR = oCells.item(j).innerHTML;
+
+
+
+
+                }
+                üretilenstok.push({ STOKKOD: STOKKOD, MIKTAR: MIKTAR});
+            }
+            $.ajax({
+                type: "POST",
+
+
+                dataType: "json",
+                contentType: "application/json; charset=utf-8",
+                url: "/RECETE/datagonderguncelle/",
+                data: JSON.stringify({
+                    RECETEKODU: document.getElementById("RECETE_RECETEKODU").value,
+                    RECETEADI: document.getElementById("RECETE_RECETEADI").value,
+                    ACIKLAMA: document.getElementById("RECETE_ACIKLAMA").value,
+                    OZELKOD: document.getElementById("RECETE_OZELKOD").options[document.getElementById("RECETE_OZELKOD").selectedIndex].innerHTML,
+                      TARIH: (document.getElementById("Tarih").value ),
+                    TOPLAMKALEM: document.getElementById("toplamkalem").value,
+                    TOPLAMMASRAF: document.getElementById("toplammasraf").value,
+                    KULLANILANSTOKLAR: kullanilanstok,
+                    MASRAFLAR: masraflar,
+                    URETILENSTOKLAR: üretilenstok
+                })
+                ,
+                success: function (result) {
+                    historysend("/RECETE/");
+                },
+                error: function (result) {
+                    alert('Lütfen Bilgileri Eksik  Ya da Yanlış Girmeyiniz');
+                }
+            });
+        }
+
+
+
+        function idFormatter() {
+            return 'Toplam'
+        }
+
+        function nameFormatter(data) {
+            return data.length
+        }
+
+
+        function numberformatter(value, row, index) {
+            if (!value)
+                return "0.00";
+            else {
+                return [
+
+                    numberWithCommas((Number(value.toString().replace(",", "."))).toFixed(2))
+                ].join('');
+            }
+        }
+        function numberWithCommas(x) {
+            return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+        }
+        function priceFormatter(data) {
+            var field = this.field
+
+            var toplam = data.map(function (row) {
+                if (row[field])
+                    return +Number(row[field].toString().replace(",", "."))
+                else {
+                    return +Number("0")
+                }
+            }).reduce(function (sum, i) {
+                return sum + i
+            }, 0);
+            return numberWithCommas(toplam) + " TL"
+        }
+        function priceFormatter(data) {
+            var field = this.field
+
+            var toplam = data.map(function (row) {
+                return +Number(row[field].toString().replace(",", "."))
+            }).reduce(function (sum, i) {
+                return sum + i
+            }, 0);
+            return numberWithCommas(toplam) + " TL"
+        }
+
+        function footerStyle(column) {
+            return {
+                id: {
+                    classes: 'uppercase'
+                },
+                name: {
+                    css: { 'font-weight': 'normal' }
+                },
+                price: {
+                    css: { color: 'red' }
+                }
+            }[column.field]
+        }
+
+
+    </script>
+
+}
+
+

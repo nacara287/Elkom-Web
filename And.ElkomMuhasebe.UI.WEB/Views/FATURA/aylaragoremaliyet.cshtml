@@ -1,0 +1,70 @@
+﻿
+
+@model And.ElkomMuhasebe.UI.WEB.Controllers.FATURAController.rapor
+@{
+
+    Layout = null;
+}
+<html>
+<head>
+    <meta http-equiv="content-type" content="text/html;charset=UTF-8" />
+    <meta charset="utf-8" />
+    <title>Rapor</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, shrink-to-fit=no" />
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-F3w7mX95PdgyTmZZMECAngseQB83DfGTowi0iMjiWaeVhAn4FJkqJByhZMI3AhiU" crossorigin="anonymous">
+
+</head>
+<body>
+    <h2>Aylara Göre Maliyet Raporu</h2>
+    <div class="table-responsive">
+        <table class="table table-striped table-sm">
+            <thead>
+                <tr>
+                    <th>Satışlar Girdiler</th>
+                    <th>Giderler Çıktılar</th>
+                </tr>
+                <tr>
+                    <th>Aylar</th>
+                    <th>Satış Tutarı</th>
+                    <th>Maliyet</th>
+                    <th>Brüt Kar</th>
+                    <th>Hizmet Vade Farkı</th>
+                    <th>Genel</th>
+                    <th>Personel</th>
+                    <th>Giderler Toplamı</th>
+                    <th>Oluşan Net Kar%</th>
+                    <th>Net Kar Tutarı</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model.aylar)
+                {
+                    <tr>
+                        <td>@item.adı</td>
+                        <td>@item.satistutari.ToString("0.##")</td>
+                        <td>@item.maliyet.ToString("0.##")</td>
+                        <td>@item.burukar.ToString("0.##")</td>
+                        <td>@item.hizmetvadefark.ToString("0.##")</td>
+                        <td>@item.genel.ToString("0.##")</td>
+                        <td>@item.personel.ToString("0.##")</td>
+                        <td>@item.giderlertoplamı.ToString("0.##")</td>
+                        <td>@item.netkaryuzde.ToString("0.##")</td>
+                        <td>@item.netkar.ToString("0.##")</td>
+                    </tr>
+
+                }
+
+            </tbody>
+        </table>
+    </div>
+</body>
+<script type="text/javascript">
+    window.onload = function () { window.print(); }
+    window.onafterprint = function () {
+        window.location.href = "/Home";
+    }
+</script>
+</html>
+
+

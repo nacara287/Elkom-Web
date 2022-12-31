@@ -1,0 +1,2349 @@
+﻿@using And.ElkomMuhasebe.Core.Model;
+@using And.ElkomMuhasebe.Core.Model.Entity.Admin;
+@using And.ElkomMuhasebe.Core.Model.Entity.FirmaDB;
+
+
+@model And.ElkomMuhasebe.UI.WEB.Controllers.PERSONELsController.personelmodel
+
+@{
+    ViewBag.Title = "Yeni Personel Oluştur";
+    Layout = "~/Views/Shared/yeni.cshtml";
+    var db = new AndDB();
+}
+
+
+
+@using (Html.BeginForm(null, null, new { @id = string.Empty }, FormMethod.Post,
+    new { @id = "postform" }))
+{
+
+
+    @Html.AntiForgeryToken()
+    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+    <nav>
+        <div class="nav nav-tabs" id="nav-tab" role="tablist">
+            <a class="nav-link active" id="nav-home-tab" data-toggle="tab" href="#nav-home" role="tab" aria-controls="nav-home" aria-selected="true">Genel</a>
+            <a class="nav-link" id="nav-stok-pirim-tab" data-toggle="tab" href="#nav-stok-pirim" role="tab" aria-controls="nav-stok-pirim" aria-selected="false">Stok Gruba Göre Pirim Listesi</a>
+        </div>
+    </nav>
+    <div class="tab-content" id="nav-tabContent">
+        <!-- Genel -->
+        <div class="tab-pane fade show active" id="nav-home" role="tabpanel" aria-labelledby="nav-home-tab">
+            <div class="card border-top-0 rounded-0">
+                <div class="card-body p-3">
+                    <div class="form-row">
+                        <div class="form-group col-md-4">
+                            <label for="">Personel Kodu :</label>
+                            <div class="input-group">
+                                @Html.EditorFor(model => model.PERSONEL.PERSONELKODU, new { htmlAttributes = new { @class = "form-control form-control-sm", @placeholder = "...", @aria_label = "...", @aria_describedby = "button-addon2" } })
+                                @Html.ValidationMessageFor(model => model.PERSONEL.PERSONELKODU, "", new { @class = "text-danger" })
+                                <div class="input-group-append">
+                                    <button class="btn btn-sm btn-outline-secondary" title="Kod üret" type="button" id="button-addon2"><i class="fas fa-plus"></i></button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group col-md-4">
+                            <label>Ünvan</label>
+                            @Html.EditorFor(model => model.PERSONEL.ADISOYADI, new { htmlAttributes = new { @class = "form-control form-control-sm", @placeholder = "..." } })
+                            @Html.ValidationMessageFor(model => model.PERSONEL.ADISOYADI, "", new { @class = "text-danger" })
+                        </div>
+                        <div class="form-group col-md-4">
+                            <label>Devir Alacak</label>
+                            <input id="PERSONEL_TOPLAMALACAK" name="PERSONEL.TOPLAMALACAK" onchange="tutargetir()" class="form-control col-form-label-sm masklancak"  value="0">
+                        </div>
+                        <div class="form-group col-md-4">
+                            <label>Devir Borç</label>
+                            <input id="PERSONEL_TOPLAMBORC" name="PERSONEL.TOPLAMBORC" onchange="tutargetir()" class="form-control col-form-label-sm masklancak"  value="0">
+                        </div>
+                        <div class="form-group col-md-4">
+                            <label>Bakiye</label>
+                            <input id="PERSONEL_BAKIYE" name="PERSONEL.BAKIYE"  class="form-control form-control-sm masklancak"  value="0" readonly>
+                        </div>
+                        <div class="form-group col-md-4">
+                            <label>Personel Maaş</label>
+                            <input id="PERSONEL_MAAS" name="PERSONEL.MAAS" onchange="tutargetir()" class="form-control col-form-label-sm masklancak"  value="0">
+                        </div>
+                        <div class="form-group col-md-4">
+                            <label>İşe Başlama Tarihi</label>
+                            <input id="PERSONEL_IS_BAS_TARIHI" name="PERSONEL.IS_BAS_TARIHI" class="form-control form-control-sm" type="datetime-local" value="2020-01-01T00:00">
+                            @Html.ValidationMessageFor(model => model.PERSONEL.IS_BAS_TARIHI, "", new { @class = "text-danger" })
+                        </div>
+                        <div class="form-group col-md-4">
+                            <label>Görevi</label>
+                            @Html.EditorFor(model => model.PERSONEL.GOREVI, new { htmlAttributes = new { @class = "form-control form-control-sm", @placeholder = "...", @aria_label = "...", @aria_describedby = "button-addon2" } })
+                            @Html.ValidationMessageFor(model => model.PERSONEL.GOREVI, "", new { @class = "text-danger" })
+                        </div>
+                        <div class="form-group col-md-4">
+                            <div class="form-check switch switch-lg success full-width right m-b-0">
+                                <input type="checkbox" value="1" id="PERSONEL_AKTIF" name="PERSONEL.AKTIF" checked>
+                                <label for="PERSONEL_AKTIF">Aktif</label>
+                            </div>
+                        </div>
+                        <!-- Adres  -->
+                        <div class="form-group col-md-4">
+                            <label>Adres </label>
+
+                            @Html.EditorFor(model => model.PERSONEL.EVADRES1, new { htmlAttributes = new { @class = "form-control form-control-sm", @placeholder = "...", @aria_label = "...", @aria_describedby = "button-addon2" } })
+                            @Html.ValidationMessageFor(model => model.PERSONEL.EVADRES1, "", new { @class = "text-danger" })
+                        </div>
+                        <div class="form-group col-md-4">
+                            <label>İl</label>
+                       
+                            <select class="form-control form-control-sm select2" id="PERSONEL_EVIL" name="PERSONEL.EVIL" onchange="set_player()">
+                                <option selected>Lütfen Seçiniz</option>
+                                @{
+                                    ILILCE itemb = new ILILCE();
+
+                                    if (db.ILILCE.ToList() != null)
+                                    {
+                                        foreach (var item in db.ILILCE.ToList())
+                                        {
+                                            if (itemb.iladi != item.iladi)
+                                            {
+                                                itemb.iladi = item.iladi;
+                                                <option>@item.iladi</option>
+                                            }
+
+                                        }
+                                    }
+                                }
+                            </select>
+                           
+
+                        </div>
+                        <div class="form-group col-md-4">
+                            <label for="PERSONEL_EVILCE">İlçe :</label>
+                            <select class="form-control form-control-sm select2" id="PERSONEL_EVILCE" name="PERSONEL.EVILCE">
+                                <option selected="selected">Önce İl Seçiniz</option>
+                            </select>
+                      
+                        </div>
+                        <div class="form-group col-md-4">
+                            <label>Telefon</label>
+                            @Html.EditorFor(model => model.PERSONEL.EVTEL, new { htmlAttributes = new { @class = "form-control form-control-sm", @placeholder = "...", @aria_label = "...", @aria_describedby = "button-addon2" } })
+                            @Html.ValidationMessageFor(model => model.PERSONEL.EVTEL, "", new { @class = "text-danger" })
+                        </div>
+                        <div class="form-group col-md-4">
+                            <label>Mobil</label>
+                            @Html.EditorFor(model => model.PERSONEL.MOBIL, new { htmlAttributes = new { @class = "form-control form-control-sm", @placeholder = "...", @aria_label = "...", @aria_describedby = "button-addon2" } })
+                            @Html.ValidationMessageFor(model => model.PERSONEL.MOBIL, "", new { @class = "text-danger" })
+                        </div>
+                        <div class="form-group col-md-4">
+                            <label>Kimlik No</label>
+                            @Html.EditorFor(model => model.PERSONEL.KIMLIKNO, new { htmlAttributes = new { @class = "form-control form-control-sm", @placeholder = "...", @aria_label = "...", @aria_describedby = "button-addon2" } })
+                            @Html.ValidationMessageFor(model => model.PERSONEL.KIMLIKNO, "", new { @class = "text-danger" })
+                        </div>
+                        <div class="form-group col-md-4">
+                            <label>SSK No</label>
+                            @Html.EditorFor(model => model.PERSONEL.SSKNO, new { htmlAttributes = new { @class = "form-control form-control-sm", @placeholder = "...", @aria_label = "...", @aria_describedby = "button-addon2" } })
+                            @Html.ValidationMessageFor(model => model.PERSONEL.SSKNO, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- stok-pirim  -->
+        <div class="tab-pane fade" id="nav-stok-pirim" role="tabpanel" aria-labelledby="nav-stok-pirim-tab">
+            <div class="card border-top-0 rounded-0">
+                <div class="card-body p-3">
+                    <div class="form-row">
+
+
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="py-2">
+        <button type="button" class="btn btn-sm btn-primary btn-icon-split" onclick="datagonder()">
+
+
+            <span class="icon text-white-50">
+                <i class="fas fa-save"></i>
+            </span>
+            <span class="text">Kaydet</span>
+
+        </button>
+        <a href="@Url.RequestContext.HttpContext.Request.Url.ToString()" class="btn btn-sm btn-secondary btn-icon-split">
+            <span class="icon text-white-50">
+                <i class="fas fa-power-off"></i>
+            </span>
+            <span class="text">İptal</span>
+        </a>
+    </div>
+
+}
+
+
+
+
+
+@section script{
+
+    <script type="text/javascript" charset="utf-8">
+        var textbox = document.getElementById("PERSONEL_TOPLAMALACAK");
+        var textbox2 = document.getElementById("PERSONEL_TOPLAMBORC");
+        var select_ilcea = document.getElementById('PERSONEL_EVILCE');
+        var select_ila = document.getElementById('PERSONEL_EVIL');
+        function datagonder() {
+            var form = $('#postform');
+            cevir("PERSONEL_TOPLAMALACAK");
+            cevir("PERSONEL_TOPLAMBORC");
+            cevir("PERSONEL_BAKIYE");
+            cevir("PERSONEL_MAAS");
+            $.ajax({
+                type: "POST",
+                url: form.attr('action'),
+                data: form.serialize()
+                ,
+                success: function (result) {
+                    historysend("/PERSONELS/");
+
+                },
+                error: function (result) {
+                    toastr["error"]('Lütfen Bilgileri Eksik  Ya da Yanlış Girmeyiniz');
+                }
+            });
+
+        };
+        var carikod = document.getElementById('PERSONEL_PERSONELKODU');
+        window.onload = function (e) {
+            if (!carikod.value) {
+                $.ajax({
+                    type: "POST",
+
+
+                    dataType: "json",
+                    contentType: "application/json; charset=utf-8",
+                    url: "/PERSONELS/kodgetir/",
+                    data: JSON.stringify({
+
+                        kod: ""
+
+
+
+
+
+                    }),
+                    success: function (result) {
+                        carikod.value = result;
+                    },
+                    error: function (result) {
+                        alert('error');
+                    }
+                });
+            }
+            else {
+
+                $.ajax({
+                    type: "POST",
+
+
+                    dataType: "json",
+                    contentType: "application/json; charset=utf-8",
+                    url: "/PERSONELS/kodgetir/",
+                    data: JSON.stringify({
+
+                        kod: carikod.value
+
+
+
+
+
+                    }),
+                    success: function (result) {
+                        carikod.value = result;
+                    },
+                    error: function (result) {
+                        alert('error');
+                    }
+                });
+            }
+        };
+        textbox.oninput = function () {
+            var s1 = Number(document.getElementById("PERSONEL_TOPLAMALACAK").value.replaceAll(",", ""));
+            var s2 = Number(document.getElementById("PERSONEL_TOPLAMBORC").value.replaceAll(",", ""));
+            var toplam = s2 - s1;
+            document.getElementById("PERSONEL_BAKIYE").value = toplam;
+            document.getElementById("bakiyetext").innerHTML = toplam;
+            document.getElementById("alacaktext").innerHTML = s1;
+        }
+        textbox2.oninput = function () {
+            var s1 = Number(document.getElementById("PERSONEL_TOPLAMALACAK").value.replaceAll(",", ""));
+            var s2 = Number(document.getElementById("PERSONEL_TOPLAMBORC").value.replaceAll(",", ""));
+            var toplam = s2 - s1;
+            document.getElementById("PERSONEL_BAKIYE").value = toplam;
+            document.getElementById("bakiyetext").innerHTML = toplam;
+            document.getElementById("borctext").innerHTML = s2;
+        }
+        $(document).ready(function () {
+           
+            kodgetir();
+        });
+        var carikodbutton = document.getElementById('button-addon2');
+        carikodbutton.onclick = function () {
+            kodgetir();
+        }
+        function kodgetir() {
+            if (!carikod.value) {
+                $.ajax({
+                    type: "POST",
+
+
+                    dataType: "json",
+                    contentType: "application/json; charset=utf-8",
+                    url: "/PERSONELS/kodgetir/",
+                    data: JSON.stringify({
+
+                        kod: ""
+
+
+
+
+
+                    }),
+                    success: function (result) {
+                        carikod.value = result;
+                    },
+                    error: function (result) {
+                        alert('error');
+                    }
+                });
+            }
+            else {
+
+                $.ajax({
+                    type: "POST",
+
+
+                    dataType: "json",
+                    contentType: "application/json; charset=utf-8",
+                    url: "/PERSONELS/kodgetir/",
+                    data: JSON.stringify({
+
+                        kod: carikod.value
+
+
+
+
+
+                    }),
+                    success: function (result) {
+                        carikod.value = result;
+                    },
+                    error: function (result) {
+                        alert('error');
+                    }
+                });
+            }
+        }
+        select_ila.onchange = function () {
+            var selected_ila = select_ila.options[select_ila.selectedIndex].value;
+            select_ilcea.options.length = 0;
+            if (selected_ila == 'Adana')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Seyhan');
+            if (selected_ila == 'Adana')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Ceyhan');
+            if (selected_ila == 'Adana')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Feke');
+            if (selected_ila == 'Adana')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Karaisalı');
+            if (selected_ila == 'Adana')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Karataş');
+            if (selected_ila == 'Adana')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Kozan');
+            if (selected_ila == 'Adana')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Pozantı');
+            if (selected_ila == 'Adana')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Saimbeyli');
+            if (selected_ila == 'Adana')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Tufanbeyli');
+            if (selected_ila == 'Adana')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Yumurtalık');
+            if (selected_ila == 'Adana')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Yüreğir');
+            if (selected_ila == 'Adana')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Aladağ');
+            if (selected_ila == 'Adana')
+                select_ilcea.options[select_ilcea.options.length] = new Option('İmamoğlu');
+            if (selected_ila == 'Adana')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Sarıçam');
+            if (selected_ila == 'Adana')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Çukurova');
+            if (selected_ila == 'Adıyaman')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Adıyaman Merkez');
+            if (selected_ila == 'Adıyaman')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Besni');
+            if (selected_ila == 'Adıyaman')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Çelikhan');
+            if (selected_ila == 'Adıyaman')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Gerger');
+            if (selected_ila == 'Adıyaman')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Gölbaşı / Adıyaman');
+            if (selected_ila == 'Adıyaman')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Kahta');
+            if (selected_ila == 'Adıyaman')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Samsat');
+            if (selected_ila == 'Adıyaman')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Sincik');
+            if (selected_ila == 'Adıyaman')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Tut');
+            if (selected_ila == 'Afyonkarahisar')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Afyonkarahisar Merkez');
+            if (selected_ila == 'Afyonkarahisar')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Bolvadin');
+            if (selected_ila == 'Afyonkarahisar')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Çay');
+            if (selected_ila == 'Afyonkarahisar')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Dazkırı');
+            if (selected_ila == 'Afyonkarahisar')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Dinar');
+            if (selected_ila == 'Afyonkarahisar')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Emirdağ');
+            if (selected_ila == 'Afyonkarahisar')
+                select_ilcea.options[select_ilcea.options.length] = new Option('İhsaniye');
+            if (selected_ila == 'Afyonkarahisar')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Sandıklı');
+            if (selected_ila == 'Afyonkarahisar')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Sinanpaşa');
+            if (selected_ila == 'Afyonkarahisar')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Sultandağı');
+            if (selected_ila == 'Afyonkarahisar')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Şuhut');
+            if (selected_ila == 'Afyonkarahisar')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Başmakçı');
+            if (selected_ila == 'Afyonkarahisar')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Bayat / Afyonkarahisar');
+            if (selected_ila == 'Afyonkarahisar')
+                select_ilcea.options[select_ilcea.options.length] = new Option('İscehisar');
+            if (selected_ila == 'Afyonkarahisar')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Çobanlar');
+            if (selected_ila == 'Afyonkarahisar')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Evciler');
+            if (selected_ila == 'Afyonkarahisar')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Hocalar');
+            if (selected_ila == 'Afyonkarahisar')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Kızılören');
+            if (selected_ila == 'Ağrı')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Ağrı Merkez');
+            if (selected_ila == 'Ağrı')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Diyadin');
+            if (selected_ila == 'Ağrı')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Doğubayazıt');
+            if (selected_ila == 'Ağrı')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Eleşkirt');
+            if (selected_ila == 'Ağrı')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Hamur');
+            if (selected_ila == 'Ağrı')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Patnos');
+            if (selected_ila == 'Ağrı')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Taşlıçay');
+            if (selected_ila == 'Ağrı')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Tutak');
+            if (selected_ila == 'Amasya')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Amasya Merkez');
+            if (selected_ila == 'Amasya')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Göynücek');
+            if (selected_ila == 'Amasya')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Gümüşhacıköy');
+            if (selected_ila == 'Amasya')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Merzifon');
+            if (selected_ila == 'Amasya')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Suluova');
+            if (selected_ila == 'Amasya')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Taşova');
+            if (selected_ila == 'Amasya')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Hamamözü');
+            if (selected_ila == 'Ankara')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Altındağ');
+            if (selected_ila == 'Ankara')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Ayaş');
+            if (selected_ila == 'Ankara')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Bala');
+            if (selected_ila == 'Ankara')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Beypazarı');
+            if (selected_ila == 'Ankara')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Çamlıdere');
+            if (selected_ila == 'Ankara')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Çankaya');
+            if (selected_ila == 'Ankara')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Çubuk');
+            if (selected_ila == 'Ankara')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Elmadağ');
+            if (selected_ila == 'Ankara')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Güdül');
+            if (selected_ila == 'Ankara')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Haymana');
+            if (selected_ila == 'Ankara')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Kalecik');
+            if (selected_ila == 'Ankara')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Kızılcahamam');
+            if (selected_ila == 'Ankara')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Nallıhan');
+            if (selected_ila == 'Ankara')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Polatlı');
+            if (selected_ila == 'Ankara')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Şereflikoçhisar');
+            if (selected_ila == 'Ankara')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Yenimahalle');
+            if (selected_ila == 'Ankara')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Gölbaşı / Ankara');
+            if (selected_ila == 'Ankara')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Keçiören');
+            if (selected_ila == 'Ankara')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Mamak');
+            if (selected_ila == 'Ankara')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Sincan');
+            if (selected_ila == 'Ankara')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Kazan');
+            if (selected_ila == 'Ankara')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Akyurt');
+            if (selected_ila == 'Ankara')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Etimesgut');
+            if (selected_ila == 'Ankara')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Evren');
+            if (selected_ila == 'Ankara')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Pursaklar');
+            if (selected_ila == 'Antalya')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Akseki');
+            if (selected_ila == 'Antalya')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Alanya');
+            if (selected_ila == 'Antalya')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Antalya Merkez');
+            if (selected_ila == 'Antalya')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Elmalı');
+            if (selected_ila == 'Antalya')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Finike');
+            if (selected_ila == 'Antalya')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Gazipaşa');
+            if (selected_ila == 'Antalya')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Gündoğmuş');
+            if (selected_ila == 'Antalya')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Kaş');
+            if (selected_ila == 'Antalya')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Korkuteli');
+            if (selected_ila == 'Antalya')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Kumluca');
+            if (selected_ila == 'Antalya')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Manavgat');
+            if (selected_ila == 'Antalya')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Serik');
+            if (selected_ila == 'Antalya')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Demre');
+            if (selected_ila == 'Antalya')
+                select_ilcea.options[select_ilcea.options.length] = new Option('İbradı');
+            if (selected_ila == 'Antalya')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Kemer / Antalya');
+            if (selected_ila == 'Antalya')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Aksu / Antalya');
+            if (selected_ila == 'Antalya')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Döşemealtı');
+            if (selected_ila == 'Antalya')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Kepez');
+            if (selected_ila == 'Antalya')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Konyaaltı');
+            if (selected_ila == 'Antalya')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Muratpaşa');
+            if (selected_ila == 'Artvin')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Ardanuç');
+            if (selected_ila == 'Artvin')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Arhavi');
+            if (selected_ila == 'Artvin')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Artvin Merkez');
+            if (selected_ila == 'Artvin')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Borçka');
+            if (selected_ila == 'Artvin')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Hopa');
+            if (selected_ila == 'Artvin')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Şavşat');
+            if (selected_ila == 'Artvin')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Yusufeli');
+            if (selected_ila == 'Artvin')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Murgul');
+            if (selected_ila == 'Artvin')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Kemalpaşa / Artvin');
+            if (selected_ila == 'Aydın')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Aydın Merkez');
+            if (selected_ila == 'Aydın')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Bozdoğan');
+            if (selected_ila == 'Aydın')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Çine');
+            if (selected_ila == 'Aydın')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Germencik');
+            if (selected_ila == 'Aydın')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Karacasu');
+            if (selected_ila == 'Aydın')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Koçarlı');
+            if (selected_ila == 'Aydın')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Kuşadası');
+            if (selected_ila == 'Aydın')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Kuyucak');
+            if (selected_ila == 'Aydın')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Nazilli');
+            if (selected_ila == 'Aydın')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Söke');
+            if (selected_ila == 'Aydın')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Sultanhisar');
+            if (selected_ila == 'Aydın')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Yenipazar / Aydın');
+            if (selected_ila == 'Aydın')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Buharkent');
+            if (selected_ila == 'Aydın')
+                select_ilcea.options[select_ilcea.options.length] = new Option('İncirliova');
+            if (selected_ila == 'Aydın')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Karpuzlu');
+            if (selected_ila == 'Aydın')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Köşk');
+            if (selected_ila == 'Aydın')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Didim');
+            if (selected_ila == 'Aydın')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Efeler');
+            if (selected_ila == 'Balıkesir')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Ayvalık');
+            if (selected_ila == 'Balıkesir')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Balıkesir Merkez');
+            if (selected_ila == 'Balıkesir')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Balya');
+            if (selected_ila == 'Balıkesir')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Bandırma');
+            if (selected_ila == 'Balıkesir')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Bigadiç');
+            if (selected_ila == 'Balıkesir')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Burhaniye');
+            if (selected_ila == 'Balıkesir')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Dursunbey');
+            if (selected_ila == 'Balıkesir')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Edremit / Balıkesir');
+            if (selected_ila == 'Balıkesir')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Erdek');
+            if (selected_ila == 'Balıkesir')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Gönen / Balıkesir');
+            if (selected_ila == 'Balıkesir')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Havran');
+            if (selected_ila == 'Balıkesir')
+                select_ilcea.options[select_ilcea.options.length] = new Option('İvrindi');
+            if (selected_ila == 'Balıkesir')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Kepsut');
+            if (selected_ila == 'Balıkesir')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Manyas');
+            if (selected_ila == 'Balıkesir')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Savaştepe');
+            if (selected_ila == 'Balıkesir')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Sındırgı');
+            if (selected_ila == 'Balıkesir')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Susurluk');
+            if (selected_ila == 'Balıkesir')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Marmara');
+            if (selected_ila == 'Balıkesir')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Gömeç');
+            if (selected_ila == 'Balıkesir')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Altıeylül');
+            if (selected_ila == 'Balıkesir')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Karesi');
+            if (selected_ila == 'Bilecik')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Bilecik Merkez');
+            if (selected_ila == 'Bilecik')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Bozüyük');
+            if (selected_ila == 'Bilecik')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Gölpazarı');
+            if (selected_ila == 'Bilecik')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Osmaneli');
+            if (selected_ila == 'Bilecik')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Pazaryeri');
+            if (selected_ila == 'Bilecik')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Söğüt');
+            if (selected_ila == 'Bilecik')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Yenipazar / Bilecik');
+            if (selected_ila == 'Bilecik')
+                select_ilcea.options[select_ilcea.options.length] = new Option('İnhisar');
+            if (selected_ila == 'Bingöl')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Bingöl Merkez');
+            if (selected_ila == 'Bingöl')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Genç');
+            if (selected_ila == 'Bingöl')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Karlıova');
+            if (selected_ila == 'Bingöl')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Kiğı');
+            if (selected_ila == 'Bingöl')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Solhan');
+            if (selected_ila == 'Bingöl')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Adaklı');
+            if (selected_ila == 'Bingöl')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Yayladere');
+            if (selected_ila == 'Bingöl')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Yedisu');
+            if (selected_ila == 'Bitlis')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Adilcevaz');
+            if (selected_ila == 'Bitlis')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Ahlat');
+            if (selected_ila == 'Bitlis')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Bitlis Merkez');
+            if (selected_ila == 'Bitlis')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Hizan');
+            if (selected_ila == 'Bitlis')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Mutki');
+            if (selected_ila == 'Bitlis')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Tatvan');
+            if (selected_ila == 'Bitlis')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Güroymak');
+            if (selected_ila == 'Bolu')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Bolu Merkez');
+            if (selected_ila == 'Bolu')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Gerede');
+            if (selected_ila == 'Bolu')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Göynük');
+            if (selected_ila == 'Bolu')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Kıbrıscık');
+            if (selected_ila == 'Bolu')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Mengen');
+            if (selected_ila == 'Bolu')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Mudurnu');
+            if (selected_ila == 'Bolu')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Seben');
+            if (selected_ila == 'Bolu')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Dörtdivan');
+            if (selected_ila == 'Bolu')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Yeniçağa');
+            if (selected_ila == 'Burdur')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Ağlasun');
+            if (selected_ila == 'Burdur')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Bucak');
+            if (selected_ila == 'Burdur')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Burdur Merkez');
+            if (selected_ila == 'Burdur')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Gölhisar');
+            if (selected_ila == 'Burdur')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Tefenni');
+            if (selected_ila == 'Burdur')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Yeşilova');
+            if (selected_ila == 'Burdur')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Karamanlı');
+            if (selected_ila == 'Burdur')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Kemer / Burdur');
+            if (selected_ila == 'Burdur')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Altınyayla / Burdur');
+            if (selected_ila == 'Burdur')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Çavdır');
+            if (selected_ila == 'Burdur')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Çeltikçi');
+            if (selected_ila == 'Bursa')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Gemlik');
+            if (selected_ila == 'Bursa')
+                select_ilcea.options[select_ilcea.options.length] = new Option('İnegöl');
+            if (selected_ila == 'Bursa')
+                select_ilcea.options[select_ilcea.options.length] = new Option('İznik');
+            if (selected_ila == 'Bursa')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Karacabey');
+            if (selected_ila == 'Bursa')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Keles');
+            if (selected_ila == 'Bursa')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Mudanya');
+            if (selected_ila == 'Bursa')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Mustafakemalpaşa');
+            if (selected_ila == 'Bursa')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Orhaneli');
+            if (selected_ila == 'Bursa')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Orhangazi');
+            if (selected_ila == 'Bursa')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Yenişehir / Bursa');
+            if (selected_ila == 'Bursa')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Büyükorhan');
+            if (selected_ila == 'Bursa')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Harmancık');
+            if (selected_ila == 'Bursa')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Nilüfer');
+            if (selected_ila == 'Bursa')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Osmangazi');
+            if (selected_ila == 'Bursa')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Yıldırım');
+            if (selected_ila == 'Bursa')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Gürsu');
+            if (selected_ila == 'Bursa')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Kestel');
+            if (selected_ila == 'Çanakkale')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Ayvacık / Çanakkale');
+            if (selected_ila == 'Çanakkale')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Bayramiç');
+            if (selected_ila == 'Çanakkale')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Biga');
+            if (selected_ila == 'Çanakkale')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Bozcaada');
+            if (selected_ila == 'Çanakkale')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Çan');
+            if (selected_ila == 'Çanakkale')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Çanakkale Merkez');
+            if (selected_ila == 'Çanakkale')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Eceabat');
+            if (selected_ila == 'Çanakkale')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Ezine');
+            if (selected_ila == 'Çanakkale')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Gelibolu');
+            if (selected_ila == 'Çanakkale')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Gökçeada');
+            if (selected_ila == 'Çanakkale')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Lapseki');
+            if (selected_ila == 'Çanakkale')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Yenice / Çanakkale');
+            if (selected_ila == 'Çankırı')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Çankırı Merkez');
+            if (selected_ila == 'Çankırı')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Çerkeş');
+            if (selected_ila == 'Çankırı')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Eldivan');
+            if (selected_ila == 'Çankırı')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Ilgaz');
+            if (selected_ila == 'Çankırı')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Kurşunlu');
+            if (selected_ila == 'Çankırı')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Orta');
+            if (selected_ila == 'Çankırı')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Şabanözü');
+            if (selected_ila == 'Çankırı')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Yapraklı');
+            if (selected_ila == 'Çankırı')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Atkaracalar');
+            if (selected_ila == 'Çankırı')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Kızılırmak');
+            if (selected_ila == 'Çankırı')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Bayramören');
+            if (selected_ila == 'Çankırı')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Korgun');
+            if (selected_ila == 'Çorum')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Alaca');
+            if (selected_ila == 'Çorum')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Bayat / Çorum');
+            if (selected_ila == 'Çorum')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Çorum Merkez');
+            if (selected_ila == 'Çorum')
+                select_ilcea.options[select_ilcea.options.length] = new Option('İskilip');
+            if (selected_ila == 'Çorum')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Kargı');
+            if (selected_ila == 'Çorum')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Mecitözü');
+            if (selected_ila == 'Çorum')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Ortaköy / Çorum');
+            if (selected_ila == 'Çorum')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Osmancık');
+            if (selected_ila == 'Çorum')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Sungurlu');
+            if (selected_ila == 'Çorum')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Boğazkale');
+            if (selected_ila == 'Çorum')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Uğurludağ');
+            if (selected_ila == 'Çorum')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Dodurga');
+            if (selected_ila == 'Çorum')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Laçin');
+            if (selected_ila == 'Çorum')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Oğuzlar');
+            if (selected_ila == 'Denizli')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Acıpayam');
+            if (selected_ila == 'Denizli')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Buldan');
+            if (selected_ila == 'Denizli')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Çal');
+            if (selected_ila == 'Denizli')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Çameli');
+            if (selected_ila == 'Denizli')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Çardak');
+            if (selected_ila == 'Denizli')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Çivril');
+            if (selected_ila == 'Denizli')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Denizli Merkez');
+            if (selected_ila == 'Denizli')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Güney');
+            if (selected_ila == 'Denizli')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Kale / Denizli');
+            if (selected_ila == 'Denizli')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Sarayköy');
+            if (selected_ila == 'Denizli')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Tavas');
+            if (selected_ila == 'Denizli')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Babadağ');
+            if (selected_ila == 'Denizli')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Bekilli');
+            if (selected_ila == 'Denizli')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Honaz');
+            if (selected_ila == 'Denizli')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Serinhisar');
+            if (selected_ila == 'Denizli')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Pamukkale');
+            if (selected_ila == 'Denizli')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Baklan');
+            if (selected_ila == 'Denizli')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Beyağaç');
+            if (selected_ila == 'Denizli')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Bozkurt / Denizli');
+            if (selected_ila == 'Denizli')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Merkezefendi');
+            if (selected_ila == 'Diyarbakır')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Bismil');
+            if (selected_ila == 'Diyarbakır')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Çermik');
+            if (selected_ila == 'Diyarbakır')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Çınar');
+            if (selected_ila == 'Diyarbakır')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Çüngüş');
+            if (selected_ila == 'Diyarbakır')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Dicle');
+            if (selected_ila == 'Diyarbakır')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Diyarbakır Merkez');
+            if (selected_ila == 'Diyarbakır')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Ergani');
+            if (selected_ila == 'Diyarbakır')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Hani');
+            if (selected_ila == 'Diyarbakır')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Hazro');
+            if (selected_ila == 'Diyarbakır')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Kulp');
+            if (selected_ila == 'Diyarbakır')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Lice');
+            if (selected_ila == 'Diyarbakır')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Silvan');
+            if (selected_ila == 'Diyarbakır')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Eğil');
+            if (selected_ila == 'Diyarbakır')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Kocaköy');
+            if (selected_ila == 'Diyarbakır')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Bağlar');
+            if (selected_ila == 'Diyarbakır')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Kayapınar');
+            if (selected_ila == 'Diyarbakır')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Sur');
+            if (selected_ila == 'Diyarbakır')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Yenişehir / Diyarbakır');
+            if (selected_ila == 'Edirne')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Edirne Merkez');
+            if (selected_ila == 'Edirne')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Enez');
+            if (selected_ila == 'Edirne')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Havsa');
+            if (selected_ila == 'Edirne')
+                select_ilcea.options[select_ilcea.options.length] = new Option('İpsala');
+            if (selected_ila == 'Edirne')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Keşan');
+            if (selected_ila == 'Edirne')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Lalapaşa');
+            if (selected_ila == 'Edirne')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Meriç');
+            if (selected_ila == 'Edirne')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Uzunköprü');
+            if (selected_ila == 'Edirne')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Süloğlu');
+            if (selected_ila == 'Elazığ')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Ağın');
+            if (selected_ila == 'Elazığ')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Baskil');
+            if (selected_ila == 'Elazığ')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Elazığ Merkez');
+            if (selected_ila == 'Elazığ')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Karakoçan');
+            if (selected_ila == 'Elazığ')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Keban');
+            if (selected_ila == 'Elazığ')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Maden');
+            if (selected_ila == 'Elazığ')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Palu');
+            if (selected_ila == 'Elazığ')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Sivrice');
+            if (selected_ila == 'Elazığ')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Arıcak');
+            if (selected_ila == 'Elazığ')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Kovancılar');
+            if (selected_ila == 'Elazığ')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Alacakaya');
+            if (selected_ila == 'Erzincan')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Çayırlı');
+            if (selected_ila == 'Erzincan')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Erzincan Merkez');
+            if (selected_ila == 'Erzincan')
+                select_ilcea.options[select_ilcea.options.length] = new Option('İliç');
+            if (selected_ila == 'Erzincan')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Kemah');
+            if (selected_ila == 'Erzincan')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Kemaliye');
+            if (selected_ila == 'Erzincan')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Refahiye');
+            if (selected_ila == 'Erzincan')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Tercan');
+            if (selected_ila == 'Erzincan')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Üzümlü');
+            if (selected_ila == 'Erzincan')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Otlukbeli');
+            if (selected_ila == 'Erzurum')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Aşkale');
+            if (selected_ila == 'Erzurum')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Çat');
+            if (selected_ila == 'Erzurum')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Erzurum Merkez');
+            if (selected_ila == 'Erzurum')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Hınıs');
+            if (selected_ila == 'Erzurum')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Horasan');
+            if (selected_ila == 'Erzurum')
+                select_ilcea.options[select_ilcea.options.length] = new Option('İspir');
+            if (selected_ila == 'Erzurum')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Karayazı');
+            if (selected_ila == 'Erzurum')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Narman');
+            if (selected_ila == 'Erzurum')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Oltu');
+            if (selected_ila == 'Erzurum')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Olur');
+            if (selected_ila == 'Erzurum')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Pasinler');
+            if (selected_ila == 'Erzurum')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Şenkaya');
+            if (selected_ila == 'Erzurum')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Tekman');
+            if (selected_ila == 'Erzurum')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Tortum');
+            if (selected_ila == 'Erzurum')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Karaçoban');
+            if (selected_ila == 'Erzurum')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Uzundere');
+            if (selected_ila == 'Erzurum')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Pazaryolu');
+            if (selected_ila == 'Erzurum')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Aziziye');
+            if (selected_ila == 'Erzurum')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Köprüköy');
+            if (selected_ila == 'Erzurum')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Palandöken');
+            if (selected_ila == 'Erzurum')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Yakutiye');
+            if (selected_ila == 'Eskişehir')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Çifteler');
+            if (selected_ila == 'Eskişehir')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Eskişehir Merkez');
+            if (selected_ila == 'Eskişehir')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Mahmudiye');
+            if (selected_ila == 'Eskişehir')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Mihalıççık');
+            if (selected_ila == 'Eskişehir')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Sarıcakaya');
+            if (selected_ila == 'Eskişehir')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Seyitgazi');
+            if (selected_ila == 'Eskişehir')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Sivrihisar');
+            if (selected_ila == 'Eskişehir')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Alpu');
+            if (selected_ila == 'Eskişehir')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Beylikova');
+            if (selected_ila == 'Eskişehir')
+                select_ilcea.options[select_ilcea.options.length] = new Option('İnönü');
+            if (selected_ila == 'Eskişehir')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Günyüzü');
+            if (selected_ila == 'Eskişehir')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Han');
+            if (selected_ila == 'Eskişehir')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Mihalgazi');
+            if (selected_ila == 'Eskişehir')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Odunpazarı');
+            if (selected_ila == 'Eskişehir')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Tepebaşı');
+            if (selected_ila == 'Gaziantep')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Araban');
+            if (selected_ila == 'Gaziantep')
+                select_ilcea.options[select_ilcea.options.length] = new Option('İslahiye');
+            if (selected_ila == 'Gaziantep')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Nizip');
+            if (selected_ila == 'Gaziantep')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Oğuzeli');
+            if (selected_ila == 'Gaziantep')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Yavuzeli');
+            if (selected_ila == 'Gaziantep')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Şahinbey');
+            if (selected_ila == 'Gaziantep')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Şehitkamil');
+            if (selected_ila == 'Gaziantep')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Karkamış');
+            if (selected_ila == 'Gaziantep')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Nurdağı');
+            if (selected_ila == 'Giresun')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Alucra');
+            if (selected_ila == 'Giresun')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Bulancak');
+            if (selected_ila == 'Giresun')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Dereli');
+            if (selected_ila == 'Giresun')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Espiye');
+            if (selected_ila == 'Giresun')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Eynesil');
+            if (selected_ila == 'Giresun')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Giresun Merkez');
+            if (selected_ila == 'Giresun')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Görele');
+            if (selected_ila == 'Giresun')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Keşap');
+            if (selected_ila == 'Giresun')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Şebinkarahisar');
+            if (selected_ila == 'Giresun')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Tirebolu');
+            if (selected_ila == 'Giresun')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Piraziz');
+            if (selected_ila == 'Giresun')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Yağlıdere');
+            if (selected_ila == 'Giresun')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Çamoluk');
+            if (selected_ila == 'Giresun')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Çanakçı');
+            if (selected_ila == 'Giresun')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Doğankent');
+            if (selected_ila == 'Giresun')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Güce');
+            if (selected_ila == 'Gümüşhane')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Gümüşhane Merkez');
+            if (selected_ila == 'Gümüşhane')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Kelkit');
+            if (selected_ila == 'Gümüşhane')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Şiran');
+            if (selected_ila == 'Gümüşhane')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Torul');
+            if (selected_ila == 'Gümüşhane')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Köse');
+            if (selected_ila == 'Gümüşhane')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Kürtün');
+            if (selected_ila == 'Hakkari')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Çukurca');
+            if (selected_ila == 'Hakkari')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Hakkari Merkez');
+            if (selected_ila == 'Hakkari')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Şemdinli');
+            if (selected_ila == 'Hakkari')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Yüksekova');
+            if (selected_ila == 'Hatay')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Altınözü');
+            if (selected_ila == 'Hatay')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Dörtyol');
+            if (selected_ila == 'Hatay')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Hassa');
+            if (selected_ila == 'Hatay')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Hatay Merkez');
+            if (selected_ila == 'Hatay')
+                select_ilcea.options[select_ilcea.options.length] = new Option('İskenderun');
+            if (selected_ila == 'Hatay')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Kırıkhan');
+            if (selected_ila == 'Hatay')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Reyhanlı');
+            if (selected_ila == 'Hatay')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Samandağ');
+            if (selected_ila == 'Hatay')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Yayladağı');
+            if (selected_ila == 'Hatay')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Erzin');
+            if (selected_ila == 'Hatay')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Belen');
+            if (selected_ila == 'Hatay')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Kumlu');
+            if (selected_ila == 'Hatay')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Antakya');
+            if (selected_ila == 'Hatay')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Arsuz');
+            if (selected_ila == 'Hatay')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Defne');
+            if (selected_ila == 'Hatay')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Payas');
+            if (selected_ila == 'Isparta')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Atabey');
+            if (selected_ila == 'Isparta')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Eğirdir');
+            if (selected_ila == 'Isparta')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Gelendost');
+            if (selected_ila == 'Isparta')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Isparta Merkez');
+            if (selected_ila == 'Isparta')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Keçiborlu');
+            if (selected_ila == 'Isparta')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Senirkent');
+            if (selected_ila == 'Isparta')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Sütçüler');
+            if (selected_ila == 'Isparta')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Şarkikaraağaç');
+            if (selected_ila == 'Isparta')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Uluborlu');
+            if (selected_ila == 'Isparta')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Yalvaç');
+            if (selected_ila == 'Isparta')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Aksu / Isparta');
+            if (selected_ila == 'Isparta')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Gönen / Isparta');
+            if (selected_ila == 'Isparta')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Yenişarbademli');
+            if (selected_ila == 'Mersin')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Anamur');
+            if (selected_ila == 'Mersin')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Erdemli');
+            if (selected_ila == 'Mersin')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Gülnar');
+            if (selected_ila == 'Mersin')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Mersin Merkez');
+            if (selected_ila == 'Mersin')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Mut');
+            if (selected_ila == 'Mersin')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Silifke');
+            if (selected_ila == 'Mersin')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Tarsus');
+            if (selected_ila == 'Mersin')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Aydıncık / Mersin');
+            if (selected_ila == 'Mersin')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Bozyazı');
+            if (selected_ila == 'Mersin')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Çamlıyayla');
+            if (selected_ila == 'Mersin')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Akdeniz');
+            if (selected_ila == 'Mersin')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Mezitli');
+            if (selected_ila == 'Mersin')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Toroslar');
+            if (selected_ila == 'Mersin')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Yenişehir / Mersin');
+            if (selected_ila == 'İstanbul')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Adalar');
+            if (selected_ila == 'İstanbul')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Bakırköy');
+            if (selected_ila == 'İstanbul')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Beşiktaş');
+            if (selected_ila == 'İstanbul')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Beykoz');
+            if (selected_ila == 'İstanbul')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Beyoğlu');
+            if (selected_ila == 'İstanbul')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Çatalca');
+            if (selected_ila == 'İstanbul')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Eminönü');
+            if (selected_ila == 'İstanbul')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Eyüp');
+            if (selected_ila == 'İstanbul')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Fatih');
+            if (selected_ila == 'İstanbul')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Gaziosmanpaşa');
+            if (selected_ila == 'İstanbul')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Kadıköy');
+            if (selected_ila == 'İstanbul')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Kartal');
+            if (selected_ila == 'İstanbul')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Sarıyer');
+            if (selected_ila == 'İstanbul')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Silivri');
+            if (selected_ila == 'İstanbul')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Şile');
+            if (selected_ila == 'İstanbul')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Şişli');
+            if (selected_ila == 'İstanbul')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Üsküdar');
+            if (selected_ila == 'İstanbul')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Zeytinburnu');
+            if (selected_ila == 'İstanbul')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Büyükçekmece');
+            if (selected_ila == 'İstanbul')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Kağıthane');
+            if (selected_ila == 'İstanbul')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Küçükçekmece');
+            if (selected_ila == 'İstanbul')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Pendik');
+            if (selected_ila == 'İstanbul')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Ümraniye');
+            if (selected_ila == 'İstanbul')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Bayrampaşa');
+            if (selected_ila == 'İstanbul')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Avcılar');
+            if (selected_ila == 'İstanbul')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Bağcılar');
+            if (selected_ila == 'İstanbul')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Bahçelievler');
+            if (selected_ila == 'İstanbul')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Güngören');
+            if (selected_ila == 'İstanbul')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Maltepe');
+            if (selected_ila == 'İstanbul')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Sultanbeyli');
+            if (selected_ila == 'İstanbul')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Tuzla');
+            if (selected_ila == 'İstanbul')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Esenler');
+            if (selected_ila == 'İstanbul')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Arnavutköy');
+            if (selected_ila == 'İstanbul')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Ataşehir');
+            if (selected_ila == 'İstanbul')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Başakşehir');
+            if (selected_ila == 'İstanbul')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Beylikdüzü');
+            if (selected_ila == 'İstanbul')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Çekmeköy');
+            if (selected_ila == 'İstanbul')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Esenyurt');
+            if (selected_ila == 'İstanbul')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Sancaktepe');
+            if (selected_ila == 'İstanbul')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Sultangazi');
+            if (selected_ila == 'İzmir')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Aliağa');
+            if (selected_ila == 'İzmir')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Bayındır');
+            if (selected_ila == 'İzmir')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Bergama');
+            if (selected_ila == 'İzmir')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Bornova');
+            if (selected_ila == 'İzmir')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Çeşme');
+            if (selected_ila == 'İzmir')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Dikili');
+            if (selected_ila == 'İzmir')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Foça');
+            if (selected_ila == 'İzmir')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Karaburun');
+            if (selected_ila == 'İzmir')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Karşıyaka');
+            if (selected_ila == 'İzmir')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Kemalpaşa / İzmir');
+            if (selected_ila == 'İzmir')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Kınık');
+            if (selected_ila == 'İzmir')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Kiraz');
+            if (selected_ila == 'İzmir')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Menemen');
+            if (selected_ila == 'İzmir')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Ödemiş');
+            if (selected_ila == 'İzmir')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Seferihisar');
+            if (selected_ila == 'İzmir')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Selçuk');
+            if (selected_ila == 'İzmir')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Tire');
+            if (selected_ila == 'İzmir')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Torbalı');
+            if (selected_ila == 'İzmir')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Urla');
+            if (selected_ila == 'İzmir')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Beydağ');
+            if (selected_ila == 'İzmir')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Buca');
+            if (selected_ila == 'İzmir')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Konak');
+            if (selected_ila == 'İzmir')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Menderes');
+            if (selected_ila == 'İzmir')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Balçova');
+            if (selected_ila == 'İzmir')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Çiğli');
+            if (selected_ila == 'İzmir')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Gaziemir');
+            if (selected_ila == 'İzmir')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Narlıdere');
+            if (selected_ila == 'İzmir')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Güzelbahçe');
+            if (selected_ila == 'İzmir')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Bayraklı');
+            if (selected_ila == 'İzmir')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Karabağlar');
+            if (selected_ila == 'Kars')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Arpaçay');
+            if (selected_ila == 'Kars')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Digor');
+            if (selected_ila == 'Kars')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Kağızman');
+            if (selected_ila == 'Kars')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Kars Merkez');
+            if (selected_ila == 'Kars')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Sarıkamış');
+            if (selected_ila == 'Kars')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Selim');
+            if (selected_ila == 'Kars')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Susuz');
+            if (selected_ila == 'Kars')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Akyaka');
+            if (selected_ila == 'Kastamonu')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Abana');
+            if (selected_ila == 'Kastamonu')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Araç');
+            if (selected_ila == 'Kastamonu')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Azdavay');
+            if (selected_ila == 'Kastamonu')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Bozkurt / Kastamonu');
+            if (selected_ila == 'Kastamonu')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Cide');
+            if (selected_ila == 'Kastamonu')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Çatalzeytin');
+            if (selected_ila == 'Kastamonu')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Daday');
+            if (selected_ila == 'Kastamonu')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Devrekani');
+            if (selected_ila == 'Kastamonu')
+                select_ilcea.options[select_ilcea.options.length] = new Option('İnebolu');
+            if (selected_ila == 'Kastamonu')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Kastamonu Merkez');
+            if (selected_ila == 'Kastamonu')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Küre');
+            if (selected_ila == 'Kastamonu')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Taşköprü');
+            if (selected_ila == 'Kastamonu')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Tosya');
+            if (selected_ila == 'Kastamonu')
+                select_ilcea.options[select_ilcea.options.length] = new Option('İhsangazi');
+            if (selected_ila == 'Kastamonu')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Pınarbaşı / Kastamonu');
+            if (selected_ila == 'Kastamonu')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Şenpazar');
+            if (selected_ila == 'Kastamonu')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Ağlı');
+            if (selected_ila == 'Kastamonu')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Doğanyurt');
+            if (selected_ila == 'Kastamonu')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Hanönü');
+            if (selected_ila == 'Kastamonu')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Seydiler');
+            if (selected_ila == 'Kayseri')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Bünyan');
+            if (selected_ila == 'Kayseri')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Develi');
+            if (selected_ila == 'Kayseri')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Felahiye');
+            if (selected_ila == 'Kayseri')
+                select_ilcea.options[select_ilcea.options.length] = new Option('İncesu');
+            if (selected_ila == 'Kayseri')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Pınarbaşı / Kayseri');
+            if (selected_ila == 'Kayseri')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Sarıoğlan');
+            if (selected_ila == 'Kayseri')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Sarız');
+            if (selected_ila == 'Kayseri')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Tomarza');
+            if (selected_ila == 'Kayseri')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Yahyalı');
+            if (selected_ila == 'Kayseri')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Yeşilhisar');
+            if (selected_ila == 'Kayseri')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Akkışla');
+            if (selected_ila == 'Kayseri')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Talas');
+            if (selected_ila == 'Kayseri')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Kocasinan');
+            if (selected_ila == 'Kayseri')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Melikgazi');
+            if (selected_ila == 'Kayseri')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Hacılar');
+            if (selected_ila == 'Kayseri')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Özvatan');
+            if (selected_ila == 'Kırklareli')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Babaeski');
+            if (selected_ila == 'Kırklareli')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Demirköy');
+            if (selected_ila == 'Kırklareli')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Kırklareli Merkez');
+            if (selected_ila == 'Kırklareli')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Kofçaz');
+            if (selected_ila == 'Kırklareli')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Lüleburgaz');
+            if (selected_ila == 'Kırklareli')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Pehlivanköy');
+            if (selected_ila == 'Kırklareli')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Pınarhisar');
+            if (selected_ila == 'Kırklareli')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Vize');
+            if (selected_ila == 'Kırşehir')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Çiçekdağı');
+            if (selected_ila == 'Kırşehir')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Kaman');
+            if (selected_ila == 'Kırşehir')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Kırşehir Merkez');
+            if (selected_ila == 'Kırşehir')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Mucur');
+            if (selected_ila == 'Kırşehir')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Akpınar');
+            if (selected_ila == 'Kırşehir')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Akçakent');
+            if (selected_ila == 'Kırşehir')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Boztepe');
+            if (selected_ila == 'Kocaeli')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Gebze');
+            if (selected_ila == 'Kocaeli')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Gölcük');
+            if (selected_ila == 'Kocaeli')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Kandıra');
+            if (selected_ila == 'Kocaeli')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Karamürsel');
+            if (selected_ila == 'Kocaeli')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Kocaeli Merkez');
+            if (selected_ila == 'Kocaeli')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Körfez');
+            if (selected_ila == 'Kocaeli')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Derince');
+            if (selected_ila == 'Kocaeli')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Başiskele');
+            if (selected_ila == 'Kocaeli')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Çayırova');
+            if (selected_ila == 'Kocaeli')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Darıca');
+            if (selected_ila == 'Kocaeli')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Dilovası');
+            if (selected_ila == 'Kocaeli')
+                select_ilcea.options[select_ilcea.options.length] = new Option('İzmit');
+            if (selected_ila == 'Kocaeli')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Kartepe');
+            if (selected_ila == 'Konya')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Akşehir');
+            if (selected_ila == 'Konya')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Beyşehir');
+            if (selected_ila == 'Konya')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Bozkır');
+            if (selected_ila == 'Konya')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Cihanbeyli');
+            if (selected_ila == 'Konya')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Çumra');
+            if (selected_ila == 'Konya')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Doğanhisar');
+            if (selected_ila == 'Konya')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Ereğli / Konya');
+            if (selected_ila == 'Konya')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Hadim');
+            if (selected_ila == 'Konya')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Ilgın');
+            if (selected_ila == 'Konya')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Kadınhanı');
+            if (selected_ila == 'Konya')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Karapınar');
+            if (selected_ila == 'Konya')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Kulu');
+            if (selected_ila == 'Konya')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Sarayönü');
+            if (selected_ila == 'Konya')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Seydişehir');
+            if (selected_ila == 'Konya')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Yunak');
+            if (selected_ila == 'Konya')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Akören');
+            if (selected_ila == 'Konya')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Altınekin');
+            if (selected_ila == 'Konya')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Derebucak');
+            if (selected_ila == 'Konya')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Hüyük');
+            if (selected_ila == 'Konya')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Karatay');
+            if (selected_ila == 'Konya')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Meram');
+            if (selected_ila == 'Konya')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Selçuklu');
+            if (selected_ila == 'Konya')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Taşkent');
+            if (selected_ila == 'Konya')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Ahırlı');
+            if (selected_ila == 'Konya')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Çeltik');
+            if (selected_ila == 'Konya')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Derbent');
+            if (selected_ila == 'Konya')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Emirgazi');
+            if (selected_ila == 'Konya')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Güneysınır');
+            if (selected_ila == 'Konya')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Halkapınar');
+            if (selected_ila == 'Konya')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Tuzlukçu');
+            if (selected_ila == 'Konya')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Yalıhüyük');
+            if (selected_ila == 'Kütahya')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Altıntaş');
+            if (selected_ila == 'Kütahya')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Domaniç');
+            if (selected_ila == 'Kütahya')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Emet');
+            if (selected_ila == 'Kütahya')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Gediz');
+            if (selected_ila == 'Kütahya')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Kütahya Merkez');
+            if (selected_ila == 'Kütahya')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Simav');
+            if (selected_ila == 'Kütahya')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Tavşanlı');
+            if (selected_ila == 'Kütahya')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Aslanapa');
+            if (selected_ila == 'Kütahya')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Dumlupınar');
+            if (selected_ila == 'Kütahya')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Hisarcık');
+            if (selected_ila == 'Kütahya')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Şaphane');
+            if (selected_ila == 'Kütahya')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Çavdarhisar');
+            if (selected_ila == 'Kütahya')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Pazarlar');
+            if (selected_ila == 'Malatya')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Akçadağ');
+            if (selected_ila == 'Malatya')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Arapgir');
+            if (selected_ila == 'Malatya')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Arguvan');
+            if (selected_ila == 'Malatya')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Darende');
+            if (selected_ila == 'Malatya')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Doğanşehir');
+            if (selected_ila == 'Malatya')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Hekimhan');
+            if (selected_ila == 'Malatya')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Malatya Merkez');
+            if (selected_ila == 'Malatya')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Pütürge');
+            if (selected_ila == 'Malatya')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Yeşilyurt / Malatya');
+            if (selected_ila == 'Malatya')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Battalgazi');
+            if (selected_ila == 'Malatya')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Doğanyol');
+            if (selected_ila == 'Malatya')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Kale / Malatya');
+            if (selected_ila == 'Malatya')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Kuluncak');
+            if (selected_ila == 'Malatya')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Yazıhan');
+            if (selected_ila == 'Manisa')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Akhisar');
+            if (selected_ila == 'Manisa')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Alaşehir');
+            if (selected_ila == 'Manisa')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Demirci');
+            if (selected_ila == 'Manisa')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Gördes');
+            if (selected_ila == 'Manisa')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Kırkağaç');
+            if (selected_ila == 'Manisa')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Kula');
+            if (selected_ila == 'Manisa')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Manisa Merkez');
+            if (selected_ila == 'Manisa')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Salihli');
+            if (selected_ila == 'Manisa')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Sarıgöl');
+            if (selected_ila == 'Manisa')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Saruhanlı');
+            if (selected_ila == 'Manisa')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Selendi');
+            if (selected_ila == 'Manisa')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Soma');
+            if (selected_ila == 'Manisa')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Turgutlu');
+            if (selected_ila == 'Manisa')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Ahmetli');
+            if (selected_ila == 'Manisa')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Gölmarmara');
+            if (selected_ila == 'Manisa')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Köprübaşı / Manisa');
+            if (selected_ila == 'Manisa')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Şehzadeler');
+            if (selected_ila == 'Manisa')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Yunusemre');
+            if (selected_ila == 'Kahramanmaraş')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Afşin');
+            if (selected_ila == 'Kahramanmaraş')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Andırın');
+            if (selected_ila == 'Kahramanmaraş')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Elbistan');
+            if (selected_ila == 'Kahramanmaraş')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Göksun');
+            if (selected_ila == 'Kahramanmaraş')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Kahramanmaraş Merkez');
+            if (selected_ila == 'Kahramanmaraş')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Pazarcık');
+            if (selected_ila == 'Kahramanmaraş')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Türkoğlu');
+            if (selected_ila == 'Kahramanmaraş')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Çağlayancerit');
+            if (selected_ila == 'Kahramanmaraş')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Ekinözü');
+            if (selected_ila == 'Kahramanmaraş')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Nurhak');
+            if (selected_ila == 'Kahramanmaraş')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Dulkadiroğlu');
+            if (selected_ila == 'Kahramanmaraş')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Onikişubat');
+            if (selected_ila == 'Mardin')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Derik');
+            if (selected_ila == 'Mardin')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Kızıltepe');
+            if (selected_ila == 'Mardin')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Mardin Merkez');
+            if (selected_ila == 'Mardin')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Mazıdağı');
+            if (selected_ila == 'Mardin')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Midyat');
+            if (selected_ila == 'Mardin')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Nusaybin');
+            if (selected_ila == 'Mardin')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Ömerli');
+            if (selected_ila == 'Mardin')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Savur');
+            if (selected_ila == 'Mardin')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Dargeçit');
+            if (selected_ila == 'Mardin')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Yeşilli');
+            if (selected_ila == 'Mardin')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Artuklu');
+            if (selected_ila == 'Muğla')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Bodrum');
+            if (selected_ila == 'Muğla')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Datça');
+            if (selected_ila == 'Muğla')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Fethiye');
+            if (selected_ila == 'Muğla')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Köyceğiz');
+            if (selected_ila == 'Muğla')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Marmaris');
+            if (selected_ila == 'Muğla')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Milas');
+            if (selected_ila == 'Muğla')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Muğla Merkez');
+            if (selected_ila == 'Muğla')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Ula');
+            if (selected_ila == 'Muğla')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Yatağan');
+            if (selected_ila == 'Muğla')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Dalaman');
+            if (selected_ila == 'Muğla')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Ortaca');
+            if (selected_ila == 'Muğla')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Kavaklıdere');
+            if (selected_ila == 'Muğla')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Menteşe');
+            if (selected_ila == 'Muğla')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Seydikemer');
+            if (selected_ila == 'Muş')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Bulanık');
+            if (selected_ila == 'Muş')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Malazgirt');
+            if (selected_ila == 'Muş')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Muş Merkez');
+            if (selected_ila == 'Muş')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Varto');
+            if (selected_ila == 'Muş')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Hasköy');
+            if (selected_ila == 'Muş')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Korkut');
+            if (selected_ila == 'Nevşehir')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Avanos');
+            if (selected_ila == 'Nevşehir')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Derinkuyu');
+            if (selected_ila == 'Nevşehir')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Gülşehir');
+            if (selected_ila == 'Nevşehir')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Hacıbektaş');
+            if (selected_ila == 'Nevşehir')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Kozaklı');
+            if (selected_ila == 'Nevşehir')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Nevşehir Merkez');
+            if (selected_ila == 'Nevşehir')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Ürgüp');
+            if (selected_ila == 'Nevşehir')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Acıgöl');
+            if (selected_ila == 'Niğde')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Bor');
+            if (selected_ila == 'Niğde')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Çamardı');
+            if (selected_ila == 'Niğde')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Niğde Merkez');
+            if (selected_ila == 'Niğde')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Ulukışla');
+            if (selected_ila == 'Niğde')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Altunhisar');
+            if (selected_ila == 'Niğde')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Çiftlik');
+            if (selected_ila == 'Ordu')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Akkuş');
+            if (selected_ila == 'Ordu')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Aybastı');
+            if (selected_ila == 'Ordu')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Fatsa');
+            if (selected_ila == 'Ordu')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Gölköy');
+            if (selected_ila == 'Ordu')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Korgan');
+            if (selected_ila == 'Ordu')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Kumru');
+            if (selected_ila == 'Ordu')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Mesudiye');
+            if (selected_ila == 'Ordu')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Ordu Merkez');
+            if (selected_ila == 'Ordu')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Perşembe');
+            if (selected_ila == 'Ordu')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Ulubey / Ordu');
+            if (selected_ila == 'Ordu')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Ünye');
+            if (selected_ila == 'Ordu')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Gülyalı');
+            if (selected_ila == 'Ordu')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Gürgentepe');
+            if (selected_ila == 'Ordu')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Çamaş');
+            if (selected_ila == 'Ordu')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Çatalpınar');
+            if (selected_ila == 'Ordu')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Çaybaşı');
+            if (selected_ila == 'Ordu')
+                select_ilcea.options[select_ilcea.options.length] = new Option('İkizce');
+            if (selected_ila == 'Ordu')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Kabadüz');
+            if (selected_ila == 'Ordu')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Kabataş');
+            if (selected_ila == 'Ordu')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Altınordu');
+            if (selected_ila == 'Rize')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Ardeşen');
+            if (selected_ila == 'Rize')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Çamlıhemşin');
+            if (selected_ila == 'Rize')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Çayeli');
+            if (selected_ila == 'Rize')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Fındıklı');
+            if (selected_ila == 'Rize')
+                select_ilcea.options[select_ilcea.options.length] = new Option('İkizdere');
+            if (selected_ila == 'Rize')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Kalkandere');
+            if (selected_ila == 'Rize')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Pazar / Rize');
+            if (selected_ila == 'Rize')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Rize Merkez');
+            if (selected_ila == 'Rize')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Güneysu');
+            if (selected_ila == 'Rize')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Derepazarı');
+            if (selected_ila == 'Rize')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Hemşin');
+            if (selected_ila == 'Rize')
+                select_ilcea.options[select_ilcea.options.length] = new Option('İyidere');
+            if (selected_ila == 'Sakarya')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Akyazı');
+            if (selected_ila == 'Sakarya')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Geyve');
+            if (selected_ila == 'Sakarya')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Hendek');
+            if (selected_ila == 'Sakarya')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Karasu');
+            if (selected_ila == 'Sakarya')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Kaynarca');
+            if (selected_ila == 'Sakarya')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Sakarya Merkez');
+            if (selected_ila == 'Sakarya')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Sapanca');
+            if (selected_ila == 'Sakarya')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Kocaali');
+            if (selected_ila == 'Sakarya')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Pamukova');
+            if (selected_ila == 'Sakarya')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Taraklı');
+            if (selected_ila == 'Sakarya')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Ferizli');
+            if (selected_ila == 'Sakarya')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Karapürçek');
+            if (selected_ila == 'Sakarya')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Söğütlü');
+            if (selected_ila == 'Sakarya')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Adapazarı');
+            if (selected_ila == 'Sakarya')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Arifiye');
+            if (selected_ila == 'Sakarya')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Erenler');
+            if (selected_ila == 'Sakarya')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Serdivan');
+            if (selected_ila == 'Samsun')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Alaçam');
+            if (selected_ila == 'Samsun')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Bafra');
+            if (selected_ila == 'Samsun')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Çarşamba');
+            if (selected_ila == 'Samsun')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Havza');
+            if (selected_ila == 'Samsun')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Kavak');
+            if (selected_ila == 'Samsun')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Ladik');
+            if (selected_ila == 'Samsun')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Samsun Merkez');
+            if (selected_ila == 'Samsun')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Terme');
+            if (selected_ila == 'Samsun')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Vezirköprü');
+            if (selected_ila == 'Samsun')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Asarcık');
+            if (selected_ila == 'Samsun')
+                select_ilcea.options[select_ilcea.options.length] = new Option('19 Mayıs');
+            if (selected_ila == 'Samsun')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Salıpazarı');
+            if (selected_ila == 'Samsun')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Tekkeköy');
+            if (selected_ila == 'Samsun')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Ayvacık / Samsun');
+            if (selected_ila == 'Samsun')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Yakakent');
+            if (selected_ila == 'Samsun')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Atakum');
+            if (selected_ila == 'Samsun')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Canik');
+            if (selected_ila == 'Samsun')
+                select_ilcea.options[select_ilcea.options.length] = new Option('İlkadım');
+            if (selected_ila == 'Siirt')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Baykan');
+            if (selected_ila == 'Siirt')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Eruh');
+            if (selected_ila == 'Siirt')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Kurtalan');
+            if (selected_ila == 'Siirt')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Pervari');
+            if (selected_ila == 'Siirt')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Siirt Merkez');
+            if (selected_ila == 'Siirt')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Şirvan');
+            if (selected_ila == 'Siirt')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Tillo');
+            if (selected_ila == 'Sinop')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Ayancık');
+            if (selected_ila == 'Sinop')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Boyabat');
+            if (selected_ila == 'Sinop')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Durağan');
+            if (selected_ila == 'Sinop')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Erfelek');
+            if (selected_ila == 'Sinop')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Gerze');
+            if (selected_ila == 'Sinop')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Sinop Merkez');
+            if (selected_ila == 'Sinop')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Türkeli');
+            if (selected_ila == 'Sinop')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Dikmen');
+            if (selected_ila == 'Sinop')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Saraydüzü');
+            if (selected_ila == 'Sivas')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Divriği');
+            if (selected_ila == 'Sivas')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Gemerek');
+            if (selected_ila == 'Sivas')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Gürün');
+            if (selected_ila == 'Sivas')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Hafik');
+            if (selected_ila == 'Sivas')
+                select_ilcea.options[select_ilcea.options.length] = new Option('İmranlı');
+            if (selected_ila == 'Sivas')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Kangal');
+            if (selected_ila == 'Sivas')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Koyulhisar');
+            if (selected_ila == 'Sivas')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Sivas Merkez');
+            if (selected_ila == 'Sivas')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Suşehri');
+            if (selected_ila == 'Sivas')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Şarkışla');
+            if (selected_ila == 'Sivas')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Yıldızeli');
+            if (selected_ila == 'Sivas')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Zara');
+            if (selected_ila == 'Sivas')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Akıncılar');
+            if (selected_ila == 'Sivas')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Altınyayla / Sivas');
+            if (selected_ila == 'Sivas')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Doğanşar');
+            if (selected_ila == 'Sivas')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Gölova');
+            if (selected_ila == 'Sivas')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Ulaş');
+            if (selected_ila == 'Tekirdağ')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Çerkezköy');
+            if (selected_ila == 'Tekirdağ')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Çorlu');
+            if (selected_ila == 'Tekirdağ')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Hayrabolu');
+            if (selected_ila == 'Tekirdağ')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Malkara');
+            if (selected_ila == 'Tekirdağ')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Muratlı');
+            if (selected_ila == 'Tekirdağ')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Saray / Tekirdağ');
+            if (selected_ila == 'Tekirdağ')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Şarköy');
+            if (selected_ila == 'Tekirdağ')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Tekirdağ Merkez');
+            if (selected_ila == 'Tekirdağ')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Marmaraereğlisi');
+            if (selected_ila == 'Tekirdağ')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Ergene');
+            if (selected_ila == 'Tekirdağ')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Kapaklı');
+            if (selected_ila == 'Tekirdağ')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Süleymanpaşa');
+            if (selected_ila == 'Tokat')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Almus');
+            if (selected_ila == 'Tokat')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Artova');
+            if (selected_ila == 'Tokat')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Erbaa');
+            if (selected_ila == 'Tokat')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Niksar');
+            if (selected_ila == 'Tokat')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Reşadiye');
+            if (selected_ila == 'Tokat')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Tokat Merkez');
+            if (selected_ila == 'Tokat')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Turhal');
+            if (selected_ila == 'Tokat')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Zile');
+            if (selected_ila == 'Tokat')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Pazar / Tokat');
+            if (selected_ila == 'Tokat')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Yeşilyurt / Tokat');
+            if (selected_ila == 'Tokat')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Başçiftlik');
+            if (selected_ila == 'Tokat')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Sulusaray');
+            if (selected_ila == 'Trabzon')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Akçaabat');
+            if (selected_ila == 'Trabzon')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Araklı');
+            if (selected_ila == 'Trabzon')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Arsin');
+            if (selected_ila == 'Trabzon')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Çaykara');
+            if (selected_ila == 'Trabzon')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Maçka');
+            if (selected_ila == 'Trabzon')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Of');
+            if (selected_ila == 'Trabzon')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Sürmene');
+            if (selected_ila == 'Trabzon')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Tonya');
+            if (selected_ila == 'Trabzon')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Trabzon Merkez');
+            if (selected_ila == 'Trabzon')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Vakfıkebir');
+            if (selected_ila == 'Trabzon')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Yomra');
+            if (selected_ila == 'Trabzon')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Beşikdüzü');
+            if (selected_ila == 'Trabzon')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Şalpazarı');
+            if (selected_ila == 'Trabzon')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Çarşıbaşı');
+            if (selected_ila == 'Trabzon')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Dernekpazarı');
+            if (selected_ila == 'Trabzon')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Düzköy');
+            if (selected_ila == 'Trabzon')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Hayrat');
+            if (selected_ila == 'Trabzon')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Köprübaşı / Trabzon');
+            if (selected_ila == 'Trabzon')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Ortahisar');
+            if (selected_ila == 'Tunceli')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Çemişgezek');
+            if (selected_ila == 'Tunceli')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Hozat');
+            if (selected_ila == 'Tunceli')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Mazgirt');
+            if (selected_ila == 'Tunceli')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Nazımiye');
+            if (selected_ila == 'Tunceli')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Ovacık / Tunceli');
+            if (selected_ila == 'Tunceli')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Pertek');
+            if (selected_ila == 'Tunceli')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Pülümür');
+            if (selected_ila == 'Tunceli')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Tunceli Merkez');
+            if (selected_ila == 'Şanlıurfa')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Akçakale');
+            if (selected_ila == 'Şanlıurfa')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Birecik');
+            if (selected_ila == 'Şanlıurfa')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Bozova');
+            if (selected_ila == 'Şanlıurfa')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Ceylanpınar');
+            if (selected_ila == 'Şanlıurfa')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Halfeti');
+            if (selected_ila == 'Şanlıurfa')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Hilvan');
+            if (selected_ila == 'Şanlıurfa')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Siverek');
+            if (selected_ila == 'Şanlıurfa')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Suruç');
+            if (selected_ila == 'Şanlıurfa')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Şanlıurfa Merkez');
+            if (selected_ila == 'Şanlıurfa')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Viranşehir');
+            if (selected_ila == 'Şanlıurfa')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Harran');
+            if (selected_ila == 'Şanlıurfa')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Eyyübiye');
+            if (selected_ila == 'Şanlıurfa')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Haliliye');
+            if (selected_ila == 'Şanlıurfa')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Karaköprü');
+            if (selected_ila == 'Uşak')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Banaz');
+            if (selected_ila == 'Uşak')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Eşme');
+            if (selected_ila == 'Uşak')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Karahallı');
+            if (selected_ila == 'Uşak')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Sivaslı');
+            if (selected_ila == 'Uşak')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Ulubey / Uşak');
+            if (selected_ila == 'Uşak')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Uşak Merkez');
+            if (selected_ila == 'Van')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Başkale');
+            if (selected_ila == 'Van')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Çatak');
+            if (selected_ila == 'Van')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Erciş');
+            if (selected_ila == 'Van')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Gevaş');
+            if (selected_ila == 'Van')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Gürpınar');
+            if (selected_ila == 'Van')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Muradiye');
+            if (selected_ila == 'Van')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Özalp');
+            if (selected_ila == 'Van')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Van Merkez');
+            if (selected_ila == 'Van')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Bahçesaray');
+            if (selected_ila == 'Van')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Çaldıran');
+            if (selected_ila == 'Van')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Edremit / Van');
+            if (selected_ila == 'Van')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Saray / Van');
+            if (selected_ila == 'Van')
+                select_ilcea.options[select_ilcea.options.length] = new Option('İpekyolu');
+            if (selected_ila == 'Van')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Tuşba');
+            if (selected_ila == 'Yozgat')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Akdağmadeni');
+            if (selected_ila == 'Yozgat')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Boğazlıyan');
+            if (selected_ila == 'Yozgat')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Çayıralan');
+            if (selected_ila == 'Yozgat')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Çekerek');
+            if (selected_ila == 'Yozgat')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Sarıkaya');
+            if (selected_ila == 'Yozgat')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Sorgun');
+            if (selected_ila == 'Yozgat')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Şefaatli');
+            if (selected_ila == 'Yozgat')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Yerköy');
+            if (selected_ila == 'Yozgat')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Yozgat Merkez');
+            if (selected_ila == 'Yozgat')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Aydıncık / Yozgat');
+            if (selected_ila == 'Yozgat')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Çandır');
+            if (selected_ila == 'Yozgat')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Kadışehri');
+            if (selected_ila == 'Yozgat')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Saraykent');
+            if (selected_ila == 'Yozgat')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Yenifakılı');
+            if (selected_ila == 'Zonguldak')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Çaycuma');
+            if (selected_ila == 'Zonguldak')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Devrek');
+            if (selected_ila == 'Zonguldak')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Ereğli / Zonguldak');
+            if (selected_ila == 'Zonguldak')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Zonguldak Merkez');
+            if (selected_ila == 'Zonguldak')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Alaplı');
+            if (selected_ila == 'Zonguldak')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Gökçebey');
+            if (selected_ila == 'Zonguldak')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Kilimli');
+            if (selected_ila == 'Zonguldak')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Kozlu');
+            if (selected_ila == 'Aksaray')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Aksaray Merkez');
+            if (selected_ila == 'Aksaray')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Ortaköy / Aksaray');
+            if (selected_ila == 'Aksaray')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Ağaçören');
+            if (selected_ila == 'Aksaray')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Güzelyurt');
+            if (selected_ila == 'Aksaray')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Sarıyahşi');
+            if (selected_ila == 'Aksaray')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Eskil');
+            if (selected_ila == 'Aksaray')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Gülağaç');
+            if (selected_ila == 'Aksaray')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Sultanhanı');
+            if (selected_ila == 'Bayburt')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Bayburt Merkez');
+            if (selected_ila == 'Bayburt')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Aydıntepe');
+            if (selected_ila == 'Bayburt')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Demirözü');
+            if (selected_ila == 'Karaman')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Ermenek');
+            if (selected_ila == 'Karaman')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Karaman Merkez');
+            if (selected_ila == 'Karaman')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Ayrancı');
+            if (selected_ila == 'Karaman')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Kazımkarabekir');
+            if (selected_ila == 'Karaman')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Başyayla');
+            if (selected_ila == 'Karaman')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Sarıveliler');
+            if (selected_ila == 'Kırıkkale')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Delice');
+            if (selected_ila == 'Kırıkkale')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Keskin');
+            if (selected_ila == 'Kırıkkale')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Kırıkkale Merkez');
+            if (selected_ila == 'Kırıkkale')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Sulakyurt');
+            if (selected_ila == 'Kırıkkale')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Bahşili');
+            if (selected_ila == 'Kırıkkale')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Balışeyh');
+            if (selected_ila == 'Kırıkkale')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Çelebi');
+            if (selected_ila == 'Kırıkkale')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Karakeçili');
+            if (selected_ila == 'Kırıkkale')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Yahşihan');
+            if (selected_ila == 'Batman')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Batman Merkez');
+            if (selected_ila == 'Batman')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Beşiri');
+            if (selected_ila == 'Batman')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Gercüş');
+            if (selected_ila == 'Batman')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Kozluk');
+            if (selected_ila == 'Batman')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Sason');
+            if (selected_ila == 'Batman')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Hasankeyf');
+            if (selected_ila == 'Şırnak')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Beytüşşebap');
+            if (selected_ila == 'Şırnak')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Cizre');
+            if (selected_ila == 'Şırnak')
+                select_ilcea.options[select_ilcea.options.length] = new Option('İdil');
+            if (selected_ila == 'Şırnak')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Silopi');
+            if (selected_ila == 'Şırnak')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Şırnak Merkez');
+            if (selected_ila == 'Şırnak')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Uludere');
+            if (selected_ila == 'Şırnak')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Güçlükonak');
+            if (selected_ila == 'Bartın')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Bartın Merkez');
+            if (selected_ila == 'Bartın')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Kurucaşile');
+            if (selected_ila == 'Bartın')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Ulus');
+            if (selected_ila == 'Bartın')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Amasra');
+            if (selected_ila == 'Ardahan')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Ardahan Merkez');
+            if (selected_ila == 'Ardahan')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Çıldır');
+            if (selected_ila == 'Ardahan')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Göle');
+            if (selected_ila == 'Ardahan')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Hanak');
+            if (selected_ila == 'Ardahan')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Posof');
+            if (selected_ila == 'Ardahan')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Damal');
+            if (selected_ila == 'Iğdır')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Aralık');
+            if (selected_ila == 'Iğdır')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Iğdır Merkez');
+            if (selected_ila == 'Iğdır')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Tuzluca');
+            if (selected_ila == 'Iğdır')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Karakoyunlu');
+            if (selected_ila == 'Yalova')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Yalova Merkez');
+            if (selected_ila == 'Yalova')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Altınova');
+            if (selected_ila == 'Yalova')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Armutlu');
+            if (selected_ila == 'Yalova')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Çınarcık');
+            if (selected_ila == 'Yalova')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Çiftlikköy');
+            if (selected_ila == 'Yalova')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Termal');
+            if (selected_ila == 'Karabük')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Eflani');
+            if (selected_ila == 'Karabük')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Eskipazar');
+            if (selected_ila == 'Karabük')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Karabük Merkez');
+            if (selected_ila == 'Karabük')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Ovacık / Karabük');
+            if (selected_ila == 'Karabük')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Safranbolu');
+            if (selected_ila == 'Karabük')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Yenice / Karabük');
+            if (selected_ila == 'Kilis')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Kilis Merkez');
+            if (selected_ila == 'Kilis')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Elbeyli');
+            if (selected_ila == 'Kilis')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Musabeyli');
+            if (selected_ila == 'Kilis')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Polateli');
+            if (selected_ila == 'Osmaniye')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Bahçe');
+            if (selected_ila == 'Osmaniye')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Kadirli');
+            if (selected_ila == 'Osmaniye')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Osmaniye Merkez');
+            if (selected_ila == 'Osmaniye')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Düziçi');
+            if (selected_ila == 'Osmaniye')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Hasanbeyli');
+            if (selected_ila == 'Osmaniye')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Sumbas');
+            if (selected_ila == 'Osmaniye')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Toprakkale');
+            if (selected_ila == 'Düzce')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Akçakoca');
+            if (selected_ila == 'Düzce')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Düzce Merkez');
+            if (selected_ila == 'Düzce')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Yığılca');
+            if (selected_ila == 'Düzce')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Cumayeri');
+            if (selected_ila == 'Düzce')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Gölyaka');
+            if (selected_ila == 'Düzce')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Çilimli');
+            if (selected_ila == 'Düzce')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Gümüşova');
+            if (selected_ila == 'Düzce')
+                select_ilcea.options[select_ilcea.options.length] = new Option('Kaynaşlı');
+
+
+        }
+
+    </script>
+}
+
+
+
+
+
+
+
+

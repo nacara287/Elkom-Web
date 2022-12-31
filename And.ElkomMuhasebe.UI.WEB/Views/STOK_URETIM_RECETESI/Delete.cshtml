@@ -1,0 +1,161 @@
+﻿@model And.ElkomMuhasebe.Core.Model.Entity.FirmaDB.STOK_URETIM_RECETESI
+
+@{
+    ViewBag.Title = "Delete";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Delete</h2>
+
+<h3>Are you sure you want to delete this?</h3>
+<div>
+    <h4>STOK_URETIM_RECETESI</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.RECETEKODU)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.RECETEKODU)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.deleted)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.deleted)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.RECETEADI)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.RECETEADI)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.TARIH)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.TARIH)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.OZELKOD)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.OZELKOD)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.ACIKLAMA)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.ACIKLAMA)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.MALIYETTURU)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.MALIYETTURU)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.SON_URETIM_TARIHI)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.SON_URETIM_TARIHI)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.URETIM_ADET)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.URETIM_ADET)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.URETIM_TIPI)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.URETIM_TIPI)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.URETIM_GURUBU)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.URETIM_GURUBU)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.SON_URETIM_MALIYET)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.SON_URETIM_MALIYET)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.KDV_EKLE)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.KDV_EKLE)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.CreateDate)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.CreateDate)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.CreateUserID)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.CreateUserID)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.UpdateDate)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.UpdateDate)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.UpdateUserID)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.UpdateUserID)
+        </dd>
+
+    </dl>
+
+    @using (Html.BeginForm()) {
+        @Html.AntiForgeryToken()
+
+        <div class="form-actions no-color">
+            <input type="submit" value="Delete" class="btn btn-default" /> |
+            @Html.ActionLink("Back to List", "Index")
+        </div>
+    }
+</div>

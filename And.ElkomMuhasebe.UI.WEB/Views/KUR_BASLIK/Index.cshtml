@@ -1,0 +1,316 @@
+﻿@model IEnumerable<And.ElkomMuhasebe.Core.Model.Entity.FirmaDB.KUR_BASLIK>
+
+@{
+    ViewBag.Title = "Kur Listesi";
+    Layout = "~/Views/Shared/yeni.cshtml";
+}
+
+<div class="row">
+    <div class="col-12">
+        <div class="card">
+
+
+
+            <!-- /.card-header -->
+            <div class="card-body">
+                <div id="example2_wrapper" class="table-responsive">
+
+                    <div class="col-sm-12">
+                        <table id="bootstrap-table" class="table-bordered table-sm" data-show-search-clear-button="true"
+                               data-show-footer="true" data-footer-style="footerStyle" data-show-print="true"
+                               data-single-select="true" data-show-refresh="true" data-icon-size="sm"
+                               data-page-size="5"
+                                data-page-list="[10, 20, 50, 100, 200, 300]" data-show-export="true" data-reorderable-columns="true">
+                            <thead>
+                                <tr>
+                                    <th data-field="state" class="no-print" data-print-ignore="true" data-checkbox="true"></th>
+                                    <th data-field="ID" data-print-ignore="true" data-visible="false" class="text-center" data-sortable="true" data-footer-formatter="idFormatter">ID</th>
+                                    <th data-field="KURADI" data-sortable="true" data-footer-formatter="nameFormatter">Kur Adı</th>
+                                    <th data-field="KURKODU" data-sortable="true">Kur Kodu</th>
+                                    <th data-field="KUR" data-sortable="true">Kur</th>
+                                    <th data-field="Aktif">Aktif</th>
+                                    <th data-field="TARIH" data-align="right">Tarih</th>
+
+                                    <th data-field="actions" data-print-ignore="true" class="td-actions text-right no-print" data-events="operateEvents" data-formatter="operateFormatter">İşlemler</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+
+                                @foreach (var item in Model)
+                                {
+                                    <tr>
+                                        <td>
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.ID)
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.KURADI)
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.KURKODU)
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.KUR)
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.Aktif)
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.CreateDate)
+                                        </td>
+
+
+
+                                        <td>
+                                        </td>
+                                    </tr>
+                                }
+
+                            </tbody>
+
+                        </table>
+
+                    </div>
+                    <!-- /.card-body -->
+                </div>
+                <!-- /.card -->
+                <!-- /.col -->
+            </div>
+            <!-- /.row -->
+        </div>
+    </div>
+</div>
+
+@section script{
+    <script type="text/javascript">
+        function pad(d) {
+            return (d < 10) ? '0' + d.toString() : d.toString();
+        }
+        Date.prototype.formatMMDDYYYY = function () {
+            return (pad(this.getDate()) + "/" + pad(this.getMonth() + 1) +
+
+                "/" + this.getFullYear());
+        }
+
+        function get_query_params(p) {
+
+            var a = document.getElementById("bakiyelistesi");
+            var bakiye = a.options[a.selectedIndex].value;
+            var b = document.getElementById("aktifpasif");
+            var aktiflik = b.options[b.selectedIndex].value;
+            var arr = [{ verismi: "BAKIYE", deger: document.getElementById("bbs").value, deger2: document.getElementById("bks").value, filtretipi: 3 }]
+            arr.push({ verismi: "BAKIYE", deger: bakiye, deger2: "", filtretipi: 5 });
+            arr.push({ verismi: "AKTIF", deger: aktiflik, deger2: "", filtretipi: 2 });
+            if (p.sort != null) {
+                return {
+
+                    extraParam: 'abc',
+                    search: p.search,
+                    sort: p.sort,
+                    order: p.order,
+                    limit: p.limit,
+                    offset: p.offset,
+
+                    sort: p.sort,
+
+                    filterler: arr
+                }
+            } else {
+                return {
+                    extraParam: 'abc',
+                    search: p.search,
+                    sort: p.sort,
+                    order: p.order,
+                    limit: p.limit,
+                    offset: p.offset,
+
+                    sort: "ID",
+
+                    filterler: arr
+                }
+
+            }
+        }
+
+
+        window.onload = function () {
+            const str = window.location.href;
+         
+
+        };
+
+
+        var $table = $('#bootstrap-table');
+
+        function numberformatter(value, row, index) {
+            if (!value)
+                return "0.00";
+            else {
+                return [
+
+                    numberWithCommas((Number(value.toString().replace(",", "."))).toFixed(2))
+                ].join('');
+            }
+        }
+        function numberWithCommas(x) {
+            return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+        }
+        function priceFormatter(data) {
+            var field = this.field
+
+            var toplam = data.map(function (row) {
+                if (row[field])
+                    return +Number(row[field].toString().replace(",", "."))
+                else {
+                    return +Number("0")
+                }
+            }).reduce(function (sum, i) {
+                return sum + i
+            }, 0);
+            return numberWithCommas(toplam) + " TL"
+        }
+        function operateFormatter(value, row, index) {
+            return [
+              
+                '<a rel="tooltip" title="Düzenle" class="btn btn-link btn-sm table-action edit" href="javascript:void(0)">',
+                '<i class="fa fa-edit"></i>',
+                '</a>'
+            ].join('');
+        }
+
+        $().ready(function () {
+            window.operateEvents = {
+
+                'click .edit': function (e, value, row, index) {
+                    info = JSON.stringify(row);
+                    window.location = "/KUR_BASLIK/Edit/" + row.ID;
+                    //   swal('You click edit icon, row: ', info);
+                    
+                },
+                'click .remove': function (e, value, row, index) {
+                    console.log(row);
+                    window.location = "/KUR_BASLIK/Delete/" + row.ID;
+                    $table.bootstrapTable('remove', {
+                        field: 'ID',
+                        values: [row.ID]
+                    });
+                }
+            };
+
+            $table.bootstrapTable({
+
+
+        printPageBuilder: function (table) {
+        return `
+<html>
+  <head>
+  <style type="text/css" media="print">
+  page {
+    size: auto;
+    margin: 25px 0 25px 0;
+  }
+  </style>
+  <style type="text/css" media="all">
+  table {
+    border-collapse: collapse;
+    font-size: 12px;
+  }
+  table, th, td {
+    border: 1px solid grey;
+  }
+  th, td {
+    text-align: center;
+    vertical-align: middle;
+  }
+  p {
+    font-weight: bold;
+    margin-left:20px;
+  }
+  table {
+    width:94%;
+    margin-left:3%;
+    margin-right:3%;
+  }
+  div.bs-table-print {
+    text-align:center;
+  }
+    h1.bs-table-print {
+    text-align:center;
+  }
+ </style>
+      <title>@Session["FirmaAdı"]</title>
+     </head>
+  <body>
+      <h1 class="bs-table-print">Kur Listesi</h1>
+
+  <div class="bs-table-print">${table}</div>
+  </body>
+</html>`
+      },
+                clickToSelect: true,
+                showRefresh: true,
+
+                search: true,
+                showToggle: true,
+                showColumns: true,
+
+                searchAlign: 'left',
+
+                locale: 'tr-TR',
+                formatShowingRows: function (pageFrom, pageTo, totalRows) {
+                    return "Toplam " + totalRows+" Kayıt";
+                },
+                formatRecordsPerPage: function (pageNumber) {
+                    return pageNumber + " Adet Listeleniyor";
+                },
+
+
+            });
+            $table.on('click-row.bs.table', function (e, row, $element) {
+             
+
+            });
+            $table.on('  dbl-click-row.bs.table', function (e, row, $element) {
+                window.open("/KUR_BASLIK/Edit/" + row.ID);
+
+
+            });
+            //activate the tooltips after the data table is initialized
+            $('[rel="tooltip"]').tooltip();
+
+            $(window).resize(function () {
+                $table.bootstrapTable('resetView');
+            });
+
+
+        })
+
+        function idFormatter() {
+            return 'Toplam'
+        }
+
+        function nameFormatter(data) {
+            return data.length
+        }
+
+
+
+        function footerStyle(column) {
+            return {
+                id: {
+                    classes: 'uppercase'
+                },
+                name: {
+                    css: { 'font-weight': 'normal' }
+                },
+                price: {
+                    css: { color: 'red' }
+                }
+            }[column.field]
+        }
+
+
+    </script>
+}
+

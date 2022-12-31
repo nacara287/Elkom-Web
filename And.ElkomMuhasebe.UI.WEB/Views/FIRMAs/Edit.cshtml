@@ -1,0 +1,464 @@
+﻿@model And.ElkomMuhasebe.Core.Model.Entity.FirmaDB.FIRMA
+
+@{
+    ViewBag.Title = "Firma Bilgileri";
+    Layout = "~/Views/Shared/yeni.cshtml";
+    var efaturseriliste = ViewBag.Efatseriler as List<And.ElkomMuhasebe.Core.Model.Entity.FirmaDB.FATURA_SERI>;
+    var earsivseriliste = ViewBag.Earsivseriler as List<And.ElkomMuhasebe.Core.Model.Entity.FirmaDB.EARSIV_SERI>;
+}
+
+@using (Html.BeginForm(null, null, new { @id = "postform" }, FormMethod.Post,
+                    new { enctype = "multipart/form-data" }))
+{
+
+    @Html.AntiForgeryToken()
+    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+    @Html.HiddenFor(model => model.ID)
+    @Html.HiddenFor(model => model.CreateDate)
+    @Html.HiddenFor(model => model.CreateUserID)
+    @Html.HiddenFor(model => model.XSLKODUFATURA)
+    @Html.HiddenFor(model => model.XSLKODUEARSIV)
+    @Html.HiddenFor(model => model.FirmaResimUrl)
+    @Html.HiddenFor(model => model.KISAADI)
+    <div class="row">
+
+        <div class="col-md-12">
+            <div class="card card-primary card-outline card-tabs">
+                <div class="card-header p-0 pt-1 border-bottom-0">
+                    <ul class="nav nav-tabs" id="custom-tabs-three-tab" role="tablist">
+                        <li class="nav-item">
+                            <a class="nav-link active" id="custom-tabs-three-home-tab" data-toggle="pill" href="#custom-tabs-three-home" role="tab" aria-controls="custom-tabs-three-home" aria-selected="active">Firma Bilgileri</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" id="custom-tabs-three-profile-tab" data-toggle="pill" href="#custom-tabs-three-profile" role="tab" aria-controls="custom-tabs-three-profile" aria-selected="false">İletişim Bilgileri</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" id="custom-tabs-three-messages-tab" data-toggle="pill" href="#custom-tabs-three-messages" role="tab" aria-controls="custom-tabs-three-messages" aria-selected="false">E-Fatura E-Arşiv Entenratör Bilgileri</a>
+                        </li>
+                    </ul>
+                </div>
+                <div class="card-body">
+                    <div class="tab-content" id="custom-tabs-three-tabContent">
+                        <!-- Firma Bilgileri -->
+                        <div class="tab-pane fade active show" id="custom-tabs-three-home" role="tabpanel" aria-labelledby="custom-tabs-three-home-tab">
+                            <div class="form-group ">
+                                <label>Firma Adı</label>
+                                @Html.EditorFor(model => model.FIRMAADI, new { htmlAttributes = new { @class = "form-control form-control-sm" } })
+                                @Html.ValidationMessageFor(model => model.FIRMAADI, "", new { @class = "text-danger" })
+                            </div>
+                            <div class="form-group ">
+                                <label>Adı</label>
+                                @Html.EditorFor(model => model.ADI, new { htmlAttributes = new { @class = "form-control form-control-sm" } })
+                                @Html.ValidationMessageFor(model => model.ADI, "", new { @class = "text-danger" })
+                            </div>
+                            <div class="form-group ">
+                                <label>Soyadı</label>
+                                @Html.EditorFor(model => model.SOYADI, new { htmlAttributes = new { @class = "form-control form-control-sm" } })
+                                @Html.ValidationMessageFor(model => model.SOYADI, "", new { @class = "text-danger" })
+                            </div>
+                            <div class="form-group ">
+                                <label>Hizmet Numarası</label>
+                                @Html.EditorFor(model => model.HIZMETNO, new { htmlAttributes = new { @class = "form-control form-control-sm", @placeholder = "..." } })
+                                @Html.ValidationMessageFor(model => model.HIZMETNO, "", new { @class = "text-danger" })
+                            </div>
+
+                            <div class="form-group ">
+                                <label>Mersin No</label>
+                                @Html.EditorFor(model => model.MERSISNO, new { htmlAttributes = new { @class = "form-control form-control-sm", @aria_label = "Cari Kodu", @aria_describedby = "button-addon2" } })
+                                @Html.ValidationMessageFor(model => model.MERSISNO, "", new { @class = "text-danger" })
+                            </div>
+
+                            <div class="form-group">
+                                <label>Vergi No</label>
+                                @Html.EditorFor(model => model.VERGINO, new { htmlAttributes = new { @class = "form-control form-control-sm", @placeholder = "..." } })
+                                @Html.ValidationMessageFor(model => model.VERGINO, "", new { @class = "text-danger" })
+                            </div>
+
+                            <div class="form-group">
+                                <label>Vergi Dairesi </label>
+                                @Html.EditorFor(model => model.VERGIDAIRESI, new { htmlAttributes = new { @class = "form-control form-control-sm", @placeholder = "...", @aria_label = "...", @aria_describedby = "button-addon2" } })
+                                @Html.ValidationMessageFor(model => model.VERGIDAIRESI, "", new { @class = "text-danger" })
+                            </div>
+
+                            <div class="form-group">
+                                <label>Cari Grup Kodu</label>
+                                @Html.EditorFor(model => model.CARIGRUPKODU, new { htmlAttributes = new { @class = "form-control form-control-sm", @placeholder = "..." } })
+                                @Html.ValidationMessageFor(model => model.CARIGRUPKODU, "", new { @class = "text-danger" })
+                            </div>
+
+                            <div class="form-group">
+                                <label>Ticaret Sicil No </label>
+                                @Html.EditorFor(model => model.TICARETSICILNO, new { htmlAttributes = new { @class = "form-control form-control-sm", @placeholder = "...", @aria_label = "...", @aria_describedby = "button-addon2" } })
+                                @Html.ValidationMessageFor(model => model.TICARETSICILNO, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+
+                        <!-- İletişim -->
+                        <div class="tab-pane fade" id="custom-tabs-three-profile" role="tabpanel" aria-labelledby="custom-tabs-three-profile-tab">
+                            <div class="form-group">
+                                <label>Adres</label>
+                                @Html.EditorFor(model => model.ADRESI1, new { htmlAttributes = new { @class = "form-control form-control-sm", @placeholder = "...", @aria_label = "...", @aria_describedby = "button-addon2" } })
+                                @Html.ValidationMessageFor(model => model.ADRESI1, "", new { @class = "text-danger" })
+                            </div>
+                            <div class="form-group">
+                                <label>İl</label>
+                                @Html.EditorFor(model => model.SEHIR, new { htmlAttributes = new { @class = "form-control form-control-sm", @placeholder = "...", @aria_label = "...", @aria_describedby = "button-addon2" } })
+                                @Html.ValidationMessageFor(model => model.ADRESI1, "", new { @class = "text-danger" })
+                            </div>
+                            <div class="form-group">
+                                <label>İlçe</label>
+                                @Html.EditorFor(model => model.ILCE, new { htmlAttributes = new { @class = "form-control form-control-sm", @placeholder = "...", @aria_label = "...", @aria_describedby = "button-addon2" } })
+                                @Html.ValidationMessageFor(model => model.ILCE, "", new { @class = "text-danger" })
+                            </div>
+                            <div class="form-group">
+                                <label>Telefon</label>
+                                <input type="text" class="form-control form-control-sm" id="TEL" name="TEL" value="@Model.TEL" data-inputmask='"mask": "(999) 999-9999"' data-mask>
+
+                                @Html.ValidationMessageFor(model => model.TEL, "", new { @class = "text-danger" })
+                            </div>
+                            <div class="form-group">
+                                <label>Mobil</label>
+                                <input type="text" class="form-control form-control-sm" id="TEL2" name="TEL2" value="@Model.TEL2" data-inputmask='"mask": "(999) 999-9999"' data-mask>
+                                @Html.ValidationMessageFor(model => model.TEL2, "", new { @class = "text-danger" })
+                            </div>
+                            <div class="form-group">
+                                <label>Website</label>
+                                @Html.EditorFor(model => model.WEB_SITE, new { htmlAttributes = new { @class = "form-control form-control-sm", @placeholder = "...", @aria_label = "...", @aria_describedby = "button-addon2" } })
+                                @Html.ValidationMessageFor(model => model.WEB_SITE, "", new { @class = "text-danger" })
+                            </div>
+                            <div class="form-group">
+                                <label>E-Posta</label>
+                                @Html.EditorFor(model => model.E_MAIL, new { htmlAttributes = new { @class = "form-control form-control-sm", @placeholder = "...", @aria_label = "...", @aria_describedby = "button-addon2" } })
+                                @Html.ValidationMessageFor(model => model.E_MAIL, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+
+                        <!-- E-fatura bilgileri -->
+                        <div class="tab-pane fade" id="custom-tabs-three-messages" role="tabpanel" aria-labelledby="custom-tabs-three-messages-tab">
+                            <div class="form-group ">
+                                <label>E-Fatura Kullanıcı Adı</label>
+                                @Html.EditorFor(model => model.EFATKULLANICIADI, new { htmlAttributes = new { @class = "form-control form-control-sm" } })
+                                @Html.ValidationMessageFor(model => model.EFATKULLANICIADI, "", new { @class = "text-danger" })
+                            </div>
+
+                            <div class="form-group ">
+                                <label>E-Fatura Kullanıcı Şifresi:</label>
+                                @Html.EditorFor(model => model.EFATSİFRE, new { htmlAttributes = new { @class = "form-control form-control-sm", @aria_label = "Cari Kodu", @aria_describedby = "button-addon2" } })
+                                @Html.ValidationMessageFor(model => model.EFATSİFRE, "", new { @class = "text-danger" })
+                            </div>
+
+                            <div class="form-group ">
+                                <label for="EFATSERINO">Efatura Seri No</label>
+                                <div class="input-group input-group-sm">
+                                    <select class="custom-select" id="EFATSERINO" name="EFATSERINO">
+                                        <option selected>@Model.EFATSERINO</option>
+                                        @{
+
+                                            if (efaturseriliste != null)
+                                            {
+                                                foreach (var item in efaturseriliste)
+                                                {
+
+                                                    <option>@item.SERI_NO</option>
+
+                                                }
+                                            }}
+                                    </select>
+                                    <div class="input-group-append">
+                                        <button class="btn btn-sm btn-outline-secondary" type="button" data-toggle="modal" data-target="#ModalEFATSERINO"><i class="fas fa-plus"></i></button>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="form-group ">
+                                <label for="EFATSERINO">EArşiv Seri No</label>
+                                <div class="input-group input-group-sm">
+                                    <select class="custom-select" id="EARSIVSERINO" name="EARSIVSERINO">
+                                        <option selected>@Model.EARSIVSERINO</option>
+                                        @{
+
+                                            if (earsivseriliste != null)
+                                            {
+                                                foreach (var item in earsivseriliste)
+                                                {
+
+                                                    <option>@item.SERI_NO</option>
+
+                                                }
+                                            }}
+                                    </select>
+                                    <div class="input-group-append">
+                                        <button class="btn btn-sm btn-outline-secondary" type="button" data-toggle="modal" data-target="#ModalEARSIVSERINO"><i class="fas fa-plus"></i></button>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="form-group ">
+                                <label>GIB BK </label>
+                                @Html.EditorFor(model => model.GIBBK, new { htmlAttributes = new { @class = "form-control form-control-sm", @placeholder = "...", @aria_label = "...", @aria_describedby = "button-addon2" } })
+                                @Html.ValidationMessageFor(model => model.GIBBK, "", new { @class = "text-danger" })
+                            </div>
+                            <div class="form-group ">
+                                <label>Demo Portal:</label>
+                                @Html.EditorFor(model => model.DemoPortal, new { htmlAttributes = new { @class = "form-control form-control-sm", @aria_label = "Cari Kodu", @aria_describedby = "button-addon2" } })
+                                @Html.ValidationMessageFor(model => model.DemoPortal, "", new { @class = "text-danger" })
+                            </div>
+
+                            <div class="form-group">
+                                <label>Entegrator</label>
+                                <select class="form-control" id="ENTAGRATOR" name="ENTAGRATOR">
+                                    @if (Model.ENTAGRATOR != null)
+                                    {
+                                        <option selected value=@((int)(Model.ENTAGRATOR))>@Model.ENTAGRATOR.ToString()</option>
+                                    }
+                                    else
+                                    {
+                                        <option selected value="EDM">EDM</option>
+                                    }
+
+                                    <option value="HizliBilisim">HizliBilisim</option>
+                                </select>
+                                @Html.ValidationMessageFor(model => model.ENTAGRATOR, "", new { @class = "text-danger" })
+                            </div>
+
+                            <div class="form-group">
+                                <label>E-Fatura xslt </label>
+                                @if (!string.IsNullOrEmpty(Model.XSLKODUFATURA))
+                                {
+                                    <a>Yüklü xslt:@Model.XSLKODUFATURA.Substring(Model.XSLKODUFATURA.Length - 30) </a>}
+                                <input type="file" name="FaturaXslt" id="FaturaXslt" onchange="fileCheck(this);" />
+                            </div>
+
+                            <div class="form-group">
+                                <label>E-Arşiv xslt </label>
+                                @if (!string.IsNullOrEmpty(Model.XSLKODUEARSIV))
+                                {
+                                    <a>Yüklü xslt:@Model.XSLKODUEARSIV.Substring(Model.XSLKODUFATURA.Length - 30) </a>}
+                                <input type="file" name="ArsivXslt" id="ArsivXslt" onchange="fileCheck(this);" />
+                            </div>
+                            <div class="form-group">
+                                <label>Firma Logo </label>
+                                @if (!string.IsNullOrEmpty(Model.FirmaResimUrl))
+                                {
+                            <a>Yüklü Logo:@Model.FirmaResimUrl.Substring(Model.FirmaResimUrl.Length - 30) </a>}
+                                <input type="file" name="FirmaResim" id="FirmaResim" onchange="fileCheck(this);" />
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <button type="submit" class="btn btn-sm btn-primary btn-icon-split">
+                        <span class="icon text-white-50">
+                            <i class="fas fa-save"></i>
+                        </span>
+                        <span class="text">Kaydet</span>
+                    </button>
+                    <a href="@Url.RequestContext.HttpContext.Request.Url.ToString()" class="btn btn-sm btn-secondary btn-icon-split">
+                        <span class="icon text-white-50">
+                            <i class="fas fa-power-off"></i>
+                        </span>
+                        <span class="text">İptal</span>
+                    </a>
+                </div>
+                <!-- /.card -->
+            </div>
+        </div>
+
+
+        @* <div class="col-xl-6 col-lg-6">
+                <div class="card card-success">
+                    <div class="card-header ">
+                        <h3 class="card-title">Firma Bilgileri</h3>
+                    </div>
+                    <div class="card-body   ">
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-xl-6 col-lg-6">
+                <div class="card card-primary">
+                    <div class="card-header">
+                        <h3 class="card-title">İletişim Bilgileri</h3>
+                    </div>
+                    <div class="card-body">
+
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-xl-6 col-lg-6">
+                <div class="card card-danger">
+                    <div class="card-header">
+                        <h3 class="card-title"> E-Fatura E-Arşiv Entenratör Bilgileri</h3>
+                    </div>
+                    <div class="card-body">
+                    </div>
+                </div>
+            </div> *@
+
+
+    </div>
+
+
+    @* <div id="butonlar" class="fixed-bottom py-1 text-center">
+
+        </div> *@
+}
+
+<div class="modal fade" id="ModalEARSIVSERINO" tabindex="-1" aria-labelledby="ModalEARSIVSERINOLabel" aria-hidden="true">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="ModalEARSIVSERINOLabel">Yeni EArşiv Seri No</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label for="efatserino">Başlık</label>
+                    <input type="text" class="form-control" id="earsivserino" name="earsivserino">
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-outline-dark" data-dismiss="modal">İptal</button>
+                <button type="button" class="btn btn-primary" onclick="özelkodolustur2()">Kaydet</button>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="ModalEFATSERINO" tabindex="-1" aria-labelledby="ModalEFATSERINOLabel" aria-hidden="true">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="ModalEFATSERINOLabel">Yeni EFatura Seri No</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label for="efatserino">Başlık</label>
+                    <input type="text" class="form-control" id="efatserino" name="efatserino">
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-outline-dark" data-dismiss="modal">İptal</button>
+                <button type="button" class="btn btn-primary" onclick="özelkodolustur1()">Kaydet</button>
+            </div>
+        </div>
+    </div>
+</div>
+@section script{
+
+    <script type="text/javascript" charset="utf-8">
+
+        function özelkodolustur1() {
+            $.ajax({
+                type: "POST",
+
+                dataType: "json",
+                contentType: "application/json; charset=utf-8",
+                url: "/FIRMAS/efaturaserinolustur/",
+                data: JSON.stringify({
+                    serino: document.getElementById("efatserino").value,
+
+                }),
+                success: function (result) {
+                    alert("Serin No Oluşturuldu!")
+                    var opt = document.createElement('option');
+
+
+                    opt.appendChild(document.createTextNode(document.getElementById("efatserino").value));
+
+
+                    opt.selected = true;
+                    var sel = document.getElementById('EFATSERINO');
+
+                    sel.appendChild(opt);
+                }
+                ,
+                error: function (result) {
+                    alert('Başarısız');
+                }
+            });
+        }
+
+        function özelkodolustur2() {
+            $.ajax({
+                type: "POST",
+
+                dataType: "json",
+                contentType: "application/json; charset=utf-8",
+                url: "/FIRMAS/earsivserinolustur/",
+                data: JSON.stringify({
+                    serino: document.getElementById("earsivserino").value,
+
+                }),
+                success: function (result) {
+                    alert("Serin No Oluşturuldu!")
+                    var opt = document.createElement('option');
+
+
+                    opt.appendChild(document.createTextNode(document.getElementById("earsivserino").value));
+
+
+                    opt.selected = true;
+                    var sel = document.getElementById('EARSIVSERINO');
+
+                    sel.appendChild(opt);
+                }
+                ,
+                error: function (result) {
+                    alert('Başarısız');
+                }
+            });
+        }
+        function datagonder() {
+            var form = $('#postform');
+
+            $.ajax({
+                type: "POST",
+                url: form.attr('action'),
+                data: form.serialize()
+                ,
+                success: function (result) {
+                    historysend("/Firmas/Edit");
+
+                },
+                error: function (result) {
+                    toastr["error"]('Lütfen Bilgileri Eksik  Ya da Yanlış Girmeyiniz');
+                }
+            });
+
+        };
+
+    </script>
+
+
+    <!-- Page specific script -->
+    <script>
+        $(function () {
+            //Initialize Select2 Elements
+            $('.select2').select2()
+
+            //Initialize Select2 Elements
+            $('.select2bs4').select2({
+                theme: 'bootstrap4'
+            })
+
+            //Datemask dd/mm/yyyy
+            $('#datemask').inputmask('dd/mm/yyyy', { 'placeholder': 'dd/mm/yyyy' })
+            //Datemask2 mm/dd/yyyy
+            $('#datemask2').inputmask('mm/dd/yyyy', { 'placeholder': 'mm/dd/yyyy' })
+            //Money Euro
+            $('[data-mask]').inputmask()
+
+
+
+        })
+
+    </script>
+
+}

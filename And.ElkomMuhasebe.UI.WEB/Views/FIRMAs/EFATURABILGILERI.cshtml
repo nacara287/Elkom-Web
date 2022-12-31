@@ -1,0 +1,145 @@
+﻿@model And.ElkomMuhasebe.UI.WEB.Controllers.FIRMAsController.efaturabilgimodel
+@{
+    ViewBag.Title = "EFATURABILGILERI";
+    Layout = "~/Views/Shared/yeni.cshtml";
+}
+
+
+@using (Html.BeginForm())
+{@Html.AntiForgeryToken()
+@Html.ValidationSummary(true, "", new { @class = "text-danger" })
+    <div class="row">
+
+        <div class="col-xl-6 col-lg-6">
+            <!-- START card -->
+            <div class="card">
+                <div class="card-header ">
+                    <div class="card-title">
+                        E-Fatura/E-Arşiv Bilgileri
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="form-group-attached">
+                        <div class="row clearfix">
+
+                            <div class="form-group form-group-default input-group ">
+                                <div class="form-input-group ">
+                                    <label>E-Fatura Kullanıcı Adı</label>
+
+                                    @Html.EditorFor(model => model.efaturausername, new { htmlAttributes = new { @class = "form-control form-control-sm" } })
+                                    @Html.ValidationMessageFor(model => model.efaturausername, "", new { @class = "text-danger" })
+
+
+                                </div>
+                                <div class="form-group form-group-default required">
+                                    <label>E-Fatura Kullanıcı Şifresi:</label>
+                                    @Html.EditorFor(model => model.efaturapassword, new { htmlAttributes = new { @class = "form-control form-control-sm", @aria_label = "Cari Kodu", @aria_describedby = "button-addon2" } })
+                                    @Html.ValidationMessageFor(model => model.efaturapassword, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+
+
+                        </div>
+
+                        <div class="row clearfix">
+                         
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="form-group-attached">
+                        <div class="row clearfix">
+                            <div class="col-md-6">
+                                <div class="form-group form-group-default form-group-default required">
+                                    <label>Vergi No</label>
+                                    @Html.EditorFor(model => model.vergino, new { htmlAttributes = new { @class = "form-control form-control-sm", @aria_label = "Cari Kodu", @aria_describedby = "button-addon2" } })
+                                    @Html.ValidationMessageFor(model => model.vergino, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group form-group-default required">
+                                    <label>Vergi Dairesi </label>
+                                    @Html.EditorFor(model => model.VERGIDAIRESI, new { htmlAttributes = new { @class = "form-control form-control-sm", @aria_label = "Cari Kodu", @aria_describedby = "button-addon2" } })
+                                    @Html.ValidationMessageFor(model => model.VERGIDAIRESI, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row clearfix">
+                            <div class="col-md-6">
+                                <div class="form-group form-group-default form-group-default required">
+                                    <label>GIB BK</label>
+                                    @Html.EditorFor(model => model.GIBBK, new { htmlAttributes = new { @class = "form-control form-control-sm", @aria_label = "Cari Kodu", @aria_describedby = "button-addon2" } })
+                                    @Html.ValidationMessageFor(model => model.GIBBK, "", new { @class = "text-danger" })
+
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group form-group-default required">
+                                    <label>Ticaret Sicil No </label>
+
+                                    @Html.EditorFor(model => model.TICARETSICILNO, new { htmlAttributes = new { @class = "form-control form-control-sm", @placeholder = "...", @aria_label = "...", @aria_describedby = "button-addon2" } })
+                                    @Html.ValidationMessageFor(model => model.TICARETSICILNO, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row clearfix">
+                            <div class="col-md-6">
+                                <div class="form-group form-group-default form-group-default required">
+                                    <label>Mersin No</label>
+                                    @Html.EditorFor(model => model.MERSISNO, new { htmlAttributes = new { @class = "form-control form-control-sm", @aria_label = "Cari Kodu", @aria_describedby = "button-addon2" } })
+                                    @Html.ValidationMessageFor(model => model.MERSISNO, "", new { @class = "text-danger" })
+
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group form-group-default required">
+                                    <label>Ticaret Sicil No </label>
+
+                                    @Html.EditorFor(model => model.TICARETSICILNO, new { htmlAttributes = new { @class = "form-control form-control-sm", @placeholder = "...", @aria_label = "...", @aria_describedby = "button-addon2" } })
+                                    @Html.ValidationMessageFor(model => model.TICARETSICILNO, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- END card -->
+        </div>
+        <div class="col-md-9 order-1 mb-3">
+
+            <div class="card">
+                <div class="card-body">
+
+
+
+
+
+                   
+                
+
+
+
+
+
+
+                    <div id="butonlar" class="fixed-bottom py-1 text-center">
+                        <button type="submit" class="btn btn-sm btn-primary btn-icon-split">
+                            <span class="icon text-white-50">
+                                <i class="fas fa-save"></i>
+                            </span>
+                            <span class="text">Kaydet</span>
+
+                        </button>
+
+
+
+                    </div>
+
+
+                </div>
+            </div>
+        </div>
+    </div>      }

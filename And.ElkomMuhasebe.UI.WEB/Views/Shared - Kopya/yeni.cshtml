@@ -1,0 +1,95 @@
+﻿@{Session["LastPage"] = Url.RequestContext.HttpContext.Request.Url.ToString(); }
+<nav aria-label="breadcrumb">
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item">@ViewBag.Title </li>
+        @if (ViewBag.Extra != null)
+        {
+            <li class="breadcrumb-item active" aria-current="page">@ViewBag.Extra</li>
+        }
+
+
+    </ol>
+</nav>
+
+<style>
+    tr.noprint {
+        border-radius: 0.25rem;
+        background-color: #007bff;
+    }
+</style>
+
+
+@RenderBody()
+
+
+
+<script type="text/javascript" charset="utf-8" defer>
+    function tabloyenile() {
+        $('.table-bordered').bootstrapTable('refresh');
+    }
+    Date.prototype.formatMMDDYYYY  = function () {
+        return (pad(this.getMonth() + 1) + "/" + pad(this.getDate()) +
+
+            "/" + this.getFullYear());
+    }
+      function historysend(urla) {
+
+
+        $.ajax({
+            type: "POST",
+
+
+            dataType: "json",
+            contentType: "application/json; charset=utf-8",
+            url: "/HOME/sendhistory/",
+            data: JSON.stringify({ url: "@Session["LastPage"]" }),
+            success: function (result) {
+                if (!urla.includes("Uye-Giris"))
+                    $('.bodycontent').load(urla);
+                else
+                    window.location = urla;
+            },
+            error: function (result) {
+                toastr["error"]('error');
+            }
+        });
+
+    }
+
+    window.onpopstate = function () {
+         
+            $('.bodycontent').load("@Session["History"]");
+        }; history.pushState({}, '');
+    window.onload = function () {
+        window.location = "/HOME/";
+
+    }
+  
+
+    $(".btn.btn-sm.btn-outline-info").click(function (e) {
+
+        var ulr = $(this).attr("href");
+        historysend(ulr);
+
+
+        return false;
+    });
+    $(".btn.btn-sm.btn-secondary ").click(function (e) {
+
+        var ulr = $(this).attr("href");
+        historysend(ulr);
+        return false;
+    });
+
+    $(".btn-secondary").click(function (e) {
+
+            var ulr = $(this).attr("href");
+
+        historysend(ulr);
+            return false;
+        });
+
+
+</script>
+
+@RenderSection("script", required: false)

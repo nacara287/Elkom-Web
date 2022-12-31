@@ -1,0 +1,23 @@
+﻿
+@{
+
+      Layout = "~/Views/Shared/_Layout.cshtml";
+    
+}
+
+<script type="text/javascript" charset="utf-8">
+
+    document.addEventListener('DOMContentLoaded', function () {
+         @if (Session["LastPage"]  !=null)
+           {
+
+            @:historysend("@Session["LastPage"]" );
+           }
+    }, false);
+   
+
+
+
+
+
+</script>

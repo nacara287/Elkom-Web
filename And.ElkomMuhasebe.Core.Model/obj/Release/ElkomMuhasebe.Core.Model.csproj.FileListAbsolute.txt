@@ -1,0 +1,13 @@
+C:\Users\nacara\source\repos\And.ElkomMuhasebe.UI.WEB\And.ElkomMuhasebe.Core.Model\bin\Release\And.ElkomMuhasebe.Core.Model.dll.config
+C:\Users\nacara\source\repos\And.ElkomMuhasebe.UI.WEB\And.ElkomMuhasebe.Core.Model\bin\Release\And.ElkomMuhasebe.Core.Model.dll
+C:\Users\nacara\source\repos\And.ElkomMuhasebe.UI.WEB\And.ElkomMuhasebe.Core.Model\bin\Release\And.ElkomMuhasebe.Core.Model.pdb
+C:\Users\nacara\source\repos\And.ElkomMuhasebe.UI.WEB\And.ElkomMuhasebe.Core.Model\bin\Release\EntityFramework.dll
+C:\Users\nacara\source\repos\And.ElkomMuhasebe.UI.WEB\And.ElkomMuhasebe.Core.Model\bin\Release\EntityFramework.SqlServer.dll
+C:\Users\nacara\source\repos\And.ElkomMuhasebe.UI.WEB\And.ElkomMuhasebe.Core.Model\bin\Release\EntityFramework.xml
+C:\Users\nacara\source\repos\And.ElkomMuhasebe.UI.WEB\And.ElkomMuhasebe.Core.Model\bin\Release\EntityFramework.SqlServer.xml
+C:\Users\nacara\source\repos\And.ElkomMuhasebe.UI.WEB\And.ElkomMuhasebe.Core.Model\obj\Release\ElkomMuhasebe.Core.Model.csprojAssemblyReference.cache
+C:\Users\nacara\source\repos\And.ElkomMuhasebe.UI.WEB\And.ElkomMuhasebe.Core.Model\obj\Release\And.ElkomMuhasebe.Core.Model.Properties.Resources.resources
+C:\Users\nacara\source\repos\And.ElkomMuhasebe.UI.WEB\And.ElkomMuhasebe.Core.Model\obj\Release\ElkomMuhasebe.Core.Model.csproj.GenerateResource.cache
+C:\Users\nacara\source\repos\And.ElkomMuhasebe.UI.WEB\And.ElkomMuhasebe.Core.Model\obj\Release\ElkomMuhasebe.Core.Model.csproj.CopyComplete
+C:\Users\nacara\source\repos\And.ElkomMuhasebe.UI.WEB\And.ElkomMuhasebe.Core.Model\obj\Release\And.ElkomMuhasebe.Core.Model.dll
+C:\Users\nacara\source\repos\And.ElkomMuhasebe.UI.WEB\And.ElkomMuhasebe.Core.Model\obj\Release\And.ElkomMuhasebe.Core.Model.pdb
